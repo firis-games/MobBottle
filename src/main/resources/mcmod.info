@@ -1,0 +1,16 @@
+[
+{
+  "modid": "mobbottle",
+  "name": "Mob Bottle",
+  "description": "",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["firis-games"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]

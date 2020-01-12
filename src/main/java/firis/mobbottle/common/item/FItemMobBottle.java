@@ -4,8 +4,11 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import firis.mobbottle.MobBottle.FirisBlocks;
 import firis.mobbottle.common.entity.FEntityItemAntiDamage;
 import firis.mobbottle.common.helpler.EntityLivingHelper;
+import firis.mobbottle.common.tileentity.FTileEntityMobBottle;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
@@ -14,8 +17,9 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -28,13 +32,13 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * モブボトル
  */
-public class FItemMobBottle extends Item {
+public class FItemMobBottle extends ItemBlock {
 
 	/**
 	 * コンストラクタ
 	 */
 	public FItemMobBottle() {
-		super();
+		super(FirisBlocks.MOB_BOTTLE);
 		this.setMaxStackSize(1);
 		this.setCreativeTab(CreativeTabs.MISC);
 	}
@@ -69,28 +73,38 @@ public class FItemMobBottle extends Item {
 	@Override
 	public EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
     {
-		ItemStack stack = player.getHeldItem(hand);
-		
-		if (!stack.isEmpty() 
-				&& stack.getItem() instanceof FItemMobBottle
-				&& stack.hasTagCompound()) {
+		if (!player.isSneaking()) {
+			ItemStack stack = player.getHeldItem(hand);
 			
-			BlockPos position = pos.offset(facing);
-			double x = position.getX() + 0.5;
-			double y = position.getY();
-			double z = position.getZ() + 0.5;
+			if (!stack.isEmpty() 
+					&& stack.getItem() instanceof FItemMobBottle
+					&& stack.hasTagCompound()) {
+				
+				BlockPos position = pos.offset(facing);
+				double x = position.getX() + 0.5;
+				double y = position.getY();
+				double z = position.getZ() + 0.5;
+				
+				//Mobのスポーン
+				EntityLivingHelper.spawnEntityFromItemStack(stack, worldIn, x, y, z);
+				
+				//Tag情報を初期化
+				stack.setTagCompound(null);
+				
+				return EnumActionResult.SUCCESS;
+	
+			}
 			
-			//Mobのスポーン
-			EntityLivingHelper.spawnEntityFromItemStack(stack, worldIn, x, y, z);
-			
-			//Tag情報を初期化
-			stack.setTagCompound(null);
-			
-			return EnumActionResult.SUCCESS;
-
+	        return EnumActionResult.PASS;
 		}
 		
-        return EnumActionResult.PASS;
+		//スニークの場合はブロック設置
+		EnumActionResult ret = super.onItemUse(player, worldIn, pos, hand, facing, hitX, hitY, hitZ);
+		if (EnumActionResult.SUCCESS == ret) {
+			player.setHeldItem(hand, ItemStack.EMPTY);
+		}
+		
+		return ret;
     }
 	
 	
@@ -169,5 +183,28 @@ public class FItemMobBottle extends Item {
 		
 		return true;
 	}
+	
+	
+	/**
+	 * ブロック設置後にItemStackのNBT情報を保存
+	 */
+	@Override
+    public boolean placeBlockAt(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, IBlockState newState) {
+
+		boolean ret = super.placeBlockAt(stack, player, world, pos, side, hitX, hitY, hitZ, newState);
+		
+		//TileEntityにNBTを保存する
+    	TileEntity tileentity = world.getTileEntity(pos);
+    	if (tileentity == null) return false;
+    	if (!(tileentity instanceof FTileEntityMobBottle)) return false;
+    	
+    	FTileEntityMobBottle tile = (FTileEntityMobBottle) tileentity;
+    	tile.setItemStackNBT(stack.serializeNBT());
+
+		tileentity.markDirty();
+		
+		return ret;
+		
+    }
 	
 }

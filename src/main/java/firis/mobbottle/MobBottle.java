@@ -2,9 +2,11 @@ package firis.mobbottle;
 
 import org.apache.logging.log4j.Logger;
 
+import firis.mobbottle.common.block.FBlockMobBottle;
 import firis.mobbottle.common.entity.FEntityItemAntiDamage;
 import firis.mobbottle.common.item.FItemMobBottle;
 import firis.mobbottle.common.proxy.IProxy;
+import firis.mobbottle.common.tileentity.FTileEntityMobBottle;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
@@ -23,6 +25,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.EntityEntry;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry.ObjectHolder;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -77,6 +80,10 @@ public class MobBottle
         
         logger.info(MobBottle.NAME + " Starting...");
         
+        //モブボトル
+        GameRegistry.registerTileEntity(FTileEntityMobBottle.class, 
+				new ResourceLocation(MobBottle.MODID, "firis_mob_bottle"));
+        
     	//Event登録
     	proxy.registerEvent();
     }
@@ -100,6 +107,12 @@ public class MobBottle
      */
     @SubscribeEvent
     protected static void registerBlocks(RegistryEvent.Register<Block> event) {
+    	
+    	//モブボトル
+    	event.getRegistry().register(new FBlockMobBottle()
+    			.setRegistryName(MODID, "mob_bottle")
+    			.setUnlocalizedName("mob_bottle"));
+    	
     }
     
     /**

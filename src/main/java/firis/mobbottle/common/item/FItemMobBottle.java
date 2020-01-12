@@ -161,16 +161,20 @@ public class FItemMobBottle extends ItemBlock {
 	 */
 	public boolean createEntityItemStack(ItemStack stack, EntityPlayer player, Entity entity) {
 	
-		//Mobチェック
+		//EntityLivingチェック
 		if (!(entity instanceof EntityLiving)) {
 			return false;
 		}
-		
 		EntityLiving entityLiving = (EntityLiving) entity;
 		
 		//NBTがある場合は何もしない
 		if (stack.hasTagCompound()) {
 			return true;
+		}
+		
+		//モブ捕獲判定
+		if (!isMobCatch(entityLiving)) {
+			return false;
 		}
 		
 		//Mob用スポーン情報の書き込み
@@ -204,5 +208,20 @@ public class FItemMobBottle extends ItemBlock {
 		return ret;
 		
     }
+	
+	
+	/**
+	 * 対象のMobがキャッチできるか判断する
+	 * @param entiy
+	 * @return
+	 */
+	private boolean isMobCatch(EntityLiving living) {
+		
+		//パッケージとClassにbossという文字がある場合は対象外とする
+		if (living.getClass().toString().toLowerCase().indexOf("boss") != -1) {
+			return false;
+		}
+		return true;
+	}
 	
 }

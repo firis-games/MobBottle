@@ -225,4 +225,19 @@ public class FItemMobBottle extends ItemBlock {
 		return true;
 	}
 	
+	
+	/**
+	 * アイテム名 + モブ名
+	 */
+	@Override
+	public String getItemStackDisplayName(ItemStack stack) {
+		String displayName = super.getItemStackDisplayName(stack);
+		if (stack.hasTagCompound()) {
+			//Mob名
+			if (stack.getTagCompound().hasKey("mob_name")) {
+				displayName += "[" + stack.getTagCompound().getString("mob_name") + "]";
+			}
+		}
+		return displayName;
+	}
 }

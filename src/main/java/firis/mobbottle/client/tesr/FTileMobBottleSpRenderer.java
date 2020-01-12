@@ -5,6 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.util.math.AxisAlignedBB;
 
 /**
  * モブボトルRenderer
@@ -62,6 +63,24 @@ public class FTileMobBottleSpRenderer extends TileEntitySpecialRenderer<FTileEnt
 		
 		//サイズを調整する
 		GlStateManager.scale(scale, scale, scale);
+		
+		//Mobごとのサイズ微調整
+		AxisAlignedBB aabb = renderEntityLiving.getRenderBoundingBox();
+		//基準値
+		double base_x = 0.825D;
+		double base_y = 1.90D;
+		double base_z = 0.825D;
+		//描画範囲
+		double aabb_x = Math.floor((aabb.maxX - aabb.minX) * 1000) / 1000;
+		double aabb_y = Math.floor((aabb.maxY - aabb.minY) * 1000) / 1000;
+		double aabb_z = Math.floor((aabb.maxZ - aabb.minZ) * 1000) / 1000;
+		double entityScale = 1.0D;
+		entityScale = Math.max(entityScale, aabb_x / base_x);
+		entityScale = Math.max(entityScale, aabb_y / base_y);
+		entityScale = Math.max(entityScale, aabb_z / base_z);
+		entityScale = 1.0D /entityScale;
+		
+		GlStateManager.scale(entityScale, entityScale, entityScale);
 		
 		//ぷるぷる震える対策
 		partialTicks = 0;

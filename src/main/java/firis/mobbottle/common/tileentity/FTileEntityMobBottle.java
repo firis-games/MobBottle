@@ -5,10 +5,11 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ITickable;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class FTileEntityMobBottle extends AbstractTileEntity {
+public class FTileEntityMobBottle extends AbstractTileEntity implements ITickable {
 
 	protected NBTTagCompound itemStackNBT;
 	protected boolean isMob = false;
@@ -60,8 +61,20 @@ public class FTileEntityMobBottle extends AbstractTileEntity {
 		//初回のみ生成する
 		if (this.isMob && this.renderEntityLiving == null) {
 			this.renderEntityLiving = (EntityLiving) EntityLivingHelper.spawnEntityFromItemStack(getItemStackToMobBottle(), this.getWorld(), 0, 0, 0);
+			this.renderEntityLiving.ticksExisted = 0;
 		}
 		return this.renderEntityLiving;
 		
+	}
+
+	/**
+	 * @Intarface ITickable
+	 */
+	@Override
+	public void update() {
+		//描画Entityのカウント処理
+		if (this.renderEntityLiving != null) {
+			this.renderEntityLiving.ticksExisted++;
+		}
 	}
 }

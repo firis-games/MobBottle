@@ -197,7 +197,7 @@ public class FItemMobBottle extends ItemBlock {
     	if (!(tileentity instanceof FTileEntityMobBottle)) return false;
     	
     	FTileEntityMobBottle tile = (FTileEntityMobBottle) tileentity;
-    	tile.initMobBottle(stack);
+    	tile.initMobBottle(stack, player.getHorizontalFacing());
 
 		tileentity.markDirty();
 		

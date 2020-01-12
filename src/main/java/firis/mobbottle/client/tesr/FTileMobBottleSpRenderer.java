@@ -41,6 +41,23 @@ public class FTileMobBottleSpRenderer extends TileEntitySpecialRenderer<FTileEnt
 		EntityLiving renderEntityLiving = te.getRenderEntityLiving();
 		if (renderEntityLiving == null) return;
 		
+		//向きにあわせて回転させる
+		switch (te.getFacing()) {
+			case NORTH:
+				break;
+			case WEST:
+				GlStateManager.rotate(90, 0.0F, 1.0F, 0.0F);
+				break;
+			case SOUTH:
+				GlStateManager.rotate(180, 0.0F, 1.0F, 0.0F);
+				break;
+			case EAST:
+				GlStateManager.rotate(270, 0.0F, 1.0F, 0.0F);
+				break;
+			default:
+				break;
+		}
+		
 		float scale = 0.45F;
 		
 		//サイズを調整する

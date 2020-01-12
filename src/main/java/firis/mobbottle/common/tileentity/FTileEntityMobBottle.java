@@ -4,6 +4,7 @@ import firis.mobbottle.common.helpler.EntityLivingHelper;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -12,17 +13,23 @@ public class FTileEntityMobBottle extends AbstractTileEntity {
 	protected NBTTagCompound itemStackNBT;
 	protected boolean isMob = false;
 	protected EntityLiving renderEntityLiving = null;
-
+	protected EnumFacing facing = EnumFacing.NORTH;
+	
 	/**
 	 * モブボトルの初期化
 	 */
-	public void initMobBottle(ItemStack stack) {
+	public void initMobBottle(ItemStack stack, EnumFacing facing) {
 		this.itemStackNBT = stack.serializeNBT();
 		this.isMob = EntityLivingHelper.isEntityFromItemStack(stack);
+		this.facing = facing;
 	}
 	
 	public ItemStack getItemStackToMobBottle() {
 		return new ItemStack(itemStackNBT);
+	}
+	
+	public EnumFacing getFacing() {
+		return this.facing;
 	}
 	
 	@Override
@@ -32,6 +39,7 @@ public class FTileEntityMobBottle extends AbstractTileEntity {
 		
 		this.itemStackNBT = (NBTTagCompound) compound.getTag("mob_bottle");
 		this.isMob = compound.getBoolean("is_mob");
+		this.facing = EnumFacing.getHorizontal(compound.getInteger("facing"));
 		
 	}
 	
@@ -41,6 +49,7 @@ public class FTileEntityMobBottle extends AbstractTileEntity {
 		
 		compound.setTag("mob_bottle", this.itemStackNBT);
 		compound.setBoolean("is_mob", this.isMob);
+		compound.setInteger("facing", this.facing.getHorizontalIndex());
 		
 		return compound;
 	}

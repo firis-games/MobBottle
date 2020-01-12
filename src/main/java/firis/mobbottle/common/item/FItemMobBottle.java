@@ -11,7 +11,6 @@ import firis.mobbottle.common.tileentity.FTileEntityMobBottle;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -40,7 +39,6 @@ public class FItemMobBottle extends ItemBlock {
 	public FItemMobBottle() {
 		super(FirisBlocks.MOB_BOTTLE);
 		this.setMaxStackSize(1);
-		this.setCreativeTab(CreativeTabs.MISC);
 	}
 	
 	/**
@@ -199,7 +197,7 @@ public class FItemMobBottle extends ItemBlock {
     	if (!(tileentity instanceof FTileEntityMobBottle)) return false;
     	
     	FTileEntityMobBottle tile = (FTileEntityMobBottle) tileentity;
-    	tile.setItemStackNBT(stack.serializeNBT());
+    	tile.initMobBottle(stack);
 
 		tileentity.markDirty();
 		

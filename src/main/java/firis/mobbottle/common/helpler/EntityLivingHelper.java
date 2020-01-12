@@ -54,8 +54,7 @@ public class EntityLivingHelper {
 	 */
 	public static Entity spawnEntityFromItemStack(ItemStack stack, World world, double x, double y, double z) {
 		
-		if (stack.hasTagCompound() == false
-				|| !stack.getTagCompound().hasKey("Mob")) return null;
+		if (!isEntityFromItemStack(stack)) return null;
 		
 		NBTTagCompound entityNBT = (NBTTagCompound) stack.getTagCompound().getTag("Mob");
 		
@@ -68,6 +67,16 @@ public class EntityLivingHelper {
 			}
 		}
 		return entity;
+	}
+	
+	/**
+	 * ItemStackが正常か判断する
+	 */
+	public static boolean isEntityFromItemStack(ItemStack stack) {
+		if (stack.hasTagCompound() == false
+				|| !stack.getTagCompound().hasKey("Mob")) return false;
+		
+		return true;
 	}
 	
 	/**

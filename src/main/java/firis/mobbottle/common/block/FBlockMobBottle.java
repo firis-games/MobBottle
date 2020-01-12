@@ -5,6 +5,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
@@ -27,6 +28,7 @@ public class FBlockMobBottle extends BlockContainer {
 	 */
 	public FBlockMobBottle() {
 		super(Material.PISTON);
+		this.setCreativeTab(CreativeTabs.MISC);
 	}
 
 	@Override
@@ -73,7 +75,7 @@ public class FBlockMobBottle extends BlockContainer {
         	
         	FTileEntityMobBottle tile = (FTileEntityMobBottle) tileentity;
         	
-        	ItemStack dropStack = new ItemStack(tile.getItemStackNBT());
+        	ItemStack dropStack = tile.getItemStackToMobBottle();
         	
         	Block.spawnAsEntity(worldIn, pos, dropStack);
         	worldIn.updateComparatorOutputLevel(pos, this);

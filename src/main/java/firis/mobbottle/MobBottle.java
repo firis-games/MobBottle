@@ -2,6 +2,7 @@ package firis.mobbottle;
 
 import org.apache.logging.log4j.Logger;
 
+import firis.mobbottle.client.tesr.FTileMobBottleSpRenderer;
 import firis.mobbottle.common.block.FBlockMobBottle;
 import firis.mobbottle.common.entity.FEntityItemAntiDamage;
 import firis.mobbottle.common.item.FItemMobBottle;
@@ -14,6 +15,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -139,6 +141,9 @@ public class MobBottle
 		ModelLoader.setCustomModelResourceLocation(FirisItems.MOB_BOTTLE, 0,
 				new ModelResourceLocation(FirisItems.MOB_BOTTLE.getRegistryName(), "inventory"));
 		
+    	//モブボトルTESR
+    	ClientRegistry.bindTileEntitySpecialRenderer(FTileEntityMobBottle.class, new FTileMobBottleSpRenderer());
+    	
     }
     
     

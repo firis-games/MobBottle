@@ -5,6 +5,7 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import firis.mobbottle.MobBottle.FirisBlocks;
+import firis.mobbottle.common.config.FirisConfig;
 import firis.mobbottle.common.entity.FEntityItemAntiDamage;
 import firis.mobbottle.common.helpler.EntityLivingHelper;
 import firis.mobbottle.common.tileentity.FTileEntityMobBottle;
@@ -71,7 +72,7 @@ public class FItemMobBottle extends ItemBlock {
 	@Override
 	public EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
     {
-		if (!player.isSneaking()) {
+		if (!player.isSneaking() || !FirisConfig.cfg_general_enable_mob_bottle_blocks) {
 			ItemStack stack = player.getHeldItem(hand);
 			
 			if (!stack.isEmpty() 

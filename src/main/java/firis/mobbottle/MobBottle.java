@@ -4,6 +4,7 @@ import org.apache.logging.log4j.Logger;
 
 import firis.mobbottle.client.tesr.FTileMobBottleSpRenderer;
 import firis.mobbottle.common.block.FBlockMobBottle;
+import firis.mobbottle.common.config.FirisConfig;
 import firis.mobbottle.common.entity.FEntityItemAntiDamage;
 import firis.mobbottle.common.item.FItemMobBottle;
 import firis.mobbottle.common.proxy.IProxy;
@@ -37,7 +38,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 		name = MobBottle.NAME,
 		version = MobBottle.VERSION,
 		dependencies = MobBottle.MOD_DEPENDENCIES,
-		acceptedMinecraftVersions = MobBottle.MOD_ACCEPTED_MINECRAFT_VERSIONS
+		acceptedMinecraftVersions = MobBottle.MOD_ACCEPTED_MINECRAFT_VERSIONS,
+		guiFactory = "firis.mobbottle.client.config.FirisConfigGuiFactory"
 )
 @EventBusSubscriber
 public class MobBottle
@@ -81,6 +83,9 @@ public class MobBottle
         logger = event.getModLog();
         
         logger.info(MobBottle.NAME + " Starting...");
+        
+        //設定読込
+        FirisConfig.init(event.getSuggestedConfigurationFile());
         
         //モブボトル
         GameRegistry.registerTileEntity(FTileEntityMobBottle.class, 

@@ -1,5 +1,6 @@
 package firis.mobbottle.client.tesr;
 
+import firis.mobbottle.common.config.FirisConfig;
 import firis.mobbottle.common.tileentity.FTileEntityMobBottle;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -59,7 +60,7 @@ public class FTileMobBottleSpRenderer extends TileEntitySpecialRenderer<FTileEnt
 				break;
 		}
 		
-		float scale = 0.45F;
+		float scale = FirisConfig.cfg_display_entity_default_scale;
 		
 		//サイズを調整する
 		GlStateManager.scale(scale, scale, scale);
@@ -67,9 +68,9 @@ public class FTileMobBottleSpRenderer extends TileEntitySpecialRenderer<FTileEnt
 		//Mobごとのサイズ微調整
 		AxisAlignedBB aabb = renderEntityLiving.getRenderBoundingBox();
 		//基準値
-		double base_x = 0.825D;
-		double base_y = 1.90D;
-		double base_z = 0.825D;
+		double base_x = (double) FirisConfig.cfg_display_entity_auto_resize_width;
+		double base_y = (double) FirisConfig.cfg_display_entity_auto_resize_height;
+		double base_z = (double) FirisConfig.cfg_display_entity_auto_resize_width;
 		//描画範囲
 		double aabb_x = Math.floor((aabb.maxX - aabb.minX) * 1000) / 1000;
 		double aabb_y = Math.floor((aabb.maxY - aabb.minY) * 1000) / 1000;

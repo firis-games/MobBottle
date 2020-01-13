@@ -19,7 +19,7 @@ repositories {
 
 version = "0.1"
 group = "firis.mobbottle" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "mobbottle"
+archivesBaseName = "MobBottle"
 
 sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 compileJava {

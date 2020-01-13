@@ -1,6 +1,7 @@
 package firis.mobbottle.common.tileentity;
 
 import firis.mobbottle.common.helpler.EntityLivingHelper;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -60,7 +61,7 @@ public class FTileEntityMobBottle extends AbstractTileEntity implements ITickabl
 		
 		//初回のみ生成する
 		if (this.isMob && this.renderEntityLiving == null) {
-			this.renderEntityLiving = (EntityLiving) EntityLivingHelper.spawnEntityFromItemStack(getItemStackToMobBottle(), this.getWorld(), 0, 0, 0);
+			this.renderEntityLiving = (EntityLiving) EntityLivingHelper.spawnEntityFromItemStack(getItemStackToMobBottle(), Minecraft.getMinecraft().world, 0, 0, 0);
 			this.renderEntityLiving.ticksExisted = 0;
 		}
 		return this.renderEntityLiving;

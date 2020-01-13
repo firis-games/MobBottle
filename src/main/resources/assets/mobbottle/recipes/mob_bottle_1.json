@@ -1,0 +1,25 @@
+{
+	"type": "forge:ore_shaped",
+	"pattern": [
+		"www",
+		"geg",
+		"ggg"
+	],
+	"key": {
+		"g": {
+			"type": "forge:ore_dict",
+			"ore": "blockGlass"
+		},
+		"w": {
+			"type": "forge:ore_dict",
+			"ore": "slabWood"
+		},
+		"e": {
+			"type": "forge:ore_dict",
+			"ore": "gemEmerald"
+		}
+	},
+	"result": {
+		"item": "mobbottle:mob_bottle"
+	}
+}

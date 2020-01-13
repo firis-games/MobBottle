@@ -3,6 +3,7 @@ package firis.mobbottle.common.block;
 import firis.mobbottle.common.tileentity.FTileEntityMobBottle;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
@@ -28,7 +29,8 @@ public class FBlockMobBottle extends BlockContainer {
 	 */
 	public FBlockMobBottle() {
 		super(Material.PISTON);
-		this.setCreativeTab(CreativeTabs.MISC);
+		this.setCreativeTab(CreativeTabs.TOOLS);
+		this.setSoundType(SoundType.GLASS);
 	}
 
 	@Override
@@ -91,4 +93,11 @@ public class FBlockMobBottle extends BlockContainer {
         return MOB_BOTTLE_BLOCK_AABB;
     }
 	
+    /**
+     * 通常ドロップ抑制
+     */
+    @Override
+    public void dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState state, float chance, int fortune) {
+    	
+    }
 }

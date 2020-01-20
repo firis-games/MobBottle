@@ -1,5 +1,8 @@
 package firis.mobbottle.common.tileentity;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import firis.mobbottle.common.helpler.EntityLivingHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLiving;
@@ -59,6 +62,11 @@ public class FTileEntityMobBottle extends AbstractTileEntity implements ITickabl
 	@SideOnly(Side.CLIENT)
 	public EntityLiving getRenderEntityLiving() {
 		
+		//ItemStackRender
+		if (rendererEntityLivingMap.size() != 0) {
+			return this.rendererEntityLivingMap.get(this.itemStackNBT);
+		}
+		
 		//初回のみ生成する
 		if (this.isMob && this.renderEntityLiving == null) {
 			this.renderEntityLiving = (EntityLiving) EntityLivingHelper.spawnEntityFromItemStack(getItemStackToMobBottle(), Minecraft.getMinecraft().world, 0, 0, 0);
@@ -77,5 +85,42 @@ public class FTileEntityMobBottle extends AbstractTileEntity implements ITickabl
 		if (this.renderEntityLiving != null) {
 			this.renderEntityLiving.ticksExisted++;
 		}
+	}
+	
+	/**
+	 * TileEntityItemStackRenderer用処理
+	 */
+	@SideOnly(Side.CLIENT)
+	private Map<NBTTagCompound, EntityLiving> rendererEntityLivingMap = new HashMap<>();
+	
+	/**
+	 * TileEntityItemStackRendererモブボトルの初期化
+	 * EntityLivingをMapでキャッシュする
+	 */
+	@SideOnly(Side.CLIENT)
+	public void initMobBottleItemStackRenderer(ItemStack stack) {
+		
+		this.itemStackNBT = null;
+		if (!stack.hasTagCompound()) return;
+		
+		this.itemStackNBT = stack.serializeNBT();
+		this.facing = EnumFacing.WEST;
+		
+		//インスタンス生成
+		if (!rendererEntityLivingMap.containsKey(itemStackNBT)) {
+			EntityLiving tmpRenderEntityLiving = (EntityLiving) EntityLivingHelper.spawnEntityFromItemStack(getItemStackToMobBottle(), Minecraft.getMinecraft().world, 0, 0, 0);
+			if (tmpRenderEntityLiving != null) {
+				tmpRenderEntityLiving.ticksExisted = 0;
+				rendererEntityLivingMap.put(this.itemStackNBT, tmpRenderEntityLiving);
+			}
+		}
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public boolean getItemStackRenderer() {
+		if (rendererEntityLivingMap.size() != 0) {
+			return this.rendererEntityLivingMap.get(this.itemStackNBT) != null ? true : false;
+		}
+		return false;
 	}
 }

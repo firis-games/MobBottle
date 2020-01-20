@@ -95,7 +95,7 @@ public class EntityLivingHelper {
 	/**
 	 * EntityLivingからMobIdを取得する
 	 */
-	private static String getEntityId(EntityLiving entityliving) {
+	public static String getEntityId(EntityLiving entityliving) {
 		String mobid = "";
 		net.minecraftforge.fml.common.registry.EntityEntry entry = 
 				net.minecraftforge.fml.common.registry.EntityRegistry.getEntry(entityliving.getClass());

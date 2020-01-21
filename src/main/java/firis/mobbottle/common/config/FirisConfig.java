@@ -28,6 +28,11 @@ public class FirisConfig {
 	public static float cfg_display_entity_auto_resize_width = 0.8F;
 	public static float cfg_display_entity_auto_resize_height = 1.9F;
 	
+	/**
+	 * モブボトルのカバータイプ
+	 */
+	public static int cfg_display_bottle_cover_type = 0;	
+	
 	public static void init(File configFile) {
 		
 		config = new Configuration(configFile, MobBottle.VERSION, true);
@@ -73,8 +78,12 @@ public class FirisConfig {
 
 		cfg_display_entity_auto_resize_height = config.getFloat("AutoRisizeHeight", CATEGORY_DISPLAY, 
 				1.9F, 0.0F, 5.0F, 
-				"SeSet the width at height the entity automatically resizes.");
+				"Set the width at height the entity automatically resizes.");
 		
+		//モブボトルのカバータイプ
+		cfg_display_bottle_cover_type = config.getInt("BottleCoverType", CATEGORY_DISPLAY, 
+				0, 0, 5, 
+				"Set the cover type of the mob bottle.0:bottle 1:iron_plate 2:gold_plate 3:stone_plate 4:wood_plate 5:empty");
 		
 		config.save();
 		

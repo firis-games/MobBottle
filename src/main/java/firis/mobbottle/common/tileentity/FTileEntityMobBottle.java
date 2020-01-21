@@ -3,6 +3,7 @@ package firis.mobbottle.common.tileentity;
 import java.util.HashMap;
 import java.util.Map;
 
+import firis.mobbottle.common.config.FirisConfig;
 import firis.mobbottle.common.helpler.EntityLivingHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLiving;
@@ -83,7 +84,12 @@ public class FTileEntityMobBottle extends AbstractTileEntity implements ITickabl
 	public void update() {
 		//描画Entityのカウント処理
 		if (this.renderEntityLiving != null) {
-			this.renderEntityLiving.ticksExisted++;
+			//モブアニメーションの制御
+			if (FirisConfig.cfg_general_enable_mob_bottle_animation) {
+				this.renderEntityLiving.ticksExisted++;
+			} else {
+				this.renderEntityLiving.ticksExisted = 0;
+			}
 		}
 	}
 	

@@ -18,6 +18,12 @@ public class FirisConfig {
 	public static boolean cfg_general_enable_mob_bottle_blocks = true;
 	
 	/**
+	 * モブボトルのアニメーション設定
+	 */
+	public static boolean cfg_general_enable_mob_bottle_animation = true;
+	
+	
+	/**
 	 * Entity描画の標準倍率
 	 */
 	public static float cfg_display_entity_default_scale = 0.45F;
@@ -65,6 +71,10 @@ public class FirisConfig {
 		//Blockモードの有効化設定
 		cfg_general_enable_mob_bottle_blocks = config.getBoolean("MobBottleBlocks", CATEGORY_GENERAL, 
 				true, "Enable to put Mob Bottles as blocks.");
+		
+		//Mobのアニメーション設定
+		cfg_general_enable_mob_bottle_animation = config.getBoolean("MobBottleAnimation", CATEGORY_GENERAL, 
+				true, "Set the mobs drawing animation for mob bottle.");
 		
 		//Display
 		//Entityの標準倍率

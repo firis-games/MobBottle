@@ -151,8 +151,12 @@ public class FTileMobBottleSpRenderer extends TileEntitySpecialRenderer<FTileEnt
 		//ぷるぷる震える対策
 		partialTicks = 0;
 		
-		Minecraft.getMinecraft().getRenderManager().renderEntity(renderEntityLiving, 0.0D, 0.0D, 0.0D, 0.0F, partialTicks, false);
-
+		Minecraft.getMinecraft().getRenderManager().renderEntity(renderEntityLiving, 0.0D, 0.0D, 0.0D, 0.0F, partialTicks, false);		
+		
+		//インベントリ上でスライムをモブボトルに入れた状態のものをもっていると
+		//GUIの背景が薄い青色になってしまう問題を対応
+		GlStateManager.enableBlend();
+		
 		//これを設定しないと描画が暗くなる場合がある
       	GlStateManager.enableRescaleNormal();
       	

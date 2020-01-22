@@ -5,6 +5,7 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import firis.mobbottle.MobBottle.FirisBlocks;
+import firis.mobbottle.MobBottle.FirisItems;
 import firis.mobbottle.common.config.FirisConfig;
 import firis.mobbottle.common.entity.FEntityItemAntiDamage;
 import firis.mobbottle.common.helpler.EntityLivingHelper;
@@ -39,7 +40,7 @@ public class FItemMobBottle extends ItemBlock {
 	 */
 	public FItemMobBottle() {
 		super(FirisBlocks.MOB_BOTTLE);
-		this.setMaxStackSize(1);
+		this.setMaxStackSize(16);
 	}
 	
 	/**
@@ -49,7 +50,7 @@ public class FItemMobBottle extends ItemBlock {
 	public boolean onLeftClickEntity(ItemStack stack, EntityPlayer player, Entity entity)
     {
 		//Mobアイテム化
-		return createEntityItemStack(stack, player, entity);
+		return createEntityItemStack(stack, EnumHand.MAIN_HAND, player, entity);
     }
 	
 	/**
@@ -59,11 +60,7 @@ public class FItemMobBottle extends ItemBlock {
 	public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer playerIn, EntityLivingBase target, EnumHand hand)
     {
 		//Mobアイテム化
-		boolean ret = createEntityItemStack(stack, playerIn, target);
-		if (ret && stack.hasTagCompound()) {
-			playerIn.setHeldItem(hand, stack);			
-		}
-		return ret;
+		return createEntityItemStack(stack, hand, playerIn, target);
     }
 	
 	/**
@@ -100,9 +97,8 @@ public class FItemMobBottle extends ItemBlock {
 		//スニークの場合はブロック設置
 		EnumActionResult ret = super.onItemUse(player, worldIn, pos, hand, facing, hitX, hitY, hitZ);
 		if (EnumActionResult.SUCCESS == ret) {
-			player.setHeldItem(hand, ItemStack.EMPTY);
+			player.getHeldItem(hand).shrink(1);
 		}
-		
 		return ret;
     }
 	
@@ -154,39 +150,7 @@ public class FItemMobBottle extends ItemBlock {
     public boolean hasEffect(ItemStack stack)
     {
         return stack.hasTagCompound();
-    }
-	
-	/**
-	 * Mobをアイテム化
-	 * @return
-	 */
-	public boolean createEntityItemStack(ItemStack stack, EntityPlayer player, Entity entity) {
-	
-		//EntityLivingチェック
-		if (!(entity instanceof EntityLiving)) {
-			return false;
-		}
-		EntityLiving entityLiving = (EntityLiving) entity;
-		
-		//NBTがある場合は何もしない
-		if (stack.hasTagCompound()) {
-			return true;
-		}
-		
-		//モブ捕獲判定
-		if (!isMobCatch(entityLiving)) {
-			return false;
-		}
-		
-		//Mob用スポーン情報の書き込み
-		EntityLivingHelper.getItemStackFromEntity(entityLiving, stack);
-		
-		//Mob消去
-		entityLiving.setDead();
-		
-		return true;
-	}
-	
+    }	
 	
 	/**
 	 * ブロック設置後にItemStackのNBT情報を保存
@@ -210,6 +174,56 @@ public class FItemMobBottle extends ItemBlock {
 		
     }
 	
+	/**
+	 * アイテム名 + モブ名
+	 */
+	@Override
+	public String getItemStackDisplayName(ItemStack stack) {
+		String displayName = super.getItemStackDisplayName(stack);
+		if (stack.hasTagCompound()) {
+			//Mob名
+			if (stack.getTagCompound().hasKey("mob_name")) {
+				displayName += "[" + stack.getTagCompound().getString("mob_name") + "]";
+			}
+		}
+		return displayName;
+	}
+	
+	/**
+	 * Mobをアイテム化
+	 * @return
+	 */
+	public boolean createEntityItemStack(ItemStack stack, EnumHand hand, EntityPlayer player, Entity entity) {
+	
+		//EntityLivingチェック
+		if (!(entity instanceof EntityLiving)) {
+			return false;
+		}
+		EntityLiving entityLiving = (EntityLiving) entity;
+		
+		//NBTがある場合は何もしない
+		if (stack.hasTagCompound()) {
+			return true;
+		}
+		
+		//モブ捕獲判定
+		if (!isMobCatch(entityLiving)) {
+			return false;
+		}
+		
+		ItemStack bottleStack = new ItemStack(FirisItems.MOB_BOTTLE);
+		
+		//Mob用スポーン情報の書き込み
+		bottleStack = EntityLivingHelper.getItemStackFromEntity(entityLiving, bottleStack);
+		
+		//Mob消去
+		entityLiving.setDead();
+		
+		//アイテムをプレイヤーに設定
+		setItemStackPlayerHand(bottleStack, hand, player);
+		
+		return true;
+	}
 	
 	/**
 	 * 対象のMobがキャッチできるか判断する
@@ -225,19 +239,26 @@ public class FItemMobBottle extends ItemBlock {
 		return true;
 	}
 	
-	
 	/**
-	 * アイテム名 + モブ名
+	 * 指定ハンドのアイテムを消費してItemStackをプレイヤーにセットする
 	 */
-	@Override
-	public String getItemStackDisplayName(ItemStack stack) {
-		String displayName = super.getItemStackDisplayName(stack);
-		if (stack.hasTagCompound()) {
-			//Mob名
-			if (stack.getTagCompound().hasKey("mob_name")) {
-				displayName += "[" + stack.getTagCompound().getString("mob_name") + "]";
-			}
+	private void setItemStackPlayerHand(ItemStack setStack, EnumHand hand, EntityPlayer player) {
+        
+		ItemStack handStack = player.getHeldItem(hand);
+		
+		//1つ消費
+		handStack.shrink(1);
+		
+		//アイテムセット
+		if (handStack.isEmpty()) {
+			//空の場合
+			player.setHeldItem(hand, setStack);
+		} else {
+			//在庫がある場合
+			if (!player.inventory.addItemStackToInventory(setStack)) {
+                player.dropItem(setStack, false);
+            }
 		}
-		return displayName;
-	}
+    }
+	
 }

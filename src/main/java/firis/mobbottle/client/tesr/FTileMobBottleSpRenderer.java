@@ -96,10 +96,6 @@ public class FTileMobBottleSpRenderer extends TileEntitySpecialRenderer<FTileEnt
 		
 		Minecraft.getMinecraft().getRenderManager().renderEntity(renderEntityLiving, 0.0D, 0.0D, 0.0D, 0.0F, partialTicks, false);		
 		
-		//インベントリ上でスライムをモブボトルに入れた状態のものをもっていると
-		//GUIの背景が薄い青色になってしまう問題を対応
-		GlStateManager.enableBlend();
-		
 		//これを設定しないと描画が暗くなる場合がある
       	GlStateManager.enableRescaleNormal();
       	
@@ -118,6 +114,11 @@ public class FTileMobBottleSpRenderer extends TileEntitySpecialRenderer<FTileEnt
     	        GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
     	        GlStateManager.disableTexture2D();
     	        GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
+    	        
+    			//インベントリ上でスライムをモブボトルに入れた状態のものをもっていると
+    			//GUIの背景が薄い青色になってしまう問題を対応
+    	        //ワールド描画時にモブが半透明になる場合があるためGUIの場合のみ設定するように変更
+    			GlStateManager.enableBlend();
       		}
       	}
       	

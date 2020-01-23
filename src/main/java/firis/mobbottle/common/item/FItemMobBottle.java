@@ -97,7 +97,12 @@ public class FItemMobBottle extends ItemBlock {
 		//スニークの場合はブロック設置
 		EnumActionResult ret = super.onItemUse(player, worldIn, pos, hand, facing, hitX, hitY, hitZ);
 		if (EnumActionResult.SUCCESS == ret) {
-			player.getHeldItem(hand).shrink(1);
+			ItemStack stack = player.getHeldItem(hand);
+			stack.shrink(1);
+			//クリエイティブでも強制で使用する
+			if (stack.isEmpty()) {
+				player.setHeldItem(hand, ItemStack.EMPTY);				
+			}
 		}
 		return ret;
     }
@@ -165,8 +170,12 @@ public class FItemMobBottle extends ItemBlock {
     	if (tileentity == null) return false;
     	if (!(tileentity instanceof FTileEntityMobBottle)) return false;
     	
+    	//Stackを1へ変更
+    	ItemStack setStack = stack.copy();
+    	setStack.setCount(1);
+    	
     	FTileEntityMobBottle tile = (FTileEntityMobBottle) tileentity;
-    	tile.initMobBottle(stack, player.getHorizontalFacing());
+    	tile.initMobBottle(setStack, player.getHorizontalFacing());
 
 		tileentity.markDirty();
 		

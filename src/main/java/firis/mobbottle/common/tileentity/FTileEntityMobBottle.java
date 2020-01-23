@@ -3,10 +3,13 @@ package firis.mobbottle.common.tileentity;
 import java.util.HashMap;
 import java.util.Map;
 
+import firis.mobbottle.MobBottle.FirisBlocks;
 import firis.mobbottle.common.config.FirisConfig;
 import firis.mobbottle.common.helpler.EntityLivingHelper;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
@@ -16,10 +19,59 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class FTileEntityMobBottle extends AbstractTileEntity implements ITickable {
 
+	/**
+	 * ボトルカバー定義
+	 */
+	public static enum EnumBottleCoverType {
+		MOB_BOTTLE(0, FirisBlocks.MOB_BOTTLE_EMPTY.getDefaultState(), true, 0),
+		IRON_PLATE(1, Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE.getDefaultState(), false, 2),
+		GOLD_PLATE(2, Blocks.LIGHT_WEIGHTED_PRESSURE_PLATE.getDefaultState(), false, 2),
+		STONE_PLATE(3, Blocks.STONE_PRESSURE_PLATE.getDefaultState(), false, 2),
+		WOOD_PLATE(4, Blocks.WOODEN_PRESSURE_PLATE.getDefaultState(), false, 2),
+		EMPTY(5, null, false, 0);
+		
+		//ID
+		private int id;
+		//描画用Block情報
+		private IBlockState state;
+		//透過ブロックフラグ
+		private boolean isAlpha;
+		//描画Entityの位置(0-16で設定して初期化時にtranslate設定値へ変換)
+		private float entityPosition = 0;
+		
+		private EnumBottleCoverType(int id, IBlockState state, boolean isAlpha, int entityPosition) {
+			this.id = id;
+			this.state = state;
+			this.isAlpha = isAlpha;
+			this.entityPosition = ((float)entityPosition) / 16.0F;
+		}
+		public int getId() {
+			return this.id;
+		}
+		public IBlockState getBlockState() {
+			return this.state;
+		}
+		public boolean getIsAlpha() {
+			return this.isAlpha;
+		}
+		public float getEntityPosition() {
+			return this.entityPosition;
+		}
+		public static EnumBottleCoverType getBottleCoverTypeFromId(int id) {
+			for (EnumBottleCoverType type : EnumBottleCoverType.values()) {
+				if (id == type.getId()) {
+					return type;
+				}
+			}
+			return MOB_BOTTLE;
+		}
+	}
+	
 	protected NBTTagCompound itemStackNBT;
 	protected boolean isMob = false;
 	protected EntityLiving renderEntityLiving = null;
 	protected EnumFacing facing = EnumFacing.NORTH;
+	protected EnumBottleCoverType bottleCoverType = EnumBottleCoverType.MOB_BOTTLE;
 	
 	/**
 	 * モブボトルの初期化
@@ -28,6 +80,14 @@ public class FTileEntityMobBottle extends AbstractTileEntity implements ITickabl
 		this.itemStackNBT = stack.serializeNBT();
 		this.isMob = EntityLivingHelper.isEntityFromItemStack(stack);
 		this.facing = facing;
+		
+		//空のモブボトルの場合はbottleCoverType固定
+		if (!stack.hasTagCompound()) {
+			this.bottleCoverType = EnumBottleCoverType.MOB_BOTTLE;
+		} else {
+			this.bottleCoverType = EnumBottleCoverType.getBottleCoverTypeFromId(FirisConfig.cfg_display_bottle_cover_type);
+		}
+		
 	}
 	
 	public ItemStack getItemStackToMobBottle() {
@@ -38,6 +98,10 @@ public class FTileEntityMobBottle extends AbstractTileEntity implements ITickabl
 		return this.facing;
 	}
 	
+	public EnumBottleCoverType getBottleCoverType() {
+		return this.bottleCoverType;
+	}
+	
 	@Override
 	public void readFromNBT(NBTTagCompound compound) {
 		
@@ -46,6 +110,7 @@ public class FTileEntityMobBottle extends AbstractTileEntity implements ITickabl
 		this.itemStackNBT = (NBTTagCompound) compound.getTag("mob_bottle");
 		this.isMob = compound.getBoolean("is_mob");
 		this.facing = EnumFacing.getHorizontal(compound.getInteger("facing"));
+		this.bottleCoverType = EnumBottleCoverType.getBottleCoverTypeFromId(compound.getInteger("bottle_cover_type"));
 		
 	}
 	
@@ -56,6 +121,7 @@ public class FTileEntityMobBottle extends AbstractTileEntity implements ITickabl
 		compound.setTag("mob_bottle", this.itemStackNBT);
 		compound.setBoolean("is_mob", this.isMob);
 		compound.setInteger("facing", this.facing.getHorizontalIndex());
+		compound.setInteger("bottle_cover_type", this.bottleCoverType.getId());
 		
 		return compound;
 	}
@@ -106,8 +172,14 @@ public class FTileEntityMobBottle extends AbstractTileEntity implements ITickabl
 	@SideOnly(Side.CLIENT)
 	public void initMobBottleItemStackRenderer(ItemStack stack) {
 		
+		//初期化
 		this.itemStackNBT = null;
+		this.bottleCoverType = EnumBottleCoverType.MOB_BOTTLE;
+		
 		if (!stack.hasTagCompound()) return;
+		
+		//設定から取得
+		this.bottleCoverType = EnumBottleCoverType.getBottleCoverTypeFromId(FirisConfig.cfg_display_bottle_cover_type);
 		
 		this.itemStackNBT = stack.serializeNBT();
 		this.facing = EnumFacing.WEST;

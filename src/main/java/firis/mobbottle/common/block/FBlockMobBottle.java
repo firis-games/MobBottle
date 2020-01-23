@@ -7,10 +7,14 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
@@ -99,5 +103,26 @@ public class FBlockMobBottle extends BlockContainer {
     @Override
     public void dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState state, float chance, int fortune) {
     	
+    }
+    
+    /**
+     * ブロックを右クリック
+     */
+    @Override
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
+    {
+    	
+    	//メインハンドに棒を持っている場合にBottleCoverTypeを変更する
+    	if (hand == EnumHand.MAIN_HAND
+    			&& playerIn.getHeldItem(hand).getItem() == Items.STICK) {
+    		
+    		TileEntity tile = worldIn.getTileEntity(pos);
+    		if (tile instanceof FTileEntityMobBottle) {
+    			((FTileEntityMobBottle)tile).setNextBottleCoverType();
+    		}
+    		
+    	}
+    	
+        return false;
     }
 }

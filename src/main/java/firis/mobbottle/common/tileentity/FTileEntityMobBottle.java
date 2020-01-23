@@ -65,6 +65,20 @@ public class FTileEntityMobBottle extends AbstractTileEntity implements ITickabl
 			}
 			return MOB_BOTTLE;
 		}
+		public static EnumBottleCoverType getNextBottleCoverType(EnumBottleCoverType bottleCoverType) {
+			EnumBottleCoverType[] bottleCoverTypes = EnumBottleCoverType.values();
+			int idx = 0;
+			for (int i = 0; i < bottleCoverTypes.length; i++) {
+				if (bottleCoverTypes[i] == bottleCoverType) {
+					idx = i + 1;
+				}
+			}
+			if (idx >= bottleCoverTypes.length) {
+				return EnumBottleCoverType.MOB_BOTTLE;
+			} else {
+				return bottleCoverTypes[idx];
+			}
+		}
 	}
 	
 	protected NBTTagCompound itemStackNBT;
@@ -100,6 +114,15 @@ public class FTileEntityMobBottle extends AbstractTileEntity implements ITickabl
 	
 	public EnumBottleCoverType getBottleCoverType() {
 		return this.bottleCoverType;
+	}
+	
+	/**
+	 * 次のカバータイプを設定
+	 */
+	public void setNextBottleCoverType() {
+		
+		this.bottleCoverType = EnumBottleCoverType.getNextBottleCoverType(this.bottleCoverType);
+		
 	}
 	
 	@Override

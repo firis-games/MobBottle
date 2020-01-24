@@ -60,8 +60,8 @@ dependencies {
     // for more info...
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
-    compile "mezz.jei:jei_1.12.2:4.10.0.198"
-
+    compile "mezz.jei:jei_1.12.2:4.15.0.268"
+    compile fileTree(dir: './mods', include: '*.jar')
 }
 
 processResources {

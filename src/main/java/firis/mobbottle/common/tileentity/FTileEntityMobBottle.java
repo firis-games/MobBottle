@@ -185,7 +185,6 @@ public class FTileEntityMobBottle extends AbstractTileEntity implements ITickabl
 	/**
 	 * TileEntityItemStackRenderer用処理
 	 */
-	@SideOnly(Side.CLIENT)
 	private Map<NBTTagCompound, EntityLiving> rendererEntityLivingMap = new HashMap<>();
 	
 	/**

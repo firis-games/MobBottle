@@ -14,6 +14,7 @@ import firis.mobbottle.common.tileentity.FTileEntityMobBottle;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
@@ -67,6 +68,7 @@ public class MobBottle
     @ObjectHolder(MobBottle.MODID)
     public static class FirisItems {
     	public final static Item MOB_BOTTLE = null;
+    	public final static Item MOB_BOTTLE_EMPTY = null;
     }
     
     /**
@@ -140,6 +142,11 @@ public class MobBottle
     	event.getRegistry().register(new FItemMobBottle()
     			.setRegistryName(MODID, "mob_bottle")
     			.setUnlocalizedName("mob_bottle"));
+    	
+    	//モブボトル（空）
+    	event.getRegistry().register(new ItemBlock(FirisBlocks.MOB_BOTTLE_EMPTY)
+    			.setRegistryName(MODID, "mob_bottle_empty")
+    			.setUnlocalizedName("mob_bottle_empty"));
     }
     
     /**

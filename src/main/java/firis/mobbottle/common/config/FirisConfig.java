@@ -22,6 +22,10 @@ public class FirisConfig {
 	 */
 	public static boolean cfg_general_enable_mob_bottle_animation = true;
 	
+	/**
+	 * モブボトルのTileEntityItemStackRenderer設定
+	 */
+	public static boolean cfg_general_enable_mob_bottle_teisr = true;
 	
 	/**
 	 * Entity描画の標準倍率
@@ -75,6 +79,10 @@ public class FirisConfig {
 		//Mobのアニメーション設定
 		cfg_general_enable_mob_bottle_animation = config.getBoolean("MobBottleAnimation", CATEGORY_GENERAL, 
 				true, "Set the mobs drawing animation for mob bottle.");
+		
+		//TileEntityItemStackRenderer設定
+		cfg_general_enable_mob_bottle_teisr = config.getBoolean("MobBottleInventoryRenderer", CATEGORY_GENERAL, 
+				true, "Set up custom drawings for inventory of mob bottles. If false, TileEntityItemStackRenderer will be invalidated.");
 		
 		//Display
 		//Entityの標準倍率

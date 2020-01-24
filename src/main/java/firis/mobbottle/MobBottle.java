@@ -156,9 +156,10 @@ public class MobBottle
     	//モブボトルTESR
     	ClientRegistry.bindTileEntitySpecialRenderer(FTileEntityMobBottle.class, new FTileMobBottleSpRenderer());
     	
-    	//モブボトルのTEISR登録
-    	FirisItems.MOB_BOTTLE.setTileEntityItemStackRenderer(new FTileMobBottleItemStackRenderer());
-    	
+    	if (FirisConfig.cfg_general_enable_mob_bottle_teisr) {
+	    	//モブボトルのTEISR登録
+	    	FirisItems.MOB_BOTTLE.setTileEntityItemStackRenderer(new FTileMobBottleItemStackRenderer());
+    	}
     }
     
     /**

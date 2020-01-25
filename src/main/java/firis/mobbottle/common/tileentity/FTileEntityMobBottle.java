@@ -6,6 +6,7 @@ import java.util.Map;
 import firis.mobbottle.MobBottle.FirisBlocks;
 import firis.mobbottle.common.config.FirisConfig;
 import firis.mobbottle.common.helpler.EntityLivingHelper;
+import firis.mobbottle.common.helpler.VanillaNetworkHelper;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLiving;
@@ -122,6 +123,9 @@ public class FTileEntityMobBottle extends AbstractTileEntity implements ITickabl
 	public void setNextBottleCoverType() {
 		
 		this.bottleCoverType = EnumBottleCoverType.getNextBottleCoverType(this.bottleCoverType);
+		
+		//同期
+		VanillaNetworkHelper.sendPacketTileEntity(this);
 		
 	}
 	

@@ -87,6 +87,7 @@ public class FTileEntityMobBottle extends AbstractTileEntity implements ITickabl
 	protected EntityLiving renderEntityLiving = null;
 	protected EnumFacing facing = EnumFacing.NORTH;
 	protected EnumBottleCoverType bottleCoverType = EnumBottleCoverType.MOB_BOTTLE;
+	protected float scale = FirisConfig.cfg_display_entity_default_scale;
 	
 	/**
 	 * モブボトルの初期化
@@ -95,6 +96,7 @@ public class FTileEntityMobBottle extends AbstractTileEntity implements ITickabl
 		this.itemStackNBT = stack.serializeNBT();
 		this.isMob = EntityLivingHelper.isEntityFromItemStack(stack);
 		this.facing = facing;
+		this.setScale(FirisConfig.cfg_display_entity_default_scale);
 		
 		//空のモブボトルの場合はbottleCoverType固定
 		if (!stack.hasTagCompound()) {
@@ -115,6 +117,10 @@ public class FTileEntityMobBottle extends AbstractTileEntity implements ITickabl
 	
 	public EnumBottleCoverType getBottleCoverType() {
 		return this.bottleCoverType;
+	}
+	
+	public float getScale() {
+		return this.scale;
 	}
 	
 	/**
@@ -138,6 +144,7 @@ public class FTileEntityMobBottle extends AbstractTileEntity implements ITickabl
 		this.isMob = compound.getBoolean("is_mob");
 		this.facing = EnumFacing.getHorizontal(compound.getInteger("facing"));
 		this.bottleCoverType = EnumBottleCoverType.getBottleCoverTypeFromId(compound.getInteger("bottle_cover_type"));
+		this.setScale(compound.getFloat("scale"));
 		
 	}
 	
@@ -149,6 +156,7 @@ public class FTileEntityMobBottle extends AbstractTileEntity implements ITickabl
 		compound.setBoolean("is_mob", this.isMob);
 		compound.setInteger("facing", this.facing.getHorizontalIndex());
 		compound.setInteger("bottle_cover_type", this.bottleCoverType.getId());
+		compound.setFloat("scale", this.scale);
 		
 		return compound;
 	}
@@ -209,6 +217,7 @@ public class FTileEntityMobBottle extends AbstractTileEntity implements ITickabl
 		
 		this.itemStackNBT = stack.serializeNBT();
 		this.facing = EnumFacing.WEST;
+		this.setScale(FirisConfig.cfg_display_entity_default_scale);
 		
 		//インスタンス生成
 		if (!rendererEntityLivingMap.containsKey(itemStackNBT)) {
@@ -226,5 +235,17 @@ public class FTileEntityMobBottle extends AbstractTileEntity implements ITickabl
 			return this.rendererEntityLivingMap.get(this.itemStackNBT) != null ? true : false;
 		}
 		return false;
+	}
+	
+	/**
+	 * 最大値と最小値を制限したscaleを設定する
+	 * min:0.1F max:5.0F
+	 * 0.0Fの場合はデフォルトscaleを設定する
+	 */
+	private void setScale(float scale) {
+		if (scale == 0.0F) scale = FirisConfig.cfg_display_entity_default_scale;
+		scale = Math.min(scale, 5.0F);
+		scale = Math.max(scale, 0.1F);
+		this.scale = scale;
 	}
 }

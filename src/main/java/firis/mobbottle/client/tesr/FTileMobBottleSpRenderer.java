@@ -67,7 +67,7 @@ public class FTileMobBottleSpRenderer extends TileEntitySpecialRenderer<FTileEnt
 		//向きにあわせて回転させる
 		setGLFacingRotate(te.getFacing());
 		
-		float scale = FirisConfig.cfg_display_entity_default_scale;
+		float scale = te.getScale();
 		
 		//サイズを調整する
 		GlStateManager.scale(scale, scale, scale);

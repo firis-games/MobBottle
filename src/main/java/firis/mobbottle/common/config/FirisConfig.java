@@ -87,7 +87,7 @@ public class FirisConfig {
 		//Display
 		//Entityの標準倍率
 		cfg_display_entity_default_scale = config.getFloat("DefaultScale", CATEGORY_DISPLAY, 
-				0.45F, 0.0F, 5.0F, 
+				0.45F, 0.1F, 5.0F, 
 				"Set the standard display magnification of Entity.");
 		
 		cfg_display_entity_auto_resize_width = config.getFloat("AutoResizeWidth", CATEGORY_DISPLAY, 

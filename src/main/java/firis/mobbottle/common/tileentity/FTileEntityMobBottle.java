@@ -135,6 +135,22 @@ public class FTileEntityMobBottle extends AbstractTileEntity implements ITickabl
 		
 	}
 	
+	/**
+	 * スケールサイズを変更する
+	 * 現在サイズにscaleを加算する
+	 */
+	public void setChangeScale(boolean isSmall) {
+		
+		float addScale = 0.1F;
+		
+		addScale = isSmall ? addScale * -1 : addScale;
+		this.setScale(this.scale + addScale);
+		
+		//同期
+		VanillaNetworkHelper.sendPacketTileEntity(this);
+		
+	}
+	
 	@Override
 	public void readFromNBT(NBTTagCompound compound) {
 		
@@ -144,7 +160,10 @@ public class FTileEntityMobBottle extends AbstractTileEntity implements ITickabl
 		this.isMob = compound.getBoolean("is_mob");
 		this.facing = EnumFacing.getHorizontal(compound.getInteger("facing"));
 		this.bottleCoverType = EnumBottleCoverType.getBottleCoverTypeFromId(compound.getInteger("bottle_cover_type"));
-		this.setScale(compound.getFloat("scale"));
+		//後方互換用初期値設定
+		float scale = compound.getFloat("scale");
+		if (scale == 0.0F) scale = FirisConfig.cfg_display_entity_default_scale;
+		this.setScale(scale);
 		
 	}
 	
@@ -240,10 +259,8 @@ public class FTileEntityMobBottle extends AbstractTileEntity implements ITickabl
 	/**
 	 * 最大値と最小値を制限したscaleを設定する
 	 * min:0.1F max:5.0F
-	 * 0.0Fの場合はデフォルトscaleを設定する
 	 */
 	private void setScale(float scale) {
-		if (scale == 0.0F) scale = FirisConfig.cfg_display_entity_default_scale;
 		scale = Math.min(scale, 5.0F);
 		scale = Math.max(scale, 0.1F);
 		this.scale = scale;

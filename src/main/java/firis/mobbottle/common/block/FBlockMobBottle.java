@@ -111,16 +111,30 @@ public class FBlockMobBottle extends BlockContainer {
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
     {
+    	//メインハンド以外は処理スキップ
+    	if (!(hand == EnumHand.MAIN_HAND)) return false;
     	
-    	//メインハンドに棒を持っている場合にBottleCoverTypeを変更する
-    	if (hand == EnumHand.MAIN_HAND
-    			&& playerIn.getHeldItem(hand).getItem() == Items.STICK) {
+    	TileEntity tileentity = worldIn.getTileEntity(pos);
+    	if (!(tileentity instanceof FTileEntityMobBottle)) return false;
+    	FTileEntityMobBottle tileBottle = ((FTileEntityMobBottle)tileentity);
+    	
+    	//棒を持っている場合にBottleCoverTypeを変更する
+    	if (playerIn.getHeldItem(hand).getItem() == Items.STICK) {
+    		//カバータイプ変更
+    		tileBottle.setNextBottleCoverType();
+    		return true;
+
+    	//金のクワを持っている場合にサイズを大きくする
+    	} else if (playerIn.getHeldItem(hand).getItem() == Items.GOLDEN_HOE) {
+    		//大きくなる
+    		tileBottle.setChangeScale(false);
+    		return true;
     		
-    		TileEntity tile = worldIn.getTileEntity(pos);
-    		if (tile instanceof FTileEntityMobBottle) {
-    			((FTileEntityMobBottle)tile).setNextBottleCoverType();
-    		}
-    		
+    	//金のオノを持っている場合はサイズを小さくする
+    	} else if (playerIn.getHeldItem(hand).getItem() == Items.GOLDEN_AXE) {
+    		//小さくなる
+    		tileBottle.setChangeScale(true);
+    		return true;
     	}
     	
         return false;

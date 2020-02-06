@@ -151,6 +151,18 @@ public class FTileEntityMobBottle extends AbstractTileEntity implements ITickabl
 		
 	}
 	
+	/**
+	 * モブボトルを回転させる
+	 */
+	public void setRotationBottle() {
+		
+		this.facing = this.facing.rotateY();
+		
+		//同期
+		VanillaNetworkHelper.sendPacketTileEntity(this);
+		
+	}
+	
 	@Override
 	public void readFromNBT(NBTTagCompound compound) {
 		

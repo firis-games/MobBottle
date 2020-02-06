@@ -135,7 +135,13 @@ public class FBlockMobBottle extends BlockContainer {
     		//小さくなる
     		tileBottle.setChangeScale(true);
     		return true;
-    	}
+    	
+    	//金のツルハシを持っている場合は回転させる
+		} else if (playerIn.getHeldItem(hand).getItem() == Items.GOLDEN_PICKAXE) {
+			//小さくなる
+			tileBottle.setRotationBottle();
+			return true;
+		}
     	
         return false;
     }

@@ -255,15 +255,15 @@ public class FItemMobBottle extends ItemBlock {
         
 		ItemStack handStack = player.getHeldItem(hand);
 		
-		//1つ消費
-		handStack.shrink(1);
-		
 		//アイテムセット
-		if (handStack.isEmpty()) {
-			//空の場合
+		if (handStack.getCount() == 1) {
+			//手持ちがスタックされていない場合
 			player.setHeldItem(hand, setStack);
 		} else {
-			//在庫がある場合
+			
+			handStack.shrink(1);
+			
+			//他に在庫がある場合
 			if (!player.inventory.addItemStackToInventory(setStack)) {
                 player.dropItem(setStack, false);
             }

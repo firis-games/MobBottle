@@ -67,7 +67,7 @@ public class FBlockMobBottle extends BlockContainer {
 	@Override
     @SideOnly(Side.CLIENT)
 	public BlockRenderLayer getBlockLayer() {
-		return BlockRenderLayer.TRANSLUCENT;
+		return BlockRenderLayer.CUTOUT_MIPPED;
 	}
 	
 	/**

@@ -141,7 +141,7 @@ public class FTileEntityMobBottle extends AbstractTileEntity implements ITickabl
 	 */
 	public void setChangeScale(boolean isSmall) {
 		
-		float addScale = 0.1F;
+		float addScale = FirisConfig.cfg_display_scale_up_down_value;
 		
 		addScale = isSmall ? addScale * -1 : addScale;
 		this.setScale(this.scale + addScale);

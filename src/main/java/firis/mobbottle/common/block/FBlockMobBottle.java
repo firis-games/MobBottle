@@ -1,5 +1,6 @@
 package firis.mobbottle.common.block;
 
+import firis.mobbottle.common.config.FirisConfig;
 import firis.mobbottle.common.tileentity.FTileEntityMobBottle;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
@@ -8,7 +9,6 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
@@ -113,35 +113,39 @@ public class FBlockMobBottle extends BlockContainer {
     {
     	//メインハンド以外は処理スキップ
     	if (!(hand == EnumHand.MAIN_HAND)) return false;
-    	
+    	//アイテムが空の場合はスキップ
+    	if (playerIn.getHeldItem(hand).isEmpty()) return false;
+
     	TileEntity tileentity = worldIn.getTileEntity(pos);
     	if (!(tileentity instanceof FTileEntityMobBottle)) return false;
     	FTileEntityMobBottle tileBottle = ((FTileEntityMobBottle)tileentity);
     	
-    	//棒を持っている場合にBottleCoverTypeを変更する
-    	if (playerIn.getHeldItem(hand).getItem() == Items.STICK) {
-    		//カバータイプ変更
+    	//手持ちアイテムのIDを取得する
+    	String handItemId = playerIn.getHeldItem(hand).getItem().getRegistryName().toString();
+    	
+    	//金のシャベルを持っている場合にBottleCoverTypeを変更する
+    	if (FirisConfig.cfg_display_tool_cover_type.equals(handItemId)) {
     		tileBottle.setNextBottleCoverType();
     		return true;
-
-    	//金のクワを持っている場合にサイズを大きくする
-    	} else if (playerIn.getHeldItem(hand).getItem() == Items.GOLDEN_HOE) {
+    		
+   		//金のクワを持っている場合にサイズを大きくする
+    	} else if (FirisConfig.cfg_display_tool_scale_up.equals(handItemId)) {
     		//大きくなる
     		tileBottle.setChangeScale(false);
     		return true;
     		
-    	//金のオノを持っている場合はサイズを小さくする
-    	} else if (playerIn.getHeldItem(hand).getItem() == Items.GOLDEN_AXE) {
+   		//金のオノを持っている場合にサイズを小さくする
+    	} else if (FirisConfig.cfg_display_tool_scale_down.equals(handItemId)) {
     		//小さくなる
     		tileBottle.setChangeScale(true);
     		return true;
-    	
-    	//金のツルハシを持っている場合は回転させる
-		} else if (playerIn.getHeldItem(hand).getItem() == Items.GOLDEN_PICKAXE) {
-			//小さくなる
-			tileBottle.setRotationBottle();
-			return true;
-		}
+    		
+   		//金のツルハシを持っている場合にサイズを大きくする
+    	} else if (FirisConfig.cfg_display_tool_rotation.equals(handItemId)) {
+    		//回転させる
+    		tileBottle.setRotationBottle();
+    		return true;
+    	}
     	
         return false;
     }

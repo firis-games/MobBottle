@@ -41,7 +41,29 @@ public class FirisConfig {
 	/**
 	 * モブボトルのカバータイプ
 	 */
-	public static int cfg_display_bottle_cover_type = 0;	
+	public static int cfg_display_bottle_cover_type = 0;
+	
+	/**
+	 * モブボトルの1回あたりの拡大縮小のサイズ
+	 */
+	public static float cfg_display_scale_up_down_value = 0.1F;
+	
+	/**
+	 * カバータイプ用ツール
+	 */
+	public static String cfg_display_tool_cover_type = "";
+	/**
+	 * 拡大用ツール
+	 */
+	public static String cfg_display_tool_scale_up = "";
+	/**
+	 * 縮小用ツール
+	 */
+	public static String cfg_display_tool_scale_down = "";
+	/**
+	 * 回転用ツール
+	 */
+	public static String cfg_display_tool_rotation = "";
 	
 	public static void init(File configFile) {
 		
@@ -102,6 +124,31 @@ public class FirisConfig {
 		cfg_display_bottle_cover_type = config.getInt("BottleCoverType", CATEGORY_DISPLAY, 
 				0, 0, 5, 
 				"Set the cover type of the mob bottle.0:bottle 1:iron_plate 2:gold_plate 3:stone_plate 4:wood_plate 5:empty");
+		
+		//1回あたりの拡大縮小サイズ
+		cfg_display_scale_up_down_value = config.getFloat("ChangeTools_ScaleUpDownValue", CATEGORY_DISPLAY, 
+				0.1F, 0.1F, 5.0F, 
+				"Setting the scale value for one enlargement / reduction.");
+		
+		//拡大するツール設定
+		cfg_display_tool_scale_up = config.getString("ChangeTools_ScaleUp", CATEGORY_DISPLAY,
+				"minecraft:golden_hoe", 
+				"Tools for expanding mob bottle blocks.");
+
+		//縮小するツール設定
+		cfg_display_tool_scale_down = config.getString("ChangeTools_ScaleDown", CATEGORY_DISPLAY,
+				"minecraft:golden_axe", 
+				"Tool to shrink mob bottle blocks.");
+		
+		//カバータイプツール設定
+		cfg_display_tool_cover_type = config.getString("ChangeTools_CoverType", CATEGORY_DISPLAY,
+				"minecraft:golden_pickaxe", 
+				"Tool to change cover type of mob bottle block.");
+		
+		//回転ツール設定
+		cfg_display_tool_rotation = config.getString("ChangeTools_Rotation", CATEGORY_DISPLAY,
+				"minecraft:golden_shovel", 
+				"Tool to rotate mob bottle block.");
 		
 		config.save();
 		

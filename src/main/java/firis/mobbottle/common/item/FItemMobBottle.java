@@ -98,7 +98,6 @@ public class FItemMobBottle extends ItemBlock {
 		EnumActionResult ret = super.onItemUse(player, worldIn, pos, hand, facing, hitX, hitY, hitZ);
 		if (EnumActionResult.SUCCESS == ret) {
 			ItemStack stack = player.getHeldItem(hand);
-			stack.shrink(1);
 			//クリエイティブでも強制で使用する
 			if (stack.isEmpty()) {
 				player.setHeldItem(hand, ItemStack.EMPTY);				

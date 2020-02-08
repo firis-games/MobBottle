@@ -15,6 +15,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -277,4 +278,21 @@ public class FTileEntityMobBottle extends AbstractTileEntity implements ITickabl
 		scale = Math.max(scale, 0.1F);
 		this.scale = scale;
 	}
+	
+	/**
+	 * モブボトルブロックの描画範囲
+	 */
+	@SideOnly(Side.CLIENT)
+    public AxisAlignedBB getRenderBoundingBox() {
+		
+		if (this.renderEntityLiving == null) return super.getRenderBoundingBox();
+		
+		//EntityのRender範囲をもとにブロック描画範囲を指定する
+		AxisAlignedBB aabb = this.renderEntityLiving.getRenderBoundingBox();
+		double scaleRate = this.scale * 2.0D;
+        return new AxisAlignedBB(
+        		pos.add(aabb.minX * scaleRate, aabb.minY * scaleRate, aabb.minZ * scaleRate), 
+        		pos.add(aabb.maxX * scaleRate, aabb.maxY * scaleRate, aabb.maxZ * scaleRate));
+	}
+	
 }

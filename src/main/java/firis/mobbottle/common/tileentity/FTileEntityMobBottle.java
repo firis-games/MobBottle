@@ -7,6 +7,8 @@ import firis.mobbottle.MobBottle.FirisBlocks;
 import firis.mobbottle.common.config.FirisConfig;
 import firis.mobbottle.common.helpler.EntityLivingHelper;
 import firis.mobbottle.common.helpler.VanillaNetworkHelper;
+import net.blacklab.lmr.client.renderer.entity.RenderLittleMaid.MaidMotion;
+import net.blacklab.lmr.entity.littlemaid.EntityLittleMaid;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLiving;
@@ -178,6 +180,8 @@ public class FTileEntityMobBottle extends AbstractTileEntity implements ITickabl
 		if (scale == 0.0F) scale = FirisConfig.cfg_display_entity_default_scale;
 		this.setScale(scale);
 		
+		this.lmrfpMaidMotion = compound.getInteger("lmrfp_maid_motion");
+		
 	}
 	
 	@Override
@@ -189,6 +193,8 @@ public class FTileEntityMobBottle extends AbstractTileEntity implements ITickabl
 		compound.setInteger("facing", this.facing.getHorizontalIndex());
 		compound.setInteger("bottle_cover_type", this.bottleCoverType.getId());
 		compound.setFloat("scale", this.scale);
+
+		compound.setInteger("lmrfp_maid_motion", this.lmrfpMaidMotion);
 		
 		return compound;
 	}
@@ -224,6 +230,9 @@ public class FTileEntityMobBottle extends AbstractTileEntity implements ITickabl
 				this.renderEntityLiving.ticksExisted = 0;
 			}
 		}
+		
+		//リトルメイド連携
+		this.updateLittleMaid();
 	}
 	
 	/**
@@ -295,4 +304,55 @@ public class FTileEntityMobBottle extends AbstractTileEntity implements ITickabl
         		pos.add(aabb.maxX * scaleRate, aabb.maxY * scaleRate, aabb.maxZ * scaleRate));
 	}
 	
+	
+	
+	//--------------------------------------------------------------------------------
+	
+	private int lmrfpMaidMotion = 1;
+	
+	/**
+	 * メイドさんのモーションを変更する
+	 */
+	public void setNextMaidMotion() {
+		
+		if (!FirisConfig.cfg_general_enable_lmrfp_collaboration) return;
+		
+		//Entityがメイドさんの場合のみ処理を行う
+		if (this.renderEntityLiving instanceof EntityLittleMaid) {
+			
+			//次モーションのIDを取得する
+			this.lmrfpMaidMotion = MaidMotion.getMaidMotionFromId(lmrfpMaidMotion).next().getId();
+			
+			//Noneの場合は飛ばす
+			if (this.lmrfpMaidMotion == 0) this.lmrfpMaidMotion = 1;
+			
+			//同期
+			VanillaNetworkHelper.sendPacketTileEntity(this);
+		}
+	}
+	
+	/**
+	 * リトルメイド連携
+	 * 連携設定が有効な場合のみ処理を行う
+	 */
+	protected void updateLittleMaid() {
+		
+		if (!FirisConfig.cfg_general_enable_lmrfp_collaboration) return;
+		
+		//Entityがメイドさんの場合のみ処理を行う
+		if (this.renderEntityLiving instanceof EntityLittleMaid) {
+			EntityLittleMaid entityMaid = (EntityLittleMaid) this.renderEntityLiving;
+			
+			//視線をリセット
+			entityMaid.rotationPitch = 0.0F;
+			entityMaid.rotationYaw = 0.0F;
+			entityMaid.prevRotationPitch = 0.0F;
+			entityMaid.prevRotationYaw = 0.0F;
+			
+			//MaidMostion設定
+			MaidMotion motion = MaidMotion.getMaidMotionFromId(this.lmrfpMaidMotion);
+			entityMaid.setMaidMotion(motion);
+			
+		}
+	}
 }

@@ -9,6 +9,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
@@ -144,6 +145,13 @@ public class FBlockMobBottle extends BlockContainer {
     	} else if (FirisConfig.cfg_display_tool_rotation.equals(handItemId)) {
     		//回転させる
     		tileBottle.setRotationBottle();
+    		return true;
+    	
+    	//砂糖でメイドさん連携
+    	} else if (FirisConfig.cfg_general_enable_lmrfp_collaboration
+    			&& Items.SUGAR.getRegistryName().toString().equals(handItemId)) {
+    		//モーション変更
+    		tileBottle.setNextMaidMotion();
     		return true;
     	}
     	

@@ -4,6 +4,7 @@ import java.io.File;
 
 import firis.mobbottle.MobBottle;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.common.Loader;
 
 public class FirisConfig {
 
@@ -65,6 +66,13 @@ public class FirisConfig {
 	 */
 	public static String cfg_display_tool_rotation = "";
 	
+	
+	/**
+	 * モブボトルのTileEntityItemStackRenderer設定
+	 */
+	public static boolean cfg_general_enable_lmrfp_collaboration = false;
+	
+	
 	public static void init(File configFile) {
 		
 		config = new Configuration(configFile, MobBottle.VERSION, true);
@@ -105,6 +113,15 @@ public class FirisConfig {
 		//TileEntityItemStackRenderer設定
 		cfg_general_enable_mob_bottle_teisr = config.getBoolean("MobBottleInventoryRenderer", CATEGORY_GENERAL, 
 				true, "Set up custom drawings for inventory of mob bottles. If false, TileEntityItemStackRenderer will be invalidated.");
+		
+		//LMRFP連携
+		if (Loader.isModLoaded("lmreengaged")) {
+			//メイドさんがロードされている場合は設定を取得する
+			cfg_general_enable_lmrfp_collaboration = config.getBoolean("Enable_LittleMaidReengagedFP_Collaboration", CATEGORY_GENERAL, 
+					false, "Enable with LittleMaidReengaged Firis's Patch collaboration.");			
+		}
+		
+		//--------------------------------------------------
 		
 		//Display
 		//Entityの標準倍率

@@ -299,9 +299,20 @@ public class FTileEntityMobBottle extends AbstractTileEntity implements ITickabl
 		//EntityのRender範囲をもとにブロック描画範囲を指定する
 		AxisAlignedBB aabb = this.renderEntityLiving.getRenderBoundingBox();
 		double scaleRate = this.scale * 2.0D;
+		
+		//最小値側は余分に1.0D大きいが再計算はしない
+		//Math.min(aabb.minX * scaleRate + 1.0D, 0.0D);
+		double minX = Math.min(aabb.minX * scaleRate, -1.0D);
+		double minY = Math.min(aabb.minY * scaleRate, 0.0D);
+		double minZ = Math.min(aabb.minZ * scaleRate, -1.0D);
+		
+		double maxX = Math.max(aabb.maxX * scaleRate, 1.0D);
+		double maxY = Math.max(aabb.maxY * scaleRate, 1.0D);
+		double maxZ = Math.max(aabb.maxZ * scaleRate, 1.0D);
+
         return new AxisAlignedBB(
-        		pos.add(aabb.minX * scaleRate, aabb.minY * scaleRate, aabb.minZ * scaleRate), 
-        		pos.add(aabb.maxX * scaleRate, aabb.maxY * scaleRate, aabb.maxZ * scaleRate));
+        		pos.add(minX, minY, minZ), 
+        		pos.add(maxX, maxY, maxZ));
 	}
 	
 	

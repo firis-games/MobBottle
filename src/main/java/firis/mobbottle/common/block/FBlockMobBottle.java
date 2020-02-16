@@ -25,9 +25,15 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class FBlockMobBottle extends BlockContainer {
 
+	//モブボトル当たり判定
 	public static final AxisAlignedBB MOB_BOTTLE_BLOCK_AABB = new AxisAlignedBB(
 			2.0D / 16.0D, 0.0D / 16.0D, 2.0D / 16.0D, 
 			14.0D / 16.0D, 16.0D / 16.0D, 14.0D / 16.0D);
+	
+	//プレート当たり判定
+	public static final AxisAlignedBB MOB_BOTTLE_PLATE_BLOCK_AABB = new AxisAlignedBB(
+			1.0D / 16.0D, 0.0D / 16.0D, 1.0D / 16.0D, 
+			15.0D / 16.0D, 1.0D / 16.0D, 15.0D / 16.0D);
 	
 	/**
 	 * コンストラクタ
@@ -95,6 +101,11 @@ public class FBlockMobBottle extends BlockContainer {
     @Override
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos)
     {
+    	//プレートタイプ
+    	if (FirisConfig.cfg_general_mob_bottle_collision_type == 1) {
+            return MOB_BOTTLE_PLATE_BLOCK_AABB;
+    	}
+    	//デフォルト
         return MOB_BOTTLE_BLOCK_AABB;
     }
 	

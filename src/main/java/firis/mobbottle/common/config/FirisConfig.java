@@ -72,6 +72,11 @@ public class FirisConfig {
 	 */
 	public static boolean cfg_general_enable_lmrfp_collaboration = false;
 	
+	/**
+	 * モブボトルの当たり判定タイプ
+	 */
+	public static int cfg_general_mob_bottle_collision_type = 0;
+	
 	
 	public static void init(File configFile) {
 		
@@ -113,6 +118,13 @@ public class FirisConfig {
 		//TileEntityItemStackRenderer設定
 		cfg_general_enable_mob_bottle_teisr = config.getBoolean("MobBottleInventoryRenderer", CATEGORY_GENERAL, 
 				true, "Set up custom drawings for inventory of mob bottles. If false, TileEntityItemStackRenderer will be invalidated.");
+		
+		//モブボトルの当たり判定設定
+		//0:モブボトル 1:プレート
+		cfg_general_mob_bottle_collision_type = config.getInt("MobBottleBlockCollisionType", CATEGORY_GENERAL, 
+				0, 0, 1, 
+				"Set the collision type of the mob bottle.0:bottle 1:plate");
+		
 		
 		//LMRFP連携
 		if (Loader.isModLoaded("lmreengaged")) {

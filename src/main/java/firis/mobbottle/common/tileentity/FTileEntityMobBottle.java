@@ -210,7 +210,11 @@ public class FTileEntityMobBottle extends AbstractTileEntity implements ITickabl
 		//初回のみ生成する
 		if (this.isMob && this.renderEntityLiving == null) {
 			this.renderEntityLiving = (EntityLiving) EntityLivingHelper.spawnEntityFromItemStack(getItemStackToMobBottle(), Minecraft.getMinecraft().world, 0, 0, 0);
-			this.renderEntityLiving.ticksExisted = 0;
+			if (this.renderEntityLiving != null) {
+				this.renderEntityLiving.ticksExisted = 0;
+			} else {
+				this.isMob = false;
+			}
 		}
 		return this.renderEntityLiving;
 		

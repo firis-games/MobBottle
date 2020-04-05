@@ -16,6 +16,7 @@ import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.MultiPartEntityPart;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
@@ -203,11 +204,21 @@ public class FItemMobBottle extends ItemBlock {
 	 */
 	public boolean createEntityItemStack(ItemStack stack, EnumHand hand, EntityPlayer player, Entity entity) {
 	
+		Entity checkEntity = entity;
+		
+		//マルチパーツMob対応
+		if (checkEntity instanceof MultiPartEntityPart) {
+			MultiPartEntityPart multiPartEntity = (MultiPartEntityPart)entity;
+			if (multiPartEntity.parent instanceof Entity) {
+				checkEntity = (Entity) multiPartEntity.parent;
+			}
+		}
+		
 		//EntityLivingチェック
-		if (!(entity instanceof EntityLiving)) {
+		if (!(checkEntity instanceof EntityLiving)) {
 			return false;
 		}
-		EntityLiving entityLiving = (EntityLiving) entity;
+		EntityLiving entityLiving = (EntityLiving) checkEntity;
 		
 		//NBTがある場合は何もしない
 		if (stack.hasTagCompound()) {
@@ -239,6 +250,9 @@ public class FItemMobBottle extends ItemBlock {
 	 * @return
 	 */
 	private boolean isMobCatch(EntityLiving living) {
+		
+		//強制的にすべてのMobを捕獲
+		if (FirisConfig.cfg_general_mob_bottle_capture_boss) return true;
 		
 		//パッケージとClassにbossという文字がある場合は対象外とする
 		if (living.getClass().toString().toLowerCase().indexOf("boss") != -1) {

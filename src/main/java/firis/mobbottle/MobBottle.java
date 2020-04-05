@@ -160,6 +160,10 @@ public class MobBottle
 		ModelLoader.setCustomModelResourceLocation(FirisItems.MOB_BOTTLE, 0,
 				new ModelResourceLocation(FirisItems.MOB_BOTTLE.getRegistryName(), "inventory"));
 		
+    	//モブボトル(空)
+		ModelLoader.setCustomModelResourceLocation(FirisItems.MOB_BOTTLE_EMPTY, 0,
+				new ModelResourceLocation(FirisItems.MOB_BOTTLE.getRegistryName(), "inventory"));
+		
     	//モブボトルTESR
     	ClientRegistry.bindTileEntitySpecialRenderer(FTileEntityMobBottle.class, new FTileMobBottleSpRenderer());
     	

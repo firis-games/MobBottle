@@ -77,6 +77,11 @@ public class FirisConfig {
 	 */
 	public static int cfg_general_mob_bottle_collision_type = 0;
 	
+	/**
+	 * モブボトルのボス捕獲判定
+	 */
+	public static boolean cfg_general_mob_bottle_capture_boss = false;
+	
 	
 	public static void init(File configFile) {
 		
@@ -132,6 +137,10 @@ public class FirisConfig {
 			cfg_general_enable_lmrfp_collaboration = config.getBoolean("Enable_LittleMaidReengagedFP_Collaboration", CATEGORY_GENERAL, 
 					false, "Enable with LittleMaidReengaged Firis's Patch collaboration.");			
 		}
+		
+		//ボスキャッチ判定
+		cfg_general_mob_bottle_capture_boss = config.getBoolean("MobBottleCaptureBoss", CATEGORY_GENERAL, 
+				false, "Enable the settings to capture bosses.");
 		
 		//--------------------------------------------------
 		

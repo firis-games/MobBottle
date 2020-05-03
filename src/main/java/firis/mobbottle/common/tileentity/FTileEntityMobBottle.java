@@ -332,18 +332,19 @@ public class FTileEntityMobBottle extends AbstractTileEntity implements ITickabl
 		
 		if (!FirisConfig.cfg_general_enable_lmrfp_collaboration) return;
 		
-		//Entityがメイドさんの場合のみ処理を行う
-		if (this.renderEntityLiving instanceof EntityLittleMaid) {
-			
-			//次モーションのIDを取得する
-			this.lmrfpMaidMotion = EnumMaidMotion.getMaidMotionFromId(lmrfpMaidMotion).next().getId();
-			
-			//Noneの場合は飛ばす
-			if (this.lmrfpMaidMotion == 0) this.lmrfpMaidMotion = 1;
-			
-			//同期
-			VanillaNetworkHelper.sendPacketTileEntity(this);
-		}
+		
+		//renderEntityLivingがClient側にしかないのでサーバー側は変数の更新のみ行う
+		//関係ないMobの場合も更新されるが特に影響はないので問題ないと判断する
+		
+		//次モーションのIDを取得する
+		this.lmrfpMaidMotion = EnumMaidMotion.getMaidMotionFromId(lmrfpMaidMotion).next().getId();
+		
+		//Noneの場合は飛ばす
+		if (this.lmrfpMaidMotion == 0) this.lmrfpMaidMotion = 1;
+		
+		//同期
+		VanillaNetworkHelper.sendPacketTileEntity(this);
+
 	}
 	
 	/**

@@ -7,8 +7,8 @@ import firis.mobbottle.MobBottle.FirisBlocks;
 import firis.mobbottle.common.config.FirisConfig;
 import firis.mobbottle.common.helpler.EntityLivingHelper;
 import firis.mobbottle.common.helpler.VanillaNetworkHelper;
-import net.blacklab.lmr.client.renderer.entity.RenderLittleMaid.MaidMotion;
 import net.blacklab.lmr.entity.littlemaid.EntityLittleMaid;
+import net.blacklab.lmr.util.EnumMaidMotion;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLiving;
@@ -336,7 +336,7 @@ public class FTileEntityMobBottle extends AbstractTileEntity implements ITickabl
 		if (this.renderEntityLiving instanceof EntityLittleMaid) {
 			
 			//次モーションのIDを取得する
-			this.lmrfpMaidMotion = MaidMotion.getMaidMotionFromId(lmrfpMaidMotion).next().getId();
+			this.lmrfpMaidMotion = EnumMaidMotion.getMaidMotionFromId(lmrfpMaidMotion).next().getId();
 			
 			//Noneの場合は飛ばす
 			if (this.lmrfpMaidMotion == 0) this.lmrfpMaidMotion = 1;
@@ -365,7 +365,7 @@ public class FTileEntityMobBottle extends AbstractTileEntity implements ITickabl
 			entityMaid.prevRotationYaw = 0.0F;
 			
 			//MaidMostion設定
-			MaidMotion motion = MaidMotion.getMaidMotionFromId(this.lmrfpMaidMotion);
+			EnumMaidMotion motion = EnumMaidMotion.getMaidMotionFromId(this.lmrfpMaidMotion);
 			entityMaid.setMaidMotion(motion);
 			
 		}

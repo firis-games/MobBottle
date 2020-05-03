@@ -168,4 +168,8 @@ public class FBlockMobBottle extends BlockContainer {
     	
         return false;
     }
+    
+    public Block setSoundType(SoundType sound) {
+        return super.setSoundType(sound);
+    }
 }

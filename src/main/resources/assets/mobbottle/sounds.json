@@ -1,0 +1,9 @@
+{
+    "bottle": {
+        "category": "block",
+        "sounds": [
+            "mobbottle:bottle01",
+            "mobbottle:bottle02"
+        ]
+    }
+}

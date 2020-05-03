@@ -12,10 +12,12 @@ import firis.mobbottle.common.item.FItemMobBottle;
 import firis.mobbottle.common.proxy.IProxy;
 import firis.mobbottle.common.tileentity.FTileEntityMobBottle;
 import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.event.RegistryEvent;
@@ -76,7 +78,7 @@ public class MobBottle
      */
     @ObjectHolder(MobBottle.MODID)
     public static class FirisBlocks {
-    	public final static Block MOB_BOTTLE = null;
+    	public final static FBlockMobBottle MOB_BOTTLE = null;
     	public final static Block MOB_BOTTLE_EMPTY = null;
     }
     
@@ -184,5 +186,29 @@ public class MobBottle
     			"Anti Dmage EntityItem", 
     			entityId, 
     			MobBottle.INSTANCE, 32, 5, true);
+    }
+    
+    /**
+     * サウンド登録イベント
+     * @param event
+     */
+    @SubscribeEvent
+    protected static void registerSoundEvent(RegistryEvent.Register<SoundEvent> event) {
+    
+    	//ボトルの破壊音イベント作成
+    	SoundEvent soundEventBottle = new SoundEvent(new ResourceLocation(MobBottle.MODID, "bottle"));
+    	soundEventBottle.setRegistryName(soundEventBottle.getSoundName());
+    	
+    	//サウンド登録
+    	event.getRegistry().register(soundEventBottle);
+    	
+    	//サウンドタイプ生成
+    	SoundType soundTypeBottle = new SoundType(0.5F, 1.0F, soundEventBottle, soundEventBottle, soundEventBottle, soundEventBottle, soundEventBottle);
+    	
+    	//モブボトルの破壊音設定
+    	//ブロック登録のタイミングの前にこの処理が動かないため
+    	//あとからSoundTypeを登録する
+    	FirisBlocks.MOB_BOTTLE.setSoundType(soundTypeBottle);
+    	
     }
 }

@@ -17,7 +17,7 @@ repositories {
     }
 }
 
-version = "0.5"
+version = "0.6"
 group = "firis.mobbottle" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "MobBottle"
 

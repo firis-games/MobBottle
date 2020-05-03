@@ -82,6 +82,11 @@ public class FirisConfig {
 	 */
 	public static boolean cfg_general_mob_bottle_capture_boss = false;
 	
+	/**
+	 * モブボトルのデフォルトサウンド
+	 */
+	public static boolean cfg_general_mob_bottle_glass_sound = true;
+	
 	
 	public static void init(File configFile) {
 		
@@ -141,6 +146,10 @@ public class FirisConfig {
 		//ボスキャッチ判定
 		cfg_general_mob_bottle_capture_boss = config.getBoolean("MobBottleCaptureBoss", CATEGORY_GENERAL, 
 				false, "Enable the settings to capture bosses.");
+		
+		//モブボトルのデフォルトサウンド(ガラス音)
+		cfg_general_mob_bottle_glass_sound = config.getBoolean("MobBottleGlassSound", CATEGORY_GENERAL, 
+				true, "Setting to make the mob bottle block sound the same as the glass block.");
 		
 		//--------------------------------------------------
 		

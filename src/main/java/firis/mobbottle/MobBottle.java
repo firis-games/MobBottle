@@ -195,6 +195,8 @@ public class MobBottle
     @SubscribeEvent
     protected static void registerSoundEvent(RegistryEvent.Register<SoundEvent> event) {
     
+    	if (FirisConfig.cfg_general_mob_bottle_glass_sound) return;
+    	
     	//ボトルの破壊音イベント作成
     	SoundEvent soundEventBottle = new SoundEvent(new ResourceLocation(MobBottle.MODID, "bottle"));
     	soundEventBottle.setRegistryName(soundEventBottle.getSoundName());

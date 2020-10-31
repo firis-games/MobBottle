@@ -141,7 +141,7 @@ public class MobBottle
     protected static void registerItems(RegistryEvent.Register<Item> event) {
     	
     	//モブボトル
-    	event.getRegistry().register(new FItemMobBottle()
+    	event.getRegistry().register(new FItemMobBottle(FirisBlocks.MOB_BOTTLE)
     			.setRegistryName(MODID, "mob_bottle")
     			.setUnlocalizedName("mob_bottle"));
     	

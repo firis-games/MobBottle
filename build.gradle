@@ -84,3 +84,14 @@ processResources {
 }
 
 [compileJava, compileTestJava].each{ it.options.encoding = 'UTF-8' }
+
+//Develop Mod
+task devJar(type: Jar) {
+    from sourceSets.main.java
+    from sourceSets.main.output
+    classifier = 'dev'
+}
+
+artifacts {
+    archives devJar
+} 

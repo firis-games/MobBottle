@@ -4,12 +4,12 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import firis.mobbottle.MobBottle.FirisBlocks;
 import firis.mobbottle.MobBottle.FirisItems;
 import firis.mobbottle.common.config.FirisConfig;
 import firis.mobbottle.common.entity.FEntityItemAntiDamage;
 import firis.mobbottle.common.helpler.EntityLivingHelper;
 import firis.mobbottle.common.tileentity.FTileEntityMobBottle;
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
@@ -19,6 +19,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.MultiPartEntityPart;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -39,8 +40,8 @@ public class FItemMobBottle extends ItemBlock {
 	/**
 	 * コンストラクタ
 	 */
-	public FItemMobBottle() {
-		super(FirisBlocks.MOB_BOTTLE);
+	public FItemMobBottle(Block block) {
+		super(block);
 		this.setMaxStackSize(16);
 	}
 	
@@ -230,7 +231,7 @@ public class FItemMobBottle extends ItemBlock {
 			return false;
 		}
 		
-		ItemStack bottleStack = new ItemStack(FirisItems.MOB_BOTTLE);
+		ItemStack bottleStack = new ItemStack(this.getItemMobBottle());
 		
 		//Mob用スポーン情報の書き込み
 		bottleStack = EntityLivingHelper.getItemStackFromEntity(entityLiving, bottleStack);
@@ -282,5 +283,13 @@ public class FItemMobBottle extends ItemBlock {
             }
 		}
     }
+	
+	/**
+	 * モブボトルのインスタンスを取得する
+	 * @return
+	 */
+	protected Item getItemMobBottle() {
+		return FirisItems.MOB_BOTTLE;
+	}
 	
 }

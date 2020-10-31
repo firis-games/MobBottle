@@ -255,8 +255,8 @@ public class FItemMobBottle extends ItemBlock {
 		//強制的にすべてのMobを捕獲
 		if (FirisConfig.cfg_general_mob_bottle_capture_boss) return true;
 		
-		//パッケージとClassにbossという文字がある場合は対象外とする
-		if (living.getClass().toString().toLowerCase().indexOf("boss") != -1) {
+		//ボスEntityでない
+		if (!living.isNonBoss()) {
 			return false;
 		}
 		return true;

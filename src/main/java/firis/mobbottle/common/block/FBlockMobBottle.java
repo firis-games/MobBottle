@@ -135,25 +135,25 @@ public class FBlockMobBottle extends BlockContainer {
     	//手持ちアイテムのIDを取得する
     	String handItemId = playerIn.getHeldItem(hand).getItem().getRegistryName().toString();
     	
-    	//金のシャベルを持っている場合にBottleCoverTypeを変更する
-    	if (FirisConfig.cfg_display_tool_cover_type.equals(handItemId)) {
+    	//金のツルハシを持っている場合にBottleCoverTypeを変更する
+    	if (handItemId.indexOf(FirisConfig.cfg_display_tool_cover_type) != -1) {
     		tileBottle.setNextBottleCoverType();
     		return true;
     		
    		//金のクワを持っている場合にサイズを大きくする
-    	} else if (FirisConfig.cfg_display_tool_scale_up.equals(handItemId)) {
+    	} else if (handItemId.indexOf(FirisConfig.cfg_display_tool_scale_up) != -1) {
     		//大きくなる
     		tileBottle.setChangeScale(false);
     		return true;
     		
    		//金のオノを持っている場合にサイズを小さくする
-    	} else if (FirisConfig.cfg_display_tool_scale_down.equals(handItemId)) {
+    	} else if (handItemId.indexOf(FirisConfig.cfg_display_tool_scale_down) != -1) {
     		//小さくなる
     		tileBottle.setChangeScale(true);
     		return true;
     		
-   		//金のツルハシを持っている場合にサイズを大きくする
-    	} else if (FirisConfig.cfg_display_tool_rotation.equals(handItemId)) {
+   		//金のシャベルを持っている場合にサイズを大きくする
+    	} else if (handItemId.indexOf(FirisConfig.cfg_display_tool_rotation) != -1) {
     		//回転させる
     		tileBottle.setRotationBottle();
     		return true;
@@ -169,6 +169,9 @@ public class FBlockMobBottle extends BlockContainer {
         return false;
     }
     
+    /**
+     * アクセス修飾子をpublicへ変更
+     */
     public Block setSoundType(SoundType sound) {
         return super.setSoundType(sound);
     }

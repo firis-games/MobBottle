@@ -68,7 +68,7 @@ public class FirisConfig {
 	
 	
 	/**
-	 * モブボトルのTileEntityItemStackRenderer設定
+	 * LMRFP連携フラグ
 	 */
 	public static boolean cfg_general_enable_lmrfp_collaboration = false;
 	
@@ -86,6 +86,11 @@ public class FirisConfig {
 	 * モブボトルのデフォルトサウンド
 	 */
 	public static boolean cfg_general_mob_bottle_glass_sound = true;
+	
+	/**
+	 * モブボトルの表示最大サイズ
+	 */
+	public static float cfg_general_mob_bottle_max_scale = 5.0F;
 	
 	
 	public static void init(File configFile) {
@@ -151,20 +156,25 @@ public class FirisConfig {
 		cfg_general_mob_bottle_glass_sound = config.getBoolean("MobBottleGlassSound", CATEGORY_GENERAL, 
 				true, "Setting to make the mob bottle block sound the same as the glass block.");
 		
+		//モブボトルの表示上限設定
+		cfg_general_mob_bottle_max_scale = config.getFloat("MobBottleMaxScale", CATEGORY_GENERAL, 
+				5.0F, 5.0F, 100.0F, 
+				"Warning: The larger the size, the higher the drawing load.　Sets the upper limit of the mob drawing size.");
+		
 		//--------------------------------------------------
 		
 		//Display
 		//Entityの標準倍率
 		cfg_display_entity_default_scale = config.getFloat("DefaultScale", CATEGORY_DISPLAY, 
-				0.45F, 0.1F, 5.0F, 
+				0.45F, 0.1F, cfg_general_mob_bottle_max_scale, 
 				"Set the standard display magnification of Entity.");
 		
 		cfg_display_entity_auto_resize_width = config.getFloat("AutoResizeWidth", CATEGORY_DISPLAY, 
-				0.8F, 0.0F, 5.0F, 
+				0.8F, 0.0F, cfg_general_mob_bottle_max_scale, 
 				"Set the width at which the entity automatically resizes.");
 
 		cfg_display_entity_auto_resize_height = config.getFloat("AutoRisizeHeight", CATEGORY_DISPLAY, 
-				1.9F, 0.0F, 5.0F, 
+				1.9F, 0.0F, cfg_general_mob_bottle_max_scale, 
 				"Set the width at height the entity automatically resizes.");
 		
 		//モブボトルのカバータイプ
@@ -174,7 +184,7 @@ public class FirisConfig {
 		
 		//1回あたりの拡大縮小サイズ
 		cfg_display_scale_up_down_value = config.getFloat("ChangeTools_ScaleUpDownValue", CATEGORY_DISPLAY, 
-				0.1F, 0.1F, 5.0F, 
+				0.1F, 0.1F, cfg_general_mob_bottle_max_scale, 
 				"Setting the scale value for one enlargement / reduction.");
 		
 		//拡大するツール設定

@@ -287,7 +287,7 @@ public class FTileEntityMobBottle extends AbstractTileEntity implements ITickabl
 	 * min:0.1F max:5.0F
 	 */
 	private void setScale(float scale) {
-		scale = Math.min(scale, 5.0F);
+		scale = Math.min(scale, FirisConfig.cfg_general_mob_bottle_max_scale);
 		scale = Math.max(scale, 0.1F);
 		this.scale = scale;
 	}

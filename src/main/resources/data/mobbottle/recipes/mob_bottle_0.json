@@ -1,0 +1,22 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"www",
+		"gdg",
+		"ggg"
+	],
+	"key": {
+		"g": {
+			"tag": "forge:glass"
+		},
+		"w": {
+			"tag": "minecraft:slabs"
+		},
+		"d": {
+			"tag": "forge:gems"
+		}
+	},
+	"result": {
+		"item": "mobbottle:mob_bottle"
+	}
+}

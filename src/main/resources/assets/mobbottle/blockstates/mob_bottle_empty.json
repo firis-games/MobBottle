@@ -1,5 +1,5 @@
 {
     "variants": {
-		"normal": { "model": "mobbottle:mob_bottle" }
+		"": { "model": "mobbottle:block/mob_bottle" }
     }
 }

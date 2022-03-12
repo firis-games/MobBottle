@@ -1,218 +1,170 @@
 package firis.mobbottle;
 
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import firis.mobbottle.client.teisr.FTileMobBottleItemStackRenderer;
-import firis.mobbottle.client.tesr.FTileMobBottleSpRenderer;
-import firis.mobbottle.common.block.FBlockMobBottle;
-import firis.mobbottle.common.block.FBlockMobBottleEmpty;
-import firis.mobbottle.common.config.FirisConfig;
-import firis.mobbottle.common.entity.FEntityItemAntiDamage;
-import firis.mobbottle.common.item.FItemMobBottle;
-import firis.mobbottle.common.proxy.IProxy;
-import firis.mobbottle.common.tileentity.FTileEntityMobBottle;
-import net.minecraft.block.Block;
-import net.minecraft.block.SoundType;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
-import net.minecraftforge.client.event.ModelRegistryEvent;
-import net.minecraftforge.client.model.ModelLoader;
+import firis.mobbottle.client.renderer.MobBottleBlockEntityRenderer;
+import firis.mobbottle.common.block.MobBottleBlock;
+import firis.mobbottle.common.block.MobBottleEmptyBlock;
+import firis.mobbottle.common.blockentity.MobBottleBlockEntity;
+import firis.mobbottle.common.item.MobBottleBlockItem;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.event.server.ServerStartingEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.Mod.Instance;
-import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.registry.EntityEntry;
-import net.minecraftforge.fml.common.registry.EntityRegistry;
-import net.minecraftforge.fml.common.registry.GameRegistry;
-import net.minecraftforge.fml.common.registry.GameRegistry.ObjectHolder;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
+import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
-@Mod(
-		modid = MobBottle.MODID, 
-		name = MobBottle.NAME,
-		version = MobBottle.VERSION,
-		dependencies = MobBottle.MOD_DEPENDENCIES,
-		acceptedMinecraftVersions = MobBottle.MOD_ACCEPTED_MINECRAFT_VERSIONS,
-		guiFactory = "firis.mobbottle.client.config.FirisConfigGuiFactory"
-)
-@EventBusSubscriber
+// The value here should match an entry in the META-INF/mods.toml file
+@Mod("mobbottle")
 public class MobBottle
 {
-    public static final String MODID = "mobbottle";
-    public static final String NAME = "Mob Bottle";
-    public static final String VERSION = "1.0.0";
-    public static final String MOD_DEPENDENCIES = "required-after:forge@[1.12.2-14.23.5.2768,);"
-    		+ "after:jei@[1.12.2-4.13.1.220,);"
-    		+ "after:lmreengaged@[9.3.0,)";
-    public static final String MOD_ACCEPTED_MINECRAFT_VERSIONS = "[1.12.2]";
-    
-    public static Logger logger;
-    
-    @Instance(MobBottle.MODID)
-    public static MobBottle INSTANCE;
-    
-    @SidedProxy(serverSide = "firis.mobbottle.common.proxy.CommonProxy", 
-    		clientSide = "firis.mobbottle.client.proxy.ClientProxy")
-    public static IProxy proxy;
-    
+	public static final String MODID = "mobbottle";
+	
+    // Directly reference a log4j logger.
+    public static final Logger LOGGER = LogManager.getLogger();
+	
     /**
-     * アイテムインスタンス保持用
+     * ブロック参照用定義
      */
-    @ObjectHolder(MobBottle.MODID)
-    public static class FirisItems {
-    	public final static Item MOB_BOTTLE = null;
-    	public final static Item MOB_BOTTLE_EMPTY = null;
+	public static class FirisBlocks {
+	    public static final RegistryObject<Block> MOB_BOTTLE = RegistryObject.of(new ResourceLocation(MODID, "mob_bottle"), ForgeRegistries.BLOCKS);
+	    public static final RegistryObject<Block> MOB_BOTTLE_EMPTY = RegistryObject.of(new ResourceLocation(MODID, "mob_bottle_empty"), ForgeRegistries.BLOCKS);		
+	}
+	/**
+     * アイテム参照用定義
+     */
+	public static class FirisItems {
+		public static final RegistryObject<Item> MOB_BOTTLE = RegistryObject.of(new ResourceLocation(MODID, "mob_bottle"), ForgeRegistries.ITEMS);
+		public static final RegistryObject<Item> MOB_BOTTLE_EMPTY = RegistryObject.of(new ResourceLocation(MODID, "mob_bottle"), ForgeRegistries.ITEMS);
+	}
+	/**
+	 * BlockEntityType参照用定義
+	 */
+	public static class FirisBlockEntityType {
+	    public static final RegistryObject<BlockEntityType<MobBottleBlockEntity>> BLOCK_ENTITY_TYPE = RegistryObject.of(new ResourceLocation(MODID, "mob_bottle_be"), ForgeRegistries.BLOCK_ENTITIES);
+	}
+	
+	/**
+	 * 各種イベント登録
+	 */
+    public MobBottle() {
+        // Register the setup method for modloading
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
+        // Register the enqueueIMC method for modloading
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
+        // Register the processIMC method for modloading
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
+
+        // Register ourselves for server and other game events we are interested in
+        MinecraftForge.EVENT_BUS.register(this);
+    }
+
+    private void setup(final FMLCommonSetupEvent event)
+    {
+    }
+
+    private void enqueueIMC(final InterModEnqueueEvent event)
+    {
+    }
+
+    private void processIMC(final InterModProcessEvent event)
+    {
     }
     
-    /**
-     * ブロックインスタンス保持用
-     */
-    @ObjectHolder(MobBottle.MODID)
-    public static class FirisBlocks {
-    	public final static FBlockMobBottle MOB_BOTTLE = null;
-    	public final static Block MOB_BOTTLE_EMPTY = null;
-    }
-    
-    /**
-     * FMLPreInitializationEvent
-     */
-    @EventHandler
-    public void preInit(FMLPreInitializationEvent event) {
-        logger = event.getModLog();
-        
-        logger.info(MobBottle.NAME + " Starting...");
-        
-        //設定読込
-        FirisConfig.init(event.getSuggestedConfigurationFile());
-        
-        //モブボトル
-        GameRegistry.registerTileEntity(FTileEntityMobBottle.class, 
-				new ResourceLocation(MobBottle.MODID, "firis_mob_bottle"));
-        
-    	//Event登録
-    	proxy.registerEvent();
-    }
-    
-    /**
-     * FMLInitializationEvent
-     */
-    @EventHandler
-    public void init(FMLInitializationEvent event) {
-    }
-    
-    /**
-     * FMLPostInitializationEvent
-     */
-    @EventHandler
-    public void postInit(FMLPostInitializationEvent event) {
-    }
-    
-    /**
-     * ブロックを登録するイベント
-     */
+    // You can use SubscribeEvent and let the Event Bus discover methods to call
     @SubscribeEvent
-    protected static void registerBlocks(RegistryEvent.Register<Block> event) {
+    public void onServerStarting(ServerStartingEvent event) {
+    }
+
+    // You can use EventBusSubscriber to automatically subscribe events on the contained class (this is subscribing to the MOD
+    // Event bus for receiving Registry Events)
+    @Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)
+    public static class RegistryEvents {
     	
-    	//モブボトル
-    	event.getRegistry().register(new FBlockMobBottle()
-    			.setRegistryName(MODID, "mob_bottle")
-    			.setUnlocalizedName("mob_bottle"));
-    	
-    	//モブボトル（空）
-    	event.getRegistry().register(new FBlockMobBottleEmpty()
-    			.setRegistryName(MODID, "mob_bottle_empty")
-    			.setUnlocalizedName("mob_bottle_empty"));
-    	
+    	/**
+    	 * ブロック登録イベント
+    	 */
+        @SubscribeEvent
+        public static void onBlocksRegistry(final RegistryEvent.Register<Block> event) {
+        	
+        	//モブボトル登録
+            event.getRegistry().register(new MobBottleBlock()
+            		.setRegistryName(MODID, "mob_bottle"));
+            
+            //空のモブボトル登録
+            event.getRegistry().register(new MobBottleEmptyBlock()
+            		.setRegistryName(MODID, "mob_bottle_empty"));
+            
+        }
+        
+        /**
+         * アイテム登録イベント
+         * @param event
+         */
+        @SubscribeEvent
+        public static void onItemsRegistry(final RegistryEvent.Register<Item> event) {
+        	
+        	//モブボトル
+        	event.getRegistry().register(new MobBottleBlockItem(FirisBlocks.MOB_BOTTLE.get())
+        			.setRegistryName(MODID, "mob_bottle"));
+        	
+        	//空のモブボトル
+        	event.getRegistry().register(new BlockItem(FirisBlocks.MOB_BOTTLE_EMPTY.get(), 
+        			(new Item.Properties()).stacksTo(64).tab(CreativeModeTab.TAB_TOOLS))
+        			.setRegistryName(MODID, "mob_bottle_empty"));
+        	
+        }
+        
+        /**
+    	 * BlockEntity登録イベント
+    	 */
+        @SubscribeEvent
+        public static void onBlockEntityType(final RegistryEvent.Register<BlockEntityType<?>> event) {
+        	
+        	//MobBottleBlockEntity登録
+        	event.getRegistry().register(BlockEntityType.Builder.of(
+        			MobBottleBlockEntity::new, 
+        			FirisBlocks.MOB_BOTTLE.get()
+        			).build(null).setRegistryName(MODID, "mob_bottle_be"));
+        	
+        }
     }
     
-    /**
-     * アイテムを登録するイベント
-     */
-    @SubscribeEvent
-    protected static void registerItems(RegistryEvent.Register<Item> event) {
+    @Mod.EventBusSubscriber(modid=MobBottle.MODID, value=Dist.CLIENT, bus=Mod.EventBusSubscriber.Bus.MOD)
+    public static class ClientRegistryEvents {
     	
-    	//モブボトル
-    	event.getRegistry().register(new FItemMobBottle(FirisBlocks.MOB_BOTTLE)
-    			.setRegistryName(MODID, "mob_bottle")
-    			.setUnlocalizedName("mob_bottle"));
-    	
-    	//モブボトル（空）
-    	event.getRegistry().register(new ItemBlock(FirisBlocks.MOB_BOTTLE_EMPTY)
-    			.setRegistryName(MODID, "mob_bottle_empty")
-    			.setUnlocalizedName("mob_bottle_empty"));
-    }
-    
-    /**
-     * モデル登録イベント
-     */
-    @SubscribeEvent
-    @SideOnly(Side.CLIENT)
-    protected static void registerModels(ModelRegistryEvent event) {
-    	
-    	//モブボトル
-		ModelLoader.setCustomModelResourceLocation(FirisItems.MOB_BOTTLE, 0,
-				new ModelResourceLocation(FirisItems.MOB_BOTTLE.getRegistryName(), "inventory"));
-		
-    	//モブボトル(空)
-		ModelLoader.setCustomModelResourceLocation(FirisItems.MOB_BOTTLE_EMPTY, 0,
-				new ModelResourceLocation(FirisItems.MOB_BOTTLE.getRegistryName(), "inventory"));
-		
-    	//モブボトルTESR
-    	ClientRegistry.bindTileEntitySpecialRenderer(FTileEntityMobBottle.class, new FTileMobBottleSpRenderer());
-    	
-    	if (FirisConfig.cfg_general_enable_mob_bottle_teisr) {
-	    	//モブボトルのTEISR登録
-	    	FirisItems.MOB_BOTTLE.setTileEntityItemStackRenderer(new FTileMobBottleItemStackRenderer());
+    	/**
+    	 * 描画系登録イベント
+    	 * @param event
+    	 */
+    	@SubscribeEvent
+    	public static void onRegisterRenderers(final EntityRenderersEvent.RegisterRenderers event) {
+    		
+    		//対象ブロックのテクスチャを透過する設定
+    		ItemBlockRenderTypes.setRenderLayer(FirisBlocks.MOB_BOTTLE.get(), RenderType.translucent());
+    		ItemBlockRenderTypes.setRenderLayer(FirisBlocks.MOB_BOTTLE_EMPTY.get(), RenderType.translucent());
+    		
+    		//BER登録
+    		event.registerBlockEntityRenderer(
+    				FirisBlockEntityType.BLOCK_ENTITY_TYPE.get(),
+    				MobBottleBlockEntityRenderer::new
+    		);
     	}
-    }
-    
-    /**
-     * Entity登録イベント
-     */
-    @SubscribeEvent
-    protected static void registerEntitys(RegistryEvent.Register<EntityEntry> event) {
-    	int entityId = 0;
-    	EntityRegistry.registerModEntity(new ResourceLocation(MobBottle.MODID, "entityitem_antidamage"), 
-    			FEntityItemAntiDamage.class, 
-    			"Anti Dmage EntityItem", 
-    			entityId, 
-    			MobBottle.INSTANCE, 32, 5, true);
-    }
-    
-    /**
-     * サウンド登録イベント
-     * @param event
-     */
-    @SubscribeEvent
-    protected static void registerSoundEvent(RegistryEvent.Register<SoundEvent> event) {
-    
-    	if (FirisConfig.cfg_general_mob_bottle_glass_sound) return;
-    	
-    	//ボトルの破壊音イベント作成
-    	SoundEvent soundEventBottle = new SoundEvent(new ResourceLocation(MobBottle.MODID, "bottle"));
-    	soundEventBottle.setRegistryName(soundEventBottle.getSoundName());
-    	
-    	//サウンド登録
-    	event.getRegistry().register(soundEventBottle);
-    	
-    	//サウンドタイプ生成
-    	SoundType soundTypeBottle = new SoundType(0.5F, 1.0F, soundEventBottle, soundEventBottle, soundEventBottle, soundEventBottle, soundEventBottle);
-    	
-    	//モブボトルの破壊音設定
-    	//ブロック登録のタイミングの前にこの処理が動かないため
-    	//あとからSoundTypeを登録する
-    	FirisBlocks.MOB_BOTTLE.setSoundType(soundTypeBottle);
-    	
     }
 }

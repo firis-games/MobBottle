@@ -1,0 +1,11 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"ingredients": [
+	{
+		"item": "mobbottle:mob_bottle_empty"
+	}
+	],
+	"result": {
+		"item": "mobbottle:mob_bottle"
+	}
+}

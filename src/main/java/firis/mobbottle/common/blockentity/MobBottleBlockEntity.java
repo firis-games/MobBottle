@@ -1,10 +1,14 @@
 package firis.mobbottle.common.blockentity;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import firis.mobbottle.MobBottle;
 import firis.mobbottle.MobBottle.FirisBlocks;
 import firis.mobbottle.common.helper.FirisEntityHelper;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
@@ -231,5 +235,35 @@ public class MobBottleBlockEntity extends BlockEntity {
 		return this.dataPositionY;
 	}
 	
-
+	
+	// BlockEntityWithoutLevelRenderer対応
+	//**************************************************
+	@OnlyIn(Dist.CLIENT)
+	private Map<CompoundTag, Entity> renderEntityCacheMap = new HashMap<>();
+	
+	/**
+	 * アイテム描画に必要な情報を設定する
+	 * @param stack
+	 * @param direction
+	 */
+	@SuppressWarnings("resource")
+	@OnlyIn(Dist.CLIENT)
+	public void setMobBottleDataFromBEWLR(ItemStack stack) {
+		this.dataItemStackTag = stack.getOrCreateTag();
+		this.dataDirection = Direction.EAST;
+		
+		//キャッシュに存在しない場合はgetRenderEntityでEntityを生成する
+		if (!this.renderEntityCacheMap.containsKey(this.dataItemStackTag)) {
+			this.renderEntityCache = null;
+			this.isRenderEntityCache = false;
+			this.renderEntityCacheMap.put(this.dataItemStackTag, this.getRenderEntity());
+		}
+		
+		//キャッシュからEntityを反映
+		this.renderEntityCache = this.renderEntityCacheMap.get(this.dataItemStackTag);
+		this.isRenderEntityCache = true;
+		this.setLevel(Minecraft.getInstance().level);
+		
+	}
+	
 }

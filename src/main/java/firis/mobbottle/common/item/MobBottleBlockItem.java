@@ -1,11 +1,15 @@
 package firis.mobbottle.common.item;
 
 import java.util.List;
+import java.util.function.Consumer;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import firis.mobbottle.client.renderer.MobBottleBlockEntityWithoutLevelRenderer;
 import firis.mobbottle.common.helper.FirisEntityHelper;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
@@ -24,6 +28,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraftforge.client.IItemRenderProperties;
 
 /**
  * モブボトルアイテム
@@ -145,5 +150,19 @@ public class MobBottleBlockItem extends BlockItem {
 		} else {
 			listComponent.add((new TranslatableComponent("info.mobbottle.mob_bottle")).withStyle(ChatFormatting.LIGHT_PURPLE));
 		}
+	}
+	
+	/**
+	 * BlockEntityWithoutLevelRenderer描画用定義
+	 */
+	@Override
+	public void initializeClient(@Nonnull Consumer<IItemRenderProperties> consumer) {
+		consumer.accept(new IItemRenderProperties() {
+			private final MobBottleBlockEntityWithoutLevelRenderer renderer = new MobBottleBlockEntityWithoutLevelRenderer();
+			@Override
+			public BlockEntityWithoutLevelRenderer getItemStackRenderer() {
+				return renderer;
+			}
+		});
 	}
 }

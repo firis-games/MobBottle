@@ -12,8 +12,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -131,10 +129,10 @@ public class MobBottleBlockItem extends BlockItem {
 	 */
 	@Override
 	public Component getName(ItemStack stack) {
-		Component component = new TranslatableComponent(this.getDescriptionId(stack));
+		Component component = Component.translatable(this.getDescriptionId(stack));
 		String mobName = stack.getOrCreateTag().getString("mob_name");
 		if (!"".equals(mobName)) {
-			component = new TextComponent(component.getString() + "  " + mobName + "");
+			component = Component.translatable(component.getString() + "  " + mobName + "");
 		}
 		return component;
 	}
@@ -146,9 +144,9 @@ public class MobBottleBlockItem extends BlockItem {
 	public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> listComponent, TooltipFlag tooltipFlag) {
 		String mobName = stack.getOrCreateTag().getString("mob_name");
 		if (!"".equals(mobName)) {
-			listComponent.add((new TranslatableComponent("info.mobbottle.mob_bottle_in", mobName)).withStyle(ChatFormatting.DARK_AQUA));
+			listComponent.add(Component.translatable("info.mobbottle.mob_bottle_in", mobName).withStyle(ChatFormatting.DARK_AQUA));
 		} else {
-			listComponent.add((new TranslatableComponent("info.mobbottle.mob_bottle")).withStyle(ChatFormatting.LIGHT_PURPLE));
+			listComponent.add(Component.translatable("info.mobbottle.mob_bottle").withStyle(ChatFormatting.LIGHT_PURPLE));
 		}
 	}
 	

@@ -72,37 +72,42 @@ public class MobBottleBlockEntity extends BlockEntity {
 	 */
 	public void setMobBottleBlock(Block block) {
 		this.dataBlock = block;
+		this.setChanged();
 	}
 	/**
 	 * モブボトルのエンティティのサイズ+
 	 */
 	public void setMobBottleScalePlus() {
 		this.dataScale = Math.min(this.dataScale + 0.1F, 2.0F);
+		this.setChanged();
 	}
 	/**
 	 * モブボトルのエンティティのサイズ-
 	 */
 	public void setMobBottleScaleMinus() {
 		this.dataScale = Math.max(this.dataScale - 0.1F, 0.05F);
+		this.setChanged();
 	}
 	/**
 	 * モブボトルの高さ+
 	 */
 	public void setMobBottlePositionPlus() {
 		this.dataPositionY = Math.min(this.dataPositionY + 1.0F / 16.0F, 1.0F);
+		this.setChanged();
 	}
 	/**
 	 * モブボトルの高さ-
 	 */
 	public void setMobBottlePositionMinus() {
 		this.dataPositionY = Math.max(this.dataPositionY - 1.0F / 16.0F, 0.0F);
+		this.setChanged();
 	}
 	/**
 	 * モブボトルの情報を取得
 	 */
 	public CompoundTag getCopyMobBottleTag() {
 		CompoundTag tag = new CompoundTag();
-		tag.putString("block", this.getDataBlock().getRegistryName().toString());
+		tag.putString("block", this.getDataBlockRegistryName());
 		tag.putFloat("scale", this.dataScale);
 		tag.putFloat("positiony", this.dataPositionY);
 		return tag;
@@ -115,6 +120,7 @@ public class MobBottleBlockEntity extends BlockEntity {
 		this.setDataBlockFromString(tag.getString("block"));
 		this.dataScale = tag.getFloat("scale");
 		this.dataPositionY = tag.getFloat("positiony");
+		this.setChanged();
 	}
     
 	@Override
@@ -137,7 +143,7 @@ public class MobBottleBlockEntity extends BlockEntity {
 		super.saveAdditional(tag);
 		tag.put("bottle", this.dataItemStackTag);
 		tag.putInt("dict", this.dataDirection.get3DDataValue());
-		tag.putString("block", this.getDataBlock().getRegistryName().toString());
+		tag.putString("block", this.getDataBlockRegistryName());
 		tag.putFloat("scale", this.dataScale);
 		tag.putFloat("positiony", this.dataPositionY);
 	}
@@ -263,7 +269,15 @@ public class MobBottleBlockEntity extends BlockEntity {
 		this.renderEntityCache = this.renderEntityCacheMap.get(this.dataItemStackTag);
 		this.isRenderEntityCache = true;
 		this.setLevel(Minecraft.getInstance().level);
+	
 		
 	}
 	
+	/**
+	 * Block.getRegistryNameの代替メソッド
+	 */
+	@SuppressWarnings("deprecation")
+	protected String getDataBlockRegistryName() {
+		return Registry.BLOCK.getKey(this.getDataBlock()).toString();
+	}
 }

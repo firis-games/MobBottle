@@ -19,7 +19,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -28,6 +27,7 @@ import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegisterEvent;
 import net.minecraftforge.registries.RegistryObject;
 
 // The value here should match an entry in the META-INF/mods.toml file
@@ -43,21 +43,21 @@ public class MobBottle
      * ブロック参照用定義
      */
 	public static class FirisBlocks {
-	    public static final RegistryObject<Block> MOB_BOTTLE = RegistryObject.of(new ResourceLocation(MODID, "mob_bottle"), ForgeRegistries.BLOCKS);
-	    public static final RegistryObject<Block> MOB_BOTTLE_EMPTY = RegistryObject.of(new ResourceLocation(MODID, "mob_bottle_empty"), ForgeRegistries.BLOCKS);		
+	    public static final RegistryObject<Block> MOB_BOTTLE = RegistryObject.create(new ResourceLocation(MODID, "mob_bottle"), ForgeRegistries.BLOCKS);
+	    public static final RegistryObject<Block> MOB_BOTTLE_EMPTY = RegistryObject.create(new ResourceLocation(MODID, "mob_bottle_empty"), ForgeRegistries.BLOCKS);		
 	}
 	/**
      * アイテム参照用定義
      */
 	public static class FirisItems {
-		public static final RegistryObject<Item> MOB_BOTTLE = RegistryObject.of(new ResourceLocation(MODID, "mob_bottle"), ForgeRegistries.ITEMS);
-		public static final RegistryObject<Item> MOB_BOTTLE_EMPTY = RegistryObject.of(new ResourceLocation(MODID, "mob_bottle"), ForgeRegistries.ITEMS);
+		public static final RegistryObject<Item> MOB_BOTTLE = RegistryObject.create(new ResourceLocation(MODID, "mob_bottle"), ForgeRegistries.ITEMS);
+		public static final RegistryObject<Item> MOB_BOTTLE_EMPTY = RegistryObject.create(new ResourceLocation(MODID, "mob_bottle"), ForgeRegistries.ITEMS);
 	}
 	/**
 	 * BlockEntityType参照用定義
 	 */
 	public static class FirisBlockEntityType {
-	    public static final RegistryObject<BlockEntityType<MobBottleBlockEntity>> BLOCK_ENTITY_TYPE = RegistryObject.of(new ResourceLocation(MODID, "mob_bottle_be"), ForgeRegistries.BLOCK_ENTITIES);
+	    public static final RegistryObject<BlockEntityType<MobBottleBlockEntity>> BLOCK_ENTITY_TYPE = RegistryObject.create(new ResourceLocation(MODID, "mob_bottle_be"), ForgeRegistries.BLOCK_ENTITIES);
 	}
 	
 	/**
@@ -101,16 +101,17 @@ public class MobBottle
     	 * ブロック登録イベント
     	 */
         @SubscribeEvent
-        public static void onBlocksRegistry(final RegistryEvent.Register<Block> event) {
-        	
-        	//モブボトル登録
-            event.getRegistry().register(new MobBottleBlock()
-            		.setRegistryName(MODID, "mob_bottle"));
-            
-            //空のモブボトル登録
-            event.getRegistry().register(new MobBottleEmptyBlock()
-            		.setRegistryName(MODID, "mob_bottle_empty"));
-            
+        public static void onBlocksRegistry(RegisterEvent event) {
+        	event.register(ForgeRegistries.Keys.BLOCKS,
+    			helper -> {
+    				//モブボトル登録
+    				helper.register(new ResourceLocation(MODID, "mob_bottle"), 
+    						new MobBottleBlock());
+    				//空のモブボトル登録
+    				helper.register(new ResourceLocation(MODID, "mob_bottle_empty"), 
+    						new MobBottleEmptyBlock());
+    			}
+        	);
         }
         
         /**
@@ -118,31 +119,36 @@ public class MobBottle
          * @param event
          */
         @SubscribeEvent
-        public static void onItemsRegistry(final RegistryEvent.Register<Item> event) {
-        	
-        	//モブボトル
-        	event.getRegistry().register(new MobBottleBlockItem(FirisBlocks.MOB_BOTTLE.get())
-        			.setRegistryName(MODID, "mob_bottle"));
-        	
-        	//空のモブボトル
-        	event.getRegistry().register(new BlockItem(FirisBlocks.MOB_BOTTLE_EMPTY.get(), 
-        			(new Item.Properties()).stacksTo(64).tab(CreativeModeTab.TAB_TOOLS))
-        			.setRegistryName(MODID, "mob_bottle_empty"));
-        	
+        public static void onItemsRegistry(RegisterEvent event) {
+        	event.register(ForgeRegistries.Keys.ITEMS,
+    			helper -> {
+    				//モブボトル登録
+    				helper.register(new ResourceLocation(MODID, "mob_bottle"), 
+    	        			new MobBottleBlockItem(FirisBlocks.MOB_BOTTLE.get()));
+    				
+    				//空のモブボトル登録
+    				helper.register(new ResourceLocation(MODID, "mob_bottle_empty"), 
+    	        			new BlockItem(FirisBlocks.MOB_BOTTLE_EMPTY.get(), 
+    	                			(new Item.Properties()).stacksTo(64).tab(CreativeModeTab.TAB_TOOLS)));
+    			}
+        	);
         }
         
         /**
     	 * BlockEntity登録イベント
     	 */
         @SubscribeEvent
-        public static void onBlockEntityType(final RegistryEvent.Register<BlockEntityType<?>> event) {
-        	
-        	//MobBottleBlockEntity登録
-        	event.getRegistry().register(BlockEntityType.Builder.of(
-        			MobBottleBlockEntity::new, 
-        			FirisBlocks.MOB_BOTTLE.get()
-        			).build(null).setRegistryName(MODID, "mob_bottle_be"));
-        	
+        public static void onBlockEntityType(RegisterEvent event) {
+        	event.register(ForgeRegistries.Keys.BLOCK_ENTITY_TYPES,
+    			helper -> {
+    				//モブボトル登録
+    				helper.register(new ResourceLocation(MODID, "mob_bottle_be"), 
+    	        			BlockEntityType.Builder.of(
+    	                			MobBottleBlockEntity::new, 
+    	                			FirisBlocks.MOB_BOTTLE.get()
+    	                			).build(null));
+    			}
+        	);
         }
     }
     

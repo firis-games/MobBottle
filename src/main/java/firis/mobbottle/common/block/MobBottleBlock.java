@@ -10,6 +10,7 @@ import firis.mobbottle.MobBottle.FirisItems;
 import firis.mobbottle.common.blockentity.MobBottleBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
@@ -127,6 +128,7 @@ public class MobBottleBlock extends BaseEntityBlock {
 	/**
 	 * ブロックを右クリック
 	 */
+	@SuppressWarnings("deprecation")
 	@Override
 	public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult blockHitResult) {
 		BlockEntity blockentity = level.getBlockEntity(pos);
@@ -135,7 +137,7 @@ public class MobBottleBlock extends BaseEntityBlock {
 			ItemStack stack = player.getItemInHand(hand);
 			if (stack.isEmpty()) return InteractionResult.SUCCESS;
 			Block block = Block.byItem(stack.getItem());
-			String itemId = stack.getItem().getRegistryName().toString();
+			String itemId = Registry.ITEM.getKey(stack.getItem()).toString();
 			
 			//モブボトルの場合
 			if (block.equals(FirisBlocks.MOB_BOTTLE.get())) {

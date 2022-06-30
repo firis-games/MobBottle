@@ -1,30 +1,28 @@
 package firis.mobbottle.client.renderer;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
+import com.mojang.blaze3d.matrix.MatrixStack;
 
 import firis.mobbottle.common.blockentity.MobBottleBlockEntity;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
-import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.core.Direction;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
+import net.minecraft.entity.Entity;
+import net.minecraft.util.Direction;
+import net.minecraft.util.math.vector.Quaternion;
+import net.minecraft.util.math.vector.Vector3f;
 
-public class MobBottleBlockEntityRenderer implements BlockEntityRenderer<MobBottleBlockEntity> {
+public class MobBottleBlockEntityRenderer extends TileEntityRenderer<MobBottleBlockEntity> {
 
-	protected BlockEntityRendererProvider.Context context;
-
-	public MobBottleBlockEntityRenderer(BlockEntityRendererProvider.Context context) {
-		this.context = context;
+	public MobBottleBlockEntityRenderer(TileEntityRendererDispatcher p_i226006_1_) {
+		super(p_i226006_1_);
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	@Override
-	public void render(MobBottleBlockEntity blockEntity, float p_112308_, PoseStack poseStack,
-			MultiBufferSource p_112310_, int p_112311_, int p_112312_) {
+	public void render(MobBottleBlockEntity blockEntity, float p_225616_2_, MatrixStack poseStack,
+			IRenderTypeBuffer p_112310_, int p_112311_, int p_112312_) {
 		
 		//Mobの描画
 		Entity entity = blockEntity.getRenderEntity();

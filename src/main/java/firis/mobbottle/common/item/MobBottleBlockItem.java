@@ -1,34 +1,33 @@
 package firis.mobbottle.common.item;
 
 import java.util.List;
-import java.util.function.Consumer;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import firis.mobbottle.client.renderer.MobBottleBlockEntityWithoutLevelRenderer;
 import firis.mobbottle.common.helper.FirisEntityHelper;
-import net.minecraft.ChatFormatting;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraftforge.client.IItemRenderProperties;
+import net.minecraft.block.Block;
+import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemUseContext;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Hand;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+
+
 
 /**
  * モブボトルアイテム
@@ -38,14 +37,15 @@ public class MobBottleBlockItem extends BlockItem {
 	public MobBottleBlockItem(Block block) {
 		super(block, (new Item.Properties())
 				.stacksTo(1)
-				.tab(CreativeModeTab.TAB_TOOLS));
+				.tab(ItemGroup.TAB_TOOLS)
+				.setISTER(() -> MobBottleBlockEntityWithoutLevelRenderer::new));
 	}
 	
 	/**
 	 * アイテムを使用する
 	 */
 	@Override
-	public InteractionResult useOn(UseOnContext context) {
+	public ActionResultType useOn(ItemUseContext context) {
 		
 		//スニーク中
 		if (!context.getPlayer().isShiftKeyDown()) {
@@ -55,14 +55,14 @@ public class MobBottleBlockItem extends BlockItem {
 				if (entity != null) {
 					//スポーン
 					entity.moveTo(context.getClickLocation());
-					if (context.getLevel() instanceof ServerLevel) {
-						((ServerLevel)context.getLevel()).addFreshEntityWithPassengers(entity);
+					if (context.getLevel() instanceof ServerWorld) {
+						((ServerWorld)context.getLevel()).addFreshEntityWithPassengers(entity);
 					}
 					//Tag情報を初期化
 					stack.setTag(null);
 				}
 			}
-			return InteractionResult.SUCCESS;
+			return ActionResultType.SUCCESS;
 		}
 		
 		//ブロック設置処理
@@ -73,16 +73,16 @@ public class MobBottleBlockItem extends BlockItem {
 	 * Entityを右クリック
 	 */
 	@Override
-	public InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity livingEntity, InteractionHand hand) {
+	public ActionResultType interactLivingEntity(ItemStack stack, PlayerEntity player, LivingEntity livingEntity, Hand hand) {
 		//モブ情報取得
 		catchMobBottle(player, livingEntity, hand);
-		return InteractionResult.SUCCESS;
+		return ActionResultType.SUCCESS;
 	}
 	
 	@Override
-	public boolean onLeftClickEntity(ItemStack stack, Player player, Entity entity) {
+	public boolean onLeftClickEntity(ItemStack stack, PlayerEntity player, Entity entity) {
 		//モブ情報取得
-		catchMobBottle(player, entity, InteractionHand.MAIN_HAND);
+		catchMobBottle(player, entity, Hand.MAIN_HAND);
 		return true;
 	}
 	
@@ -90,22 +90,22 @@ public class MobBottleBlockItem extends BlockItem {
 	 * モブを捕獲する
 	 * @return
 	 */
-	protected boolean catchMobBottle(Player player, Entity entity, InteractionHand hand) {
+	protected boolean catchMobBottle(PlayerEntity player, Entity entity, Hand hand) {
 		ItemStack handStack = player.getItemInHand(hand);
 		
 		if (!this.isCatchMobBottle(handStack)) return false;
 
 		//モブ情報取得
-		CompoundTag mobTag = FirisEntityHelper.createTagFromEntity(entity);
+		CompoundNBT mobTag = FirisEntityHelper.createTagFromEntity(entity);
 		String mobName = entity.getDisplayName().getString();
 		
 		//ItemStackへモブ情報を設定
-		CompoundTag stackTag = handStack.getOrCreateTag();
+		CompoundNBT stackTag = handStack.getOrCreateTag();
 		stackTag.put("mob", mobTag);
 		stackTag.putString("mob_name", mobName);
 
 		//モブを消去
-		entity.remove(Entity.RemovalReason.UNLOADED_WITH_PLAYER);
+		entity.remove(true);
 		return true;
 	}
 	
@@ -130,11 +130,11 @@ public class MobBottleBlockItem extends BlockItem {
 	 * アイテム名
 	 */
 	@Override
-	public Component getName(ItemStack stack) {
-		Component component = new TranslatableComponent(this.getDescriptionId(stack));
+	public ITextComponent getName(ItemStack stack) {
+		ITextComponent component = new TranslationTextComponent(this.getDescriptionId(stack));
 		String mobName = stack.getOrCreateTag().getString("mob_name");
 		if (!"".equals(mobName)) {
-			component = new TextComponent(component.getString() + "  " + mobName + "");
+			component = new TranslationTextComponent(component.getString() + "  " + mobName + "");
 		}
 		return component;
 	}
@@ -143,26 +143,14 @@ public class MobBottleBlockItem extends BlockItem {
 	 * info表示追加
 	 */
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> listComponent, TooltipFlag tooltipFlag) {
+	@OnlyIn(Dist.CLIENT)
+	public void appendHoverText(ItemStack stack, @Nullable World level, List<ITextComponent> listComponent, ITooltipFlag tooltipFlag) {
 		String mobName = stack.getOrCreateTag().getString("mob_name");
 		if (!"".equals(mobName)) {
-			listComponent.add((new TranslatableComponent("info.mobbottle.mob_bottle_in", mobName)).withStyle(ChatFormatting.DARK_AQUA));
+			listComponent.add((new TranslationTextComponent("info.mobbottle.mob_bottle_in", mobName)).withStyle(TextFormatting.DARK_AQUA));
 		} else {
-			listComponent.add((new TranslatableComponent("info.mobbottle.mob_bottle")).withStyle(ChatFormatting.LIGHT_PURPLE));
+			listComponent.add((new TranslationTextComponent("info.mobbottle.mob_bottle")).withStyle(TextFormatting.LIGHT_PURPLE));
 		}
 	}
 	
-	/**
-	 * BlockEntityWithoutLevelRenderer描画用定義
-	 */
-	@Override
-	public void initializeClient(@Nonnull Consumer<IItemRenderProperties> consumer) {
-		consumer.accept(new IItemRenderProperties() {
-			private final MobBottleBlockEntityWithoutLevelRenderer renderer = new MobBottleBlockEntityWithoutLevelRenderer();
-			@Override
-			public BlockEntityWithoutLevelRenderer getItemStackRenderer() {
-				return renderer;
-			}
-		});
-	}
 }

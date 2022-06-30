@@ -3,34 +3,33 @@ package firis.mobbottle.common.blockentity;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.checkerframework.checker.nullness.qual.NonNull;
+import javax.annotation.Nonnull;
 
 import firis.mobbottle.MobBottle;
 import firis.mobbottle.MobBottle.FirisBlocks;
 import firis.mobbottle.common.helper.FirisEntityHelper;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.core.Registry;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.entity.Entity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.play.server.SUpdateTileEntityPacket;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.registry.Registry;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class MobBottleBlockEntity extends BlockEntity {
+
+
+public class MobBottleBlockEntity extends TileEntity {
 
 	/**
 	 * ItemStackTag情報
 	 */
-	protected CompoundTag dataItemStackTag = new CompoundTag();
+	protected CompoundNBT dataItemStackTag = new CompoundNBT();
 	
 	/**
 	 * ブロックの向き
@@ -52,8 +51,8 @@ public class MobBottleBlockEntity extends BlockEntity {
 	 */
 	protected float dataPositionY = 0.0F / 16.0F;
 	
-	public MobBottleBlockEntity(BlockPos p_155229_, BlockState p_155230_) {
-		super(MobBottle.FirisBlockEntityType.BLOCK_ENTITY_TYPE.get(), p_155229_, p_155230_);
+	public MobBottleBlockEntity() {
+		super(MobBottle.FirisBlockEntityType.BLOCK_ENTITY_TYPE);
 	}
 	
 	/**
@@ -100,8 +99,8 @@ public class MobBottleBlockEntity extends BlockEntity {
 	/**
 	 * モブボトルの情報を取得
 	 */
-	public CompoundTag getCopyMobBottleTag() {
-		CompoundTag tag = new CompoundTag();
+	public CompoundNBT getCopyMobBottleTag() {
+		CompoundNBT tag = new CompoundNBT();
 		tag.putString("block", this.getDataBlock().getRegistryName().toString());
 		tag.putFloat("scale", this.dataScale);
 		tag.putFloat("positiony", this.dataPositionY);
@@ -111,51 +110,52 @@ public class MobBottleBlockEntity extends BlockEntity {
 	/**
 	 * モブボトルの情報を設定
 	 */
-	public void setCopyMobBottleTag(CompoundTag tag) {
+	public void setCopyMobBottleTag(CompoundNBT tag) {
 		this.setDataBlockFromString(tag.getString("block"));
 		this.dataScale = tag.getFloat("scale");
 		this.dataPositionY = tag.getFloat("positiony");
 	}
     
 	@Override
-    public CompoundTag getUpdateTag() {
+    public CompoundNBT getUpdateTag() {
 		return this.serializeNBT();
     }
 	
 	@Override
-    public void handleUpdateTag(CompoundTag tag) {
+    public void handleUpdateTag(BlockState state, CompoundNBT tag) {
         this.deserializeNBT(tag);
     }
 	
 	@Override
-	public Packet<ClientGamePacketListener> getUpdatePacket() {
-		return ClientboundBlockEntityDataPacket.create(this);
+	public SUpdateTileEntityPacket getUpdatePacket() {
+		return new SUpdateTileEntityPacket(this.worldPosition, 0, this.getUpdateTag());
 	}
 	
 	@Override
-	protected void saveAdditional(CompoundTag tag) {
-		super.saveAdditional(tag);
+	public CompoundNBT save(CompoundNBT tag) {
+		super.save(tag);
 		tag.put("bottle", this.dataItemStackTag);
 		tag.putInt("dict", this.dataDirection.get3DDataValue());
 		tag.putString("block", this.getDataBlock().getRegistryName().toString());
 		tag.putFloat("scale", this.dataScale);
 		tag.putFloat("positiony", this.dataPositionY);
+		return tag;
 	}
 	
 	@Override
-	public void load(CompoundTag tag) {
-		super.load(tag);
-		this.dataItemStackTag = tag.contains("bottle") ? tag.getCompound("bottle") : new CompoundTag();
+	public void load(BlockState state, CompoundNBT tag) {
+		super.load(state, tag);
+		this.dataItemStackTag = tag.contains("bottle") ? tag.getCompound("bottle") : new CompoundNBT();
 		this.dataDirection = Direction.from3DDataValue(tag.getInt("dict"));
 		this.setDataBlockFromString(tag.getString("block"));
 		this.dataScale = tag.getFloat("scale");
 		this.dataPositionY = tag.getFloat("positiony");
 	}
 	
-	@NonNull
+	@Nonnull
 	protected Block getDataBlock() {
 		if (this.dataBlock == null) {
-			this.dataBlock = FirisBlocks.MOB_BOTTLE_EMPTY.get();
+			this.dataBlock = FirisBlocks.MOB_BOTTLE_EMPTY;
 		}
 		return this.dataBlock;
 	}
@@ -168,7 +168,6 @@ public class MobBottleBlockEntity extends BlockEntity {
 	/**
 	 * Drop用ItemStackTagを設定
 	 */
-	@Override
 	public void saveToItem(ItemStack stack) {
 		//ItemStackがMob情報を持っている場合はTagを設定する
 		if (this.dataItemStackTag.contains("mob")) {
@@ -192,7 +191,7 @@ public class MobBottleBlockEntity extends BlockEntity {
 	@OnlyIn(Dist.CLIENT)
 	public Entity getRenderEntity() {
 		if (this.renderEntityCache == null && !this.isRenderEntityCache) {
-			CompoundTag tag = this.dataItemStackTag.contains("mob") ? this.dataItemStackTag.getCompound("mob") : null;
+			CompoundNBT tag = this.dataItemStackTag.contains("mob") ? this.dataItemStackTag.getCompound("mob") : null;
 			this.renderEntityCache = FirisEntityHelper.createEntityFromTag(tag, this.level);
 			this.isRenderEntityCache = true;
 		}
@@ -239,14 +238,13 @@ public class MobBottleBlockEntity extends BlockEntity {
 	// BlockEntityWithoutLevelRenderer対応
 	//**************************************************
 	@OnlyIn(Dist.CLIENT)
-	private Map<CompoundTag, Entity> renderEntityCacheMap = new HashMap<>();
+	private Map<CompoundNBT, Entity> renderEntityCacheMap = new HashMap<>();
 	
 	/**
 	 * アイテム描画に必要な情報を設定する
 	 * @param stack
 	 * @param direction
 	 */
-	@SuppressWarnings("resource")
 	@OnlyIn(Dist.CLIENT)
 	public void setMobBottleDataFromBEWLR(ItemStack stack) {
 		this.dataItemStackTag = stack.getOrCreateTag();
@@ -262,8 +260,7 @@ public class MobBottleBlockEntity extends BlockEntity {
 		//キャッシュからEntityを反映
 		this.renderEntityCache = this.renderEntityCacheMap.get(this.dataItemStackTag);
 		this.isRenderEntityCache = true;
-		this.setLevel(Minecraft.getInstance().level);
-		
+		this.level = Minecraft.getInstance().level;
 	}
 	
 }

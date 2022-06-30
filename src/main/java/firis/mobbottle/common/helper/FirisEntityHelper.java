@@ -2,10 +2,10 @@ package firis.mobbottle.common.helper;
 
 import java.util.Optional;
 
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.level.Level;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.world.World;
 
 public class FirisEntityHelper {
 
@@ -14,7 +14,7 @@ public class FirisEntityHelper {
 	 * @param tag
 	 * @return
 	 */
-	public static Entity createEntityFromTag(CompoundTag tag, Level level) {
+	public static Entity createEntityFromTag(CompoundNBT tag, World level) {
 		
 		Entity entity = null;
 		try {
@@ -35,9 +35,9 @@ public class FirisEntityHelper {
 	 * @param entity
 	 * @return
 	 */
-	public static CompoundTag createTagFromEntity(Entity entity) {
+	public static CompoundNBT createTagFromEntity(Entity entity) {
 		
-		CompoundTag tag = new CompoundTag();		
+		CompoundNBT tag = new CompoundNBT();		
 		entity.save(tag);
 		
 		return tag;

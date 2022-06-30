@@ -1,50 +1,48 @@
 package firis.mobbottle.common.block;
 
-import java.util.Optional;
-
 import javax.annotation.Nullable;
 
-import firis.mobbottle.MobBottle.FirisBlockEntityType;
 import firis.mobbottle.MobBottle.FirisBlocks;
 import firis.mobbottle.MobBottle.FirisItems;
 import firis.mobbottle.common.blockentity.MobBottleBlockEntity;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.StringTag;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseEntityBlock;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.block.AbstractBlock;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.ContainerBlock;
+import net.minecraft.block.SoundType;
+import net.minecraft.block.material.Material;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
+import net.minecraft.nbt.StringNBT;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
+import net.minecraft.world.IBlockReader;
+import net.minecraft.world.World;
 
-public class MobBottleBlock extends BaseEntityBlock {
+
+public class MobBottleBlock extends ContainerBlock {
 
 	//モブボトル当たり判定
-	protected static final VoxelShape VS_MOB_BOTTLE_BLOCK = Shapes.create(
-			new AABB(2.0D / 16.0D, 0.0D / 16.0D, 2.0D / 16.0D, 
+	protected static final VoxelShape VS_MOB_BOTTLE_BLOCK = VoxelShapes.create(
+			new AxisAlignedBB(2.0D / 16.0D, 0.0D / 16.0D, 2.0D / 16.0D, 
 					14.0D / 16.0D, 16.0D / 16.0D, 14.0D / 16.0D));
 		
 	public MobBottleBlock() {
-		super((BlockBehaviour.Properties.of(Material.PISTON)).sound(SoundType.GLASS));
+		super((AbstractBlock.Properties.of(Material.PISTON)).sound(SoundType.GLASS));
 		
 	}
 	
@@ -52,7 +50,7 @@ public class MobBottleBlock extends BaseEntityBlock {
 	 * ブロック当たり判定
 	 */
 	@Override
-	public VoxelShape getShape(BlockState p_48816_, BlockGetter p_48817_, BlockPos p_48818_, CollisionContext p_48819_) {
+	public VoxelShape getShape(BlockState p_48816_, IBlockReader p_48817_, BlockPos p_48818_, ISelectionContext p_48819_) {
 		return VS_MOB_BOTTLE_BLOCK;
 	}
 	
@@ -60,7 +58,7 @@ public class MobBottleBlock extends BaseEntityBlock {
 	 * FullBlockでない場合は1.0Fを返却する
 	 */
 	@Override
-	public float getShadeBrightness(BlockState p_48731_, BlockGetter p_48732_, BlockPos p_48733_) {
+	public float getShadeBrightness(BlockState p_48731_, IBlockReader p_48732_, BlockPos p_48733_) {
 		return 1.0F;
 	}
 
@@ -68,7 +66,7 @@ public class MobBottleBlock extends BaseEntityBlock {
 	 * 空の光を透過する
 	 */
 	@Override
-	public boolean propagatesSkylightDown(BlockState p_48740_, BlockGetter p_48741_, BlockPos p_48742_) {
+	public boolean propagatesSkylightDown(BlockState p_48740_, IBlockReader p_48741_, BlockPos p_48742_) {
 		return true;
 	}
 	
@@ -76,24 +74,24 @@ public class MobBottleBlock extends BaseEntityBlock {
 	 * 描画用当たり判定
 	 */
 	@Override
-	public VoxelShape getVisualShape(BlockState p_48735_, BlockGetter p_48736_, BlockPos p_48737_, CollisionContext p_48738_) {
-		return Shapes.empty();
+	public VoxelShape getVisualShape(BlockState p_48735_, IBlockReader p_48736_, BlockPos p_48737_, ISelectionContext p_48738_) {
+		return VoxelShapes.empty();
 	}
 
 	@Override
-	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-		return new MobBottleBlockEntity(pos, state);
+	public TileEntity newBlockEntity(IBlockReader p_196283_1_) {
+		return new MobBottleBlockEntity();
 	}
 	
 	/**
 	 * ブロック設置時にアイテム情報を設定
 	 */
 	@Override
-	public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
-		Optional<MobBottleBlockEntity> optBlockEntity = level.getBlockEntity(pos, FirisBlockEntityType.BLOCK_ENTITY_TYPE.get());
-		if (!optBlockEntity.isEmpty()) {
+	public void setPlacedBy(World level, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack stack) {
+		TileEntity optBlockEntity = level.getBlockEntity(pos);
+		if (optBlockEntity instanceof MobBottleBlockEntity) {
 			//ブロック描画情報を設定
-			optBlockEntity.get().setMobBottleData(stack, getHorizontalDirection(entity));
+			((MobBottleBlockEntity) optBlockEntity).setMobBottleData(stack, getHorizontalDirection(entity));
 		}
 	}
 	
@@ -101,12 +99,12 @@ public class MobBottleBlock extends BaseEntityBlock {
 	 * ブロック破壊時にブロック情報を設定
 	 */
 	@Override
-	public void playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
-		BlockEntity blockentity = level.getBlockEntity(pos);
+	public void playerWillDestroy(World level, BlockPos pos, BlockState state, PlayerEntity player) {
+		TileEntity blockentity = level.getBlockEntity(pos);
 		if (blockentity instanceof MobBottleBlockEntity) {
 			MobBottleBlockEntity mobBottleBlockEntity = (MobBottleBlockEntity)blockentity;
 			if (!level.isClientSide) {
-				ItemStack itemstack = new ItemStack(FirisItems.MOB_BOTTLE.get());
+				ItemStack itemstack = new ItemStack(FirisItems.MOB_BOTTLE);
 				mobBottleBlockEntity.saveToItem(itemstack);
 
 				ItemEntity itementity = new ItemEntity(level, (double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D, itemstack);
@@ -127,19 +125,20 @@ public class MobBottleBlock extends BaseEntityBlock {
 	/**
 	 * ブロックを右クリック
 	 */
+	@SuppressWarnings("deprecation")
 	@Override
-	public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult blockHitResult) {
-		BlockEntity blockentity = level.getBlockEntity(pos);
+	public ActionResultType use(BlockState state, World level, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult blockHitResult) {
+		TileEntity blockentity = level.getBlockEntity(pos);
 		if (blockentity instanceof MobBottleBlockEntity) {
 			MobBottleBlockEntity mbBlockEntity = (MobBottleBlockEntity) blockentity;
 			ItemStack stack = player.getItemInHand(hand);
-			if (stack.isEmpty()) return InteractionResult.SUCCESS;
+			if (stack.isEmpty()) return ActionResultType.SUCCESS;
 			Block block = Block.byItem(stack.getItem());
 			String itemId = stack.getItem().getRegistryName().toString();
 			
 			//モブボトルの場合
-			if (block.equals(FirisBlocks.MOB_BOTTLE.get())) {
-				mbBlockEntity.setMobBottleBlock(FirisBlocks.MOB_BOTTLE_EMPTY.get());
+			if (block.equals(FirisBlocks.MOB_BOTTLE)) {
+				mbBlockEntity.setMobBottleBlock(FirisBlocks.MOB_BOTTLE_EMPTY);
 			}
 			else if (itemId.endsWith("_sword")) {
 				//外装ケースを消す
@@ -170,16 +169,16 @@ public class MobBottleBlock extends BaseEntityBlock {
 			else if (itemId.endsWith("minecraft:writable_book")) {
 				
 				//モブボトルのコピー情報
-				CompoundTag mbTag = mbBlockEntity.getCopyMobBottleTag();
+				CompoundNBT mbTag = mbBlockEntity.getCopyMobBottleTag();
 				
 				//ペン付き本の初期設定
 				ItemStack bookStack = new ItemStack(Items.WRITTEN_BOOK);
 				bookStack.getOrCreateTag();
-				bookStack.addTagElement("author", StringTag.valueOf(player.getName().getString()));
-				bookStack.addTagElement("filtered_title", StringTag.valueOf("MobBottle"));
-				bookStack.addTagElement("title", StringTag.valueOf("MobBottle[" + pos.toShortString() + "]"));
-				ListTag listtag = new ListTag();
-				listtag.add(StringTag.valueOf(mbTag.toString()));
+				bookStack.addTagElement("author", StringNBT.valueOf(player.getName().getString()));
+				bookStack.addTagElement("filtered_title", StringNBT.valueOf("MobBottle"));
+				bookStack.addTagElement("title", StringNBT.valueOf("MobBottle[" + pos.toShortString() + "]"));
+				ListNBT listtag = new ListNBT();
+				listtag.add(StringNBT.valueOf(mbTag.toString()));
 				bookStack.addTagElement("pages", listtag);
 				
 				//モブボトル情報を設定
@@ -188,16 +187,12 @@ public class MobBottleBlock extends BaseEntityBlock {
 				player.setItemInHand(hand, bookStack);
 			}
 			else if (itemId.endsWith("minecraft:written_book")) {
-				CompoundTag mbTag = stack.getTagElement("mobbottle");
+				CompoundNBT mbTag = stack.getTagElement("mobbottle");
 				if (mbTag != null) {
 					mbBlockEntity.setCopyMobBottleTag(mbTag);
 				}
 			}
-			
-			
-			//各機能を実装
-			
 		}
-		return InteractionResult.SUCCESS;
+		return ActionResultType.SUCCESS;
 	}
 }

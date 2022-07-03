@@ -43,21 +43,21 @@ public class MobBottle
      * ブロック参照用定義
      */
 	public static class FirisBlocks {
-	    public static final RegistryObject<Block> MOB_BOTTLE = RegistryObject.of(new ResourceLocation(MODID, "mob_bottle"), ForgeRegistries.BLOCKS);
-	    public static final RegistryObject<Block> MOB_BOTTLE_EMPTY = RegistryObject.of(new ResourceLocation(MODID, "mob_bottle_empty"), ForgeRegistries.BLOCKS);		
+	    public static final RegistryObject<Block> MOB_BOTTLE = RegistryObject.create(new ResourceLocation(MODID, "mob_bottle"), ForgeRegistries.BLOCKS);
+	    public static final RegistryObject<Block> MOB_BOTTLE_EMPTY = RegistryObject.create(new ResourceLocation(MODID, "mob_bottle_empty"), ForgeRegistries.BLOCKS);		
 	}
 	/**
      * アイテム参照用定義
      */
 	public static class FirisItems {
-		public static final RegistryObject<Item> MOB_BOTTLE = RegistryObject.of(new ResourceLocation(MODID, "mob_bottle"), ForgeRegistries.ITEMS);
-		public static final RegistryObject<Item> MOB_BOTTLE_EMPTY = RegistryObject.of(new ResourceLocation(MODID, "mob_bottle"), ForgeRegistries.ITEMS);
+		public static final RegistryObject<Item> MOB_BOTTLE = RegistryObject.create(new ResourceLocation(MODID, "mob_bottle"), ForgeRegistries.ITEMS);
+		public static final RegistryObject<Item> MOB_BOTTLE_EMPTY = RegistryObject.create(new ResourceLocation(MODID, "mob_bottle"), ForgeRegistries.ITEMS);
 	}
 	/**
 	 * BlockEntityType参照用定義
 	 */
 	public static class FirisBlockEntityType {
-	    public static final RegistryObject<BlockEntityType<MobBottleBlockEntity>> BLOCK_ENTITY_TYPE = RegistryObject.of(new ResourceLocation(MODID, "mob_bottle_be"), ForgeRegistries.BLOCK_ENTITIES);
+	    public static final RegistryObject<BlockEntityType<MobBottleBlockEntity>> BLOCK_ENTITY_TYPE = RegistryObject.create(new ResourceLocation(MODID, "mob_bottle_be"), ForgeRegistries.BLOCK_ENTITIES);
 	}
 	
 	/**

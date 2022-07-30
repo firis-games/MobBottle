@@ -193,10 +193,10 @@ public class MobBottleBlock extends BaseEntityBlock {
 					mbBlockEntity.setCopyMobBottleTag(mbTag);
 				}
 			}
-			
-			
-			//各機能を実装
-			
+			else if (itemId.endsWith("minecraft:stick")) {
+				//人形モードを設定
+				mbBlockEntity.setFigureMode();
+			}			
 		}
 		return InteractionResult.SUCCESS;
 	}

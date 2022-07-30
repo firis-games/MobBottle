@@ -20,6 +20,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
@@ -96,6 +97,15 @@ public class MobBottleBlockEntity extends BlockEntity {
 	 */
 	public void setMobBottlePositionMinus() {
 		this.dataPositionY = Math.max(this.dataPositionY - 1.0F / 16.0F, 0.0F);
+	}
+	/**
+	 * 人形置き形式を設定する
+	 */
+	public void setFigureMode() {
+		this.dataBlock = Blocks.AIR;
+		this.dataScale = 1.0F;
+		this.dataPositionY = 0.0F;
+		this.setChanged();
 	}
 	/**
 	 * モブボトルの情報を取得

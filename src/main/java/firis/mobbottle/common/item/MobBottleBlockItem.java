@@ -1,9 +1,7 @@
 package firis.mobbottle.common.item;
 
 import java.util.List;
-import java.util.function.Consumer;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import firis.mobbottle.client.renderer.MobBottleBlockEntityWithoutLevelRenderer;
@@ -26,7 +24,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.client.IItemRenderProperties;
+import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 
 /**
  * モブボトルアイテム
@@ -154,11 +152,11 @@ public class MobBottleBlockItem extends BlockItem {
 	 * BlockEntityWithoutLevelRenderer描画用定義
 	 */
 	@Override
-	public void initializeClient(@Nonnull Consumer<IItemRenderProperties> consumer) {
-		consumer.accept(new IItemRenderProperties() {
+	public void initializeClient(java.util.function.Consumer<net.minecraftforge.client.extensions.common.IClientItemExtensions> consumer) {
+		consumer.accept(new IClientItemExtensions() {
 			private final MobBottleBlockEntityWithoutLevelRenderer renderer = new MobBottleBlockEntityWithoutLevelRenderer();
 			@Override
-			public BlockEntityWithoutLevelRenderer getItemStackRenderer() {
+			public BlockEntityWithoutLevelRenderer getCustomRenderer() {
 				return renderer;
 			}
 		});

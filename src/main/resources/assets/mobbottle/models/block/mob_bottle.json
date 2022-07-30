@@ -1,6 +1,7 @@
 {
 	"parent": "block/block",
     "ambientocclusion": false,
+    "render_type": "translucent",
     "textures": {
         "side": "mobbottle:blocks/mob_bottle_side",
         "bottom": "mobbottle:blocks/mob_bottle_bottom",

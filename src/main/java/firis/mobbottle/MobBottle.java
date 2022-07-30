@@ -8,8 +8,6 @@ import firis.mobbottle.common.block.MobBottleBlock;
 import firis.mobbottle.common.block.MobBottleEmptyBlock;
 import firis.mobbottle.common.blockentity.MobBottleBlockEntity;
 import firis.mobbottle.common.item.MobBottleBlockItem;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
@@ -57,7 +55,7 @@ public class MobBottle
 	 * BlockEntityType参照用定義
 	 */
 	public static class FirisBlockEntityType {
-	    public static final RegistryObject<BlockEntityType<MobBottleBlockEntity>> BLOCK_ENTITY_TYPE = RegistryObject.create(new ResourceLocation(MODID, "mob_bottle_be"), ForgeRegistries.BLOCK_ENTITIES);
+	    public static final RegistryObject<BlockEntityType<MobBottleBlockEntity>> BLOCK_ENTITY_TYPE = RegistryObject.create(new ResourceLocation(MODID, "mob_bottle_be"), ForgeRegistries.BLOCK_ENTITY_TYPES);
 	}
 	
 	/**
@@ -161,11 +159,6 @@ public class MobBottle
     	 */
     	@SubscribeEvent
     	public static void onRegisterRenderers(final EntityRenderersEvent.RegisterRenderers event) {
-    		
-    		//対象ブロックのテクスチャを透過する設定
-    		ItemBlockRenderTypes.setRenderLayer(FirisBlocks.MOB_BOTTLE.get(), RenderType.translucent());
-    		ItemBlockRenderTypes.setRenderLayer(FirisBlocks.MOB_BOTTLE_EMPTY.get(), RenderType.translucent());
-    		
     		//BER登録
     		event.registerBlockEntityRenderer(
     				FirisBlockEntityType.BLOCK_ENTITY_TYPE.get(),

@@ -10,14 +10,14 @@ import firis.mobbottle.common.blockentity.MobBottleBlockEntity;
 import firis.mobbottle.common.item.MobBottleBlockItem;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.server.ServerStartingEvent;
+import net.minecraftforge.event.CreativeModeTabEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -69,6 +69,9 @@ public class MobBottle
         // Register the processIMC method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
 
+        //クリエイティブタブ登録
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::CreativeModeTabEventBuildContents);
+        
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
     }
@@ -85,10 +88,17 @@ public class MobBottle
     {
     }
     
-    // You can use SubscribeEvent and let the Event Bus discover methods to call
-    @SubscribeEvent
-    public void onServerStarting(ServerStartingEvent event) {
-    }
+    /**
+     * クリエイティブタブ登録イベント
+     */
+	public void CreativeModeTabEventBuildContents(CreativeModeTabEvent.BuildContents event) {
+		if (event.getTab() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
+			
+			event.accept(FirisBlocks.MOB_BOTTLE_EMPTY.get());
+			event.accept(FirisBlocks.MOB_BOTTLE.get());
+			
+		}
+	}
 
     // You can use EventBusSubscriber to automatically subscribe events on the contained class (this is subscribing to the MOD
     // Event bus for receiving Registry Events)
@@ -127,7 +137,7 @@ public class MobBottle
     				//空のモブボトル登録
     				helper.register(new ResourceLocation(MODID, "mob_bottle_empty"), 
     	        			new BlockItem(FirisBlocks.MOB_BOTTLE_EMPTY.get(), 
-    	                			(new Item.Properties()).stacksTo(64).tab(CreativeModeTab.TAB_TOOLS)));
+    	                			(new Item.Properties()).stacksTo(64)));
     			}
         	);
         }

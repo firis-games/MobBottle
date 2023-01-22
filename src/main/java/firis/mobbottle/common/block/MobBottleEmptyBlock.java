@@ -3,6 +3,7 @@ package firis.mobbottle.common.block;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -55,4 +56,8 @@ public class MobBottleEmptyBlock extends Block {
 	public VoxelShape getVisualShape(BlockState p_48735_, BlockGetter p_48736_, BlockPos p_48737_, CollisionContext p_48738_) {
 		return Shapes.empty();
 	}
+	
+	   public RenderShape getRenderShape(BlockState p_49232_) {
+		      return RenderShape.MODEL;
+		   }
 }

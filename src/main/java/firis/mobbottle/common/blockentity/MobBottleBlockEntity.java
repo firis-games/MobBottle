@@ -8,19 +8,19 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import firis.mobbottle.MobBottle;
 import firis.mobbottle.MobBottle.FirisBlocks;
 import firis.mobbottle.common.helper.FirisEntityHelper;
+import firis.mobbottle.common.helper.FirisUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
@@ -176,9 +176,9 @@ public class MobBottleBlockEntity extends BlockEntity {
 		return this.dataBlock;
 	}
 	
-	@SuppressWarnings("deprecation")
 	protected void setDataBlockFromString(String blockId) {
-		this.dataBlock = Registry.BLOCK.get(new ResourceLocation(blockId));
+		//BlockIdからBlockを取得
+		this.dataBlock = FirisUtil.getBlockFromId(blockId, null);
 	}
 	
 	/**
@@ -286,8 +286,11 @@ public class MobBottleBlockEntity extends BlockEntity {
 	/**
 	 * Block.getRegistryNameの代替メソッド
 	 */
-	@SuppressWarnings("deprecation")
 	protected String getDataBlockRegistryName() {
-		return Registry.BLOCK.getKey(this.getDataBlock()).toString();
+		return FirisUtil.getIdFromBlock(this.getDataBlock(), null);
 	}
+	
+	   public RenderShape getRenderShape(BlockState p_49232_) {
+		      return RenderShape.INVISIBLE;
+		   }
 }

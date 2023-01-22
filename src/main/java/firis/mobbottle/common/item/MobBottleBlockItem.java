@@ -17,7 +17,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -33,8 +32,7 @@ public class MobBottleBlockItem extends BlockItem {
 
 	public MobBottleBlockItem(Block block) {
 		super(block, (new Item.Properties())
-				.stacksTo(1)
-				.tab(CreativeModeTab.TAB_TOOLS));
+				.stacksTo(1));
 	}
 	
 	/**
@@ -90,7 +88,7 @@ public class MobBottleBlockItem extends BlockItem {
 		ItemStack handStack = player.getItemInHand(hand);
 		
 		if (!this.isCatchMobBottle(handStack)) return false;
-
+		
 		//モブ情報取得
 		CompoundTag mobTag = FirisEntityHelper.createTagFromEntity(entity);
 		String mobName = entity.getDisplayName().getString();

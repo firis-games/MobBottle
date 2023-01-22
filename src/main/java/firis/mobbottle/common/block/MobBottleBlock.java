@@ -8,9 +8,9 @@ import firis.mobbottle.MobBottle.FirisBlockEntityType;
 import firis.mobbottle.MobBottle.FirisBlocks;
 import firis.mobbottle.MobBottle.FirisItems;
 import firis.mobbottle.common.blockentity.MobBottleBlockEntity;
+import firis.mobbottle.common.helper.FirisUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.StringTag;
@@ -46,7 +46,6 @@ public class MobBottleBlock extends BaseEntityBlock {
 		
 	public MobBottleBlock() {
 		super((BlockBehaviour.Properties.of(Material.PISTON)).sound(SoundType.GLASS));
-		
 	}
 	
 	/**
@@ -80,7 +79,7 @@ public class MobBottleBlock extends BaseEntityBlock {
 	public VoxelShape getVisualShape(BlockState p_48735_, BlockGetter p_48736_, BlockPos p_48737_, CollisionContext p_48738_) {
 		return Shapes.empty();
 	}
-
+	
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
 		return new MobBottleBlockEntity(pos, state);
@@ -128,7 +127,6 @@ public class MobBottleBlock extends BaseEntityBlock {
 	/**
 	 * ブロックを右クリック
 	 */
-	@SuppressWarnings("deprecation")
 	@Override
 	public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult blockHitResult) {
 		BlockEntity blockentity = level.getBlockEntity(pos);
@@ -137,7 +135,8 @@ public class MobBottleBlock extends BaseEntityBlock {
 			ItemStack stack = player.getItemInHand(hand);
 			if (stack.isEmpty()) return InteractionResult.SUCCESS;
 			Block block = Block.byItem(stack.getItem());
-			String itemId = Registry.ITEM.getKey(stack.getItem()).toString();
+			
+			String itemId = FirisUtil.getIdFromItem(stack.getItem(), "");
 			
 			//モブボトルの場合
 			if (block.equals(FirisBlocks.MOB_BOTTLE.get())) {

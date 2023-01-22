@@ -3,10 +3,10 @@
     "ambientocclusion": false,
     "render_type": "translucent",
     "textures": {
-        "side": "mobbottle:blocks/mob_bottle_side",
-        "bottom": "mobbottle:blocks/mob_bottle_bottom",
-        "top": "mobbottle:blocks/mob_bottle_top",
-        "particle": "mobbottle:blocks/mob_bottle_side"
+        "side": "mobbottle:block/mob_bottle_side",
+        "bottom": "mobbottle:block/mob_bottle_bottom",
+        "top": "mobbottle:block/mob_bottle_top",
+        "particle": "mobbottle:block/mob_bottle_side"
     },
     "elements": [
         {

@@ -94,7 +94,12 @@ public class MobBottleBlockItem extends BlockItem {
 		ItemStack handStack = player.getItemInHand(hand);
 		
 		if (!this.isCatchMobBottle(handStack)) return false;
-
+		
+		//騎乗中は拒否
+		if (entity.getVehicle() != null) {
+			return false;
+		}
+		
 		//モブ情報取得
 		CompoundTag mobTag = FirisEntityHelper.createTagFromEntity(entity);
 		String mobName = entity.getDisplayName().getString();

@@ -57,9 +57,9 @@ public class MobBottleBlockEntityRenderer implements BlockEntityRenderer<MobBott
         Minecraft.getInstance().getBlockRenderer().renderSingleBlock(
         		state, 
         		poseStack, p_112310_, p_112311_, p_112312_, 
-        		net.minecraftforge.client.model.data.ModelData.EMPTY, null);
-
-		
+        		net.minecraftforge.client.model.data.ModelData.EMPTY, 
+        		null);
+        
         poseStack.popPose();
-	}
+    }
 }

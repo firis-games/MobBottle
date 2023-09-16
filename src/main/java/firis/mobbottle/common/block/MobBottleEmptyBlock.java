@@ -3,11 +3,11 @@ package firis.mobbottle.common.block;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -21,7 +21,7 @@ public class MobBottleEmptyBlock extends Block {
 					14.0D / 16.0D, 16.0D / 16.0D, 14.0D / 16.0D));
 		
 	public MobBottleEmptyBlock() {
-		super((BlockBehaviour.Properties.of(Material.PISTON)).sound(SoundType.GLASS));
+		super(BlockBehaviour.Properties.copy(Blocks.PISTON).sound(SoundType.GLASS));
 		
 	}
 	
@@ -57,7 +57,7 @@ public class MobBottleEmptyBlock extends Block {
 		return Shapes.empty();
 	}
 	
-	   public RenderShape getRenderShape(BlockState p_49232_) {
-		      return RenderShape.MODEL;
-		   }
+	public RenderShape getRenderShape(BlockState p_49232_) {
+		return RenderShape.MODEL;
+	}
 }

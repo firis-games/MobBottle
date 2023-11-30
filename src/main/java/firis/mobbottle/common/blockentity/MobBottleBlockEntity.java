@@ -3,6 +3,7 @@ package firis.mobbottle.common.blockentity;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.minecraftforge.fml.DistExecutor;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import firis.mobbottle.MobBottle;
@@ -55,6 +56,11 @@ public class MobBottleBlockEntity extends BlockEntity {
 	
 	public MobBottleBlockEntity(BlockPos p_155229_, BlockState p_155230_) {
 		super(MobBottle.FirisBlockEntityType.BLOCK_ENTITY_TYPE.get(), p_155229_, p_155230_);
+		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () ->  () -> {
+			renderEntityCache = null;
+			isRenderEntityCache = false;
+			renderEntityCacheMap = new HashMap<>();
+		});
 	}
 	
 	/**
@@ -196,10 +202,10 @@ public class MobBottleBlockEntity extends BlockEntity {
 	 * 描画用Entityキャッシュ
 	 */
 	@OnlyIn(Dist.CLIENT)
-	protected Entity renderEntityCache = null;
+	protected Entity renderEntityCache;
 	
 	@OnlyIn(Dist.CLIENT)
-	protected boolean isRenderEntityCache = false;
+	protected boolean isRenderEntityCache;
 	
 	/**
 	 * 描画用Entity取得
@@ -255,12 +261,11 @@ public class MobBottleBlockEntity extends BlockEntity {
 	// BlockEntityWithoutLevelRenderer対応
 	//**************************************************
 	@OnlyIn(Dist.CLIENT)
-	private Map<CompoundTag, Entity> renderEntityCacheMap = new HashMap<>();
+	private Map<CompoundTag, Entity> renderEntityCacheMap;
 	
 	/**
 	 * アイテム描画に必要な情報を設定する
 	 * @param stack
-	 * @param direction
 	 */
 	@SuppressWarnings("resource")
 	@OnlyIn(Dist.CLIENT)

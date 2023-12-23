@@ -11,7 +11,7 @@ Minecraft1.19.2にちょっとした小物を追加するModです。
 
 ## 注意事項
 対応バージョン
-- Minecraft 1.19
+- Minecraft 1.19.2
 - Minecraft Forge 1.19.2-43.3.0
   
 開発中のMODのため不具合が発生する場合があります。

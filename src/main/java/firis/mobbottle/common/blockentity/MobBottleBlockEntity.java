@@ -25,6 +25,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.fml.DistExecutor;
 
 public class MobBottleBlockEntity extends BlockEntity {
 
@@ -55,6 +56,10 @@ public class MobBottleBlockEntity extends BlockEntity {
 	
 	public MobBottleBlockEntity(BlockPos p_155229_, BlockState p_155230_) {
 		super(MobBottle.FirisBlockEntityType.BLOCK_ENTITY_TYPE.get(), p_155229_, p_155230_);
+		//Client側初期化
+		DistExecutor.safeRunWhenOn(Dist.CLIENT, () ->  () -> {
+			this.initClient();
+		});
 	}
 	
 	/**
@@ -190,10 +195,21 @@ public class MobBottleBlockEntity extends BlockEntity {
 	 * 描画用Entityキャッシュ
 	 */
 	@OnlyIn(Dist.CLIENT)
-	protected Entity renderEntityCache = null;
+	protected Entity renderEntityCache;
 	
 	@OnlyIn(Dist.CLIENT)
-	protected boolean isRenderEntityCache = false;
+	protected boolean isRenderEntityCache;
+	
+	/**
+	 * Clientサイドの初期化
+	 */
+	@OnlyIn(Dist.CLIENT)
+	protected void initClient()
+	{
+		this.renderEntityCache = null;
+		this.isRenderEntityCache = false;
+		this.renderEntityCacheMap = new HashMap<>();
+	}
 	
 	/**
 	 * 描画用Entity取得
@@ -249,7 +265,7 @@ public class MobBottleBlockEntity extends BlockEntity {
 	// BlockEntityWithoutLevelRenderer対応
 	//**************************************************
 	@OnlyIn(Dist.CLIENT)
-	private Map<CompoundTag, Entity> renderEntityCacheMap = new HashMap<>();
+	private Map<CompoundTag, Entity> renderEntityCacheMap;
 	
 	/**
 	 * アイテム描画に必要な情報を設定する

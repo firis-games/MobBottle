@@ -57,7 +57,7 @@ public class MobBottleBlockEntity extends BlockEntity {
 	public MobBottleBlockEntity(BlockPos p_155229_, BlockState p_155230_) {
 		super(MobBottle.FirisBlockEntityType.BLOCK_ENTITY_TYPE.get(), p_155229_, p_155230_);
 		//Client側初期化
-		DistExecutor.safeRunWhenOn(Dist.CLIENT, () ->  () -> {
+		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () ->  () -> {
 			this.initClient();
 		});
 	}

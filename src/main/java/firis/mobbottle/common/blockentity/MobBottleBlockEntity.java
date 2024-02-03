@@ -3,6 +3,7 @@ package firis.mobbottle.common.blockentity;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.neoforged.fml.loading.FMLEnvironment;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 import firis.mobbottle.MobBottle;
@@ -25,7 +26,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.fml.DistExecutor;
 
 public class MobBottleBlockEntity extends BlockEntity {
 
@@ -57,9 +57,9 @@ public class MobBottleBlockEntity extends BlockEntity {
 	public MobBottleBlockEntity(BlockPos p_155229_, BlockState p_155230_) {
 		super(MobBottle.FirisBlockEntityType.BLOCK_ENTITY_TYPE.get(), p_155229_, p_155230_);
 		//Client側初期化
-		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () ->  () -> {
+		if (FMLEnvironment.dist == Dist.CLIENT) {
 			this.initClient();
-		});
+		}
 	}
 	
 	/**

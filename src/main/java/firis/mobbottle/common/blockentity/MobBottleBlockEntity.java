@@ -23,9 +23,9 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.DistExecutor;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.fml.DistExecutor;
 
 public class MobBottleBlockEntity extends BlockEntity {
 
@@ -276,7 +276,6 @@ public class MobBottleBlockEntity extends BlockEntity {
 	/**
 	 * アイテム描画に必要な情報を設定する
 	 * @param stack
-	 * @param direction
 	 */
 	@SuppressWarnings("resource")
 	@OnlyIn(Dist.CLIENT)

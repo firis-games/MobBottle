@@ -23,7 +23,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 
 /**
  * モブボトルアイテム
@@ -155,7 +155,7 @@ public class MobBottleBlockItem extends BlockItem {
 	 * BlockEntityWithoutLevelRenderer描画用定義
 	 */
 	@Override
-	public void initializeClient(java.util.function.Consumer<net.minecraftforge.client.extensions.common.IClientItemExtensions> consumer) {
+	public void initializeClient(java.util.function.Consumer<net.neoforged.neoforge.client.extensions.common.IClientItemExtensions> consumer) {
 		consumer.accept(new IClientItemExtensions() {
 			private final MobBottleBlockEntityWithoutLevelRenderer renderer = new MobBottleBlockEntityWithoutLevelRenderer();
 			@Override

@@ -1,5 +1,6 @@
 package firis.mobbottle;
 
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -23,7 +24,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.registries.DeferredBlock;
@@ -44,11 +44,10 @@ public class MobBottle
      * ブロック参照用定義
      */
 	public static class FirisBlocks {
-
 		public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(MODID);
 
-		public static final DeferredBlock<Block> MOB_BOTTLE = BLOCKS.register("mob_bottle", MobBottleBlock::new);
-	    public static final DeferredBlock<Block> MOB_BOTTLE_EMPTY = BLOCKS.register("mob_bottle_empty", MobBottleEmptyBlock::new);
+		public static final DeferredBlock<Block> MOB_BOTTLE = BLOCKS.register("mob_bottle", () -> new MobBottleBlock(MobBottleBlock.PROPERTIES));
+	    public static final DeferredBlock<Block> MOB_BOTTLE_EMPTY = BLOCKS.register("mob_bottle_empty", () -> new MobBottleEmptyBlock(MobBottleBlock.PROPERTIES));
 	}
 	/**
      * アイテム参照用定義
@@ -82,11 +81,11 @@ public class MobBottle
 		FirisBlockEntityType.REGISTER.register(modEventBus);
 
 		// クリエイティブタブ
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::CreativeModeTabEventBuildContents);
+		modEventBus.addListener(this::CreativeModeTabEventBuildContents);
 
 		// Renderer登録
 		if (FMLEnvironment.dist == Dist.CLIENT) {
-			FMLJavaModLoadingContext.get().getModEventBus().addListener(this::onRegisterRenderers);
+			modEventBus.addListener(this::onRegisterRenderers);
 		}
 	}
     

@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import javax.annotation.Nullable;
 
+import com.mojang.serialization.MapCodec;
 import firis.mobbottle.MobBottle.FirisBlockEntityType;
 import firis.mobbottle.MobBottle.FirisBlocks;
 import firis.mobbottle.MobBottle.FirisItems;
@@ -23,14 +24,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseEntityBlock;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.RenderShape;
-import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -39,13 +38,25 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class MobBottleBlock extends BaseEntityBlock {
 
+	//MobBottle Properties
+	public static final BlockBehaviour.Properties PROPERTIES = BlockBehaviour.Properties.of()
+			.mapColor(MapColor.STONE)
+			.strength(1.5F)
+			.isRedstoneConductor((BlockState blockState, BlockGetter blockGetter, BlockPos blockPos) -> false)
+			.isSuffocating((BlockState blockState, BlockGetter blockGetter, BlockPos blockPos) -> false)
+			.pushReaction(PushReaction.BLOCK)
+			.sound(SoundType.GLASS);
+
+	//MobBottle Codec
+	public static final MapCodec<MobBottleBlock> CODEC = simpleCodec(MobBottleBlock::new);
+
 	//モブボトル当たり判定
 	protected static final VoxelShape VS_MOB_BOTTLE_BLOCK = Shapes.create(
 			new AABB(2.0D / 16.0D, 0.0D / 16.0D, 2.0D / 16.0D, 
 					14.0D / 16.0D, 16.0D / 16.0D, 14.0D / 16.0D));
-		
-	public MobBottleBlock() {
-		super(BlockBehaviour.Properties.copy(Blocks.PISTON).sound(SoundType.GLASS));
+
+	public MobBottleBlock(BlockBehaviour.Properties properties) {
+		super(properties);
 	}
 	
 	/**
@@ -101,7 +112,7 @@ public class MobBottleBlock extends BaseEntityBlock {
 	 * ブロック破壊時にブロック情報を設定
 	 */
 	@Override
-	public void playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
+	public BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
 		BlockEntity blockentity = level.getBlockEntity(pos);
 		if (blockentity instanceof MobBottleBlockEntity) {
 			MobBottleBlockEntity mobBottleBlockEntity = (MobBottleBlockEntity)blockentity;
@@ -114,7 +125,7 @@ public class MobBottleBlock extends BaseEntityBlock {
 				level.addFreshEntity(itementity);
 			}
 		}
-		super.playerWillDestroy(level, pos, state, player);
+		return super.playerWillDestroy(level, pos, state, player);
 	}
 	
 	/**
@@ -201,7 +212,13 @@ public class MobBottleBlock extends BaseEntityBlock {
 		}
 		return InteractionResult.SUCCESS;
 	}
-	
+
+	@Override
+	protected MapCodec<MobBottleBlock> codec() {
+		return CODEC;
+	}
+
+	@Override
 	public RenderShape getRenderShape(BlockState p_49232_) {
 		return RenderShape.INVISIBLE;
 	}

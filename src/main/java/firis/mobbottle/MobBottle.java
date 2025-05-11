@@ -2,11 +2,13 @@ package firis.mobbottle;
 
 import com.mojang.logging.LogUtils;
 import firis.mobbottle.client.renderer.MobBottleBlockEntityRenderer;
+import firis.mobbottle.client.renderer.MobBottleBlockEntityWithoutLevelRenderer;
 import firis.mobbottle.common.block.MobBottleBlock;
 import firis.mobbottle.common.block.MobBottleEmptyBlock;
 import firis.mobbottle.common.blockentity.MobBottleBlockEntity;
 import firis.mobbottle.common.component.MobBottleMobData;
 import firis.mobbottle.common.item.MobBottleBlockItem;
+import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -24,6 +26,8 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
+import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -106,6 +110,7 @@ public class MobBottle
 		// Renderer登録
 		if (FMLEnvironment.dist == Dist.CLIENT) {
 			modEventBus.addListener(this::onRegisterRenderers);
+			modEventBus.addListener(this::onRegisterClientExtensionsEvent);
 		}
 	}
     
@@ -124,7 +129,7 @@ public class MobBottle
 	}
 
 	/**
-	 * 描画系登録イベント
+	 * ブロック描画系登録イベント
 	 * @param event
 	 */
 	@OnlyIn(Dist.CLIENT)
@@ -134,6 +139,23 @@ public class MobBottle
 				FirisBlockEntityType.BLOCK_ENTITY_TYPE.get(),
 				MobBottleBlockEntityRenderer::new
 		);
+	}
+
+	/**
+	 * アイテム描画イベント登録
+	 * @param event
+	 */
+	@OnlyIn(Dist.CLIENT)
+	public void onRegisterClientExtensionsEvent(final RegisterClientExtensionsEvent event)
+	{
+		//ItemRenderer登録
+		event.registerItem(new IClientItemExtensions() {
+			private final MobBottleBlockEntityWithoutLevelRenderer renderer = new MobBottleBlockEntityWithoutLevelRenderer();
+			@Override
+			public BlockEntityWithoutLevelRenderer getCustomRenderer() {
+				return renderer;
+			}
+		}, FirisItems.MOB_BOTTLE);
 	}
 
     @EventBusSubscriber(modid = MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)

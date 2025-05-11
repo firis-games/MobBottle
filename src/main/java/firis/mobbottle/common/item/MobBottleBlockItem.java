@@ -153,19 +153,4 @@ public class MobBottleBlockItem extends BlockItem {
 			tooltipComponents.add(Component.translatable("info.mobbottle.mob_bottle").withStyle(ChatFormatting.LIGHT_PURPLE));
 		}
 	}
-	
-	/**
-	 * BlockEntityWithoutLevelRenderer描画用定義
-	 */
-	@Override
-	@Deprecated(forRemoval = true, since = "1.21")
-	public void initializeClient(java.util.function.Consumer<net.neoforged.neoforge.client.extensions.common.IClientItemExtensions> consumer) {
-		consumer.accept(new IClientItemExtensions() {
-			private final MobBottleBlockEntityWithoutLevelRenderer renderer = new MobBottleBlockEntityWithoutLevelRenderer();
-			@Override
-			public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-				return renderer;
-			}
-		});
-	}
 }

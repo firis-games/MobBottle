@@ -1,34 +1,37 @@
 package firis.mobbottle;
 
-import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.fml.loading.FMLEnvironment;
-import net.neoforged.neoforge.registries.DeferredHolder;
-import org.slf4j.Logger;
-
 import com.mojang.logging.LogUtils;
-
 import firis.mobbottle.client.renderer.MobBottleBlockEntityRenderer;
 import firis.mobbottle.common.block.MobBottleBlock;
 import firis.mobbottle.common.block.MobBottleEmptyBlock;
 import firis.mobbottle.common.blockentity.MobBottleBlockEntity;
+import firis.mobbottle.common.component.MobBottleMobData;
 import firis.mobbottle.common.item.MobBottleBlockItem;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.registries.DeferredBlock;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import org.slf4j.Logger;
+
+import java.util.function.Supplier;
 
 
 // The value here should match an entry in the META-INF/mods.toml file
@@ -65,7 +68,23 @@ public class MobBottle
 		public static final DeferredRegister<BlockEntityType<?>> REGISTER = DeferredRegister.create(BuiltInRegistries.BLOCK_ENTITY_TYPE, MODID);
 
 	    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<MobBottleBlockEntity>> BLOCK_ENTITY_TYPE = REGISTER.register("mob_bottle_be", () -> BlockEntityType.Builder.of(MobBottleBlockEntity::new, FirisBlocks.MOB_BOTTLE.get()).build(null));
-	}	
+	}
+
+	/**
+	 * DataComponentType参照用定義
+	 */
+	public static class FirisDataComponentType {
+		public static final DeferredRegister.DataComponents REGISTRAR = DeferredRegister.createDataComponents(Registries.DATA_COMPONENT_TYPE, MODID);
+
+		public static final Supplier<DataComponentType<MobBottleMobData>> MOBBOTTLE_TYPE = REGISTRAR.registerComponentType(
+				"mob_data_type",
+				builder -> builder
+						// The codec to read/write the data to disk
+						.persistent(MobBottleMobData.CODEC)
+						// The codec to read/write the data across the network
+						.networkSynchronized(MobBottleMobData.STREAM_CODEC)
+		);
+	}
 	
 	/**
 	 * 各種イベント登録
@@ -79,6 +98,7 @@ public class MobBottle
         FirisBlocks.BLOCKS.register(modEventBus);
         FirisItems.ITEMS.register(modEventBus);
 		FirisBlockEntityType.REGISTER.register(modEventBus);
+		FirisDataComponentType.REGISTRAR.register(modEventBus);
 
 		// クリエイティブタブ
 		modEventBus.addListener(this::CreativeModeTabEventBuildContents);
@@ -116,7 +136,7 @@ public class MobBottle
 		);
 	}
 
-    @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+    @EventBusSubscriber(modid = MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
     public static class ClientModEvents
     {
     	@SubscribeEvent

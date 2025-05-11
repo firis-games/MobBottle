@@ -1,9 +1,5 @@
 package firis.mobbottle.common.block;
 
-import java.util.Optional;
-
-import javax.annotation.Nullable;
-
 import com.mojang.serialization.MapCodec;
 import firis.mobbottle.MobBottle.FirisBlockEntityType;
 import firis.mobbottle.MobBottle.FirisBlocks;
@@ -12,16 +8,13 @@ import firis.mobbottle.common.blockentity.MobBottleBlockEntity;
 import firis.mobbottle.common.helper.FirisUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.StringTag;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
@@ -35,6 +28,9 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+
+import javax.annotation.Nullable;
+import java.util.Optional;
 
 public class MobBottleBlock extends BaseEntityBlock {
 
@@ -118,7 +114,7 @@ public class MobBottleBlock extends BaseEntityBlock {
 			MobBottleBlockEntity mobBottleBlockEntity = (MobBottleBlockEntity)blockentity;
 			if (!level.isClientSide) {
 				ItemStack itemstack = new ItemStack(FirisItems.MOB_BOTTLE.get());
-				mobBottleBlockEntity.saveToItem(itemstack);
+				mobBottleBlockEntity.saveToItem(itemstack, level.registryAccess());
 
 				ItemEntity itementity = new ItemEntity(level, (double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D, itemstack);
 				itementity.setDefaultPickUpDelay();
@@ -139,12 +135,11 @@ public class MobBottleBlock extends BaseEntityBlock {
 	 * ブロックを右クリック
 	 */
 	@Override
-	public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult blockHitResult) {
+	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
 		BlockEntity blockentity = level.getBlockEntity(pos);
 		if (blockentity instanceof MobBottleBlockEntity) {
 			MobBottleBlockEntity mbBlockEntity = (MobBottleBlockEntity) blockentity;
-			ItemStack stack = player.getItemInHand(hand);
-			if (stack.isEmpty()) return InteractionResult.SUCCESS;
+			if (stack.isEmpty()) return ItemInteractionResult.SUCCESS;
 			Block block = Block.byItem(stack.getItem());
 			
 			String itemId = FirisUtil.getIdFromItem(stack.getItem(), "");
@@ -179,6 +174,7 @@ public class MobBottleBlock extends BaseEntityBlock {
 				//下方向へ調整
 				mbBlockEntity.setMobBottlePositionMinus();
 			}
+			/* オミット
 			else if (itemId.endsWith("minecraft:writable_book")) {
 				
 				//モブボトルのコピー情報
@@ -205,12 +201,13 @@ public class MobBottleBlock extends BaseEntityBlock {
 					mbBlockEntity.setCopyMobBottleTag(mbTag);
 				}
 			}
+			*/
 			else if (itemId.endsWith("minecraft:stick")) {
 				//人形モードを設定
 				mbBlockEntity.setFigureMode();
 			}			
 		}
-		return InteractionResult.SUCCESS;
+		return ItemInteractionResult.SUCCESS;
 	}
 
 	@Override

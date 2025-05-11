@@ -22,7 +22,7 @@ public class FirisUtil {
 	 */
 	public static Block getBlockFromId(String blockId, Block defBlock) {
 		//IDからBlockを取得
-		Block block = BuiltInRegistries.BLOCK.get(new ResourceLocation(blockId));
+		Block block = BuiltInRegistries.BLOCK.get(ResourceLocation.parse(blockId));
 		if (block == Blocks.AIR) {
 			//AIRは取得できないと判断
 			block = defBlock;

@@ -1,15 +1,9 @@
 package firis.mobbottle.common.item;
 
-import java.util.List;
-
 import firis.mobbottle.MobBottle;
-import firis.mobbottle.client.renderer.MobBottleBlockEntityWithoutLevelRenderer;
 import firis.mobbottle.common.component.MobBottleMobData;
 import firis.mobbottle.common.helper.FirisEntityHelper;
-import it.unimi.dsi.fastutil.ints.IntArrayList;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -22,10 +16,10 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.component.FireworkExplosion;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.Block;
-import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
+
+import java.util.List;
 
 /**
  * モブボトルアイテム

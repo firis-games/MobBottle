@@ -1,16 +1,10 @@
 package firis.mobbottle.common.helper;
 
-import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.common.data.internal.NeoForgeBlockTagsProvider;
-import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
 public class FirisUtil {
 

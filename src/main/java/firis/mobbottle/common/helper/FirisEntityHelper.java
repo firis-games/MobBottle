@@ -1,11 +1,11 @@
 package firis.mobbottle.common.helper;
 
-import java.util.Optional;
-
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
+
+import java.util.Optional;
 
 public class FirisEntityHelper {
 

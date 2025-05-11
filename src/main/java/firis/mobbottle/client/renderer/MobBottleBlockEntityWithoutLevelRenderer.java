@@ -1,9 +1,6 @@
 package firis.mobbottle.client.renderer;
 
-import javax.annotation.Nonnull;
-
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import firis.mobbottle.MobBottle.FirisBlocks;
 import firis.mobbottle.common.blockentity.MobBottleBlockEntity;
 import net.minecraft.client.Minecraft;
@@ -14,6 +11,8 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+
+import javax.annotation.Nonnull;
 
 @OnlyIn(Dist.CLIENT)
 public class MobBottleBlockEntityWithoutLevelRenderer extends BlockEntityWithoutLevelRenderer {

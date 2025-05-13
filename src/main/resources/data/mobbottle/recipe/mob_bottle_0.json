@@ -1,5 +1,6 @@
 {
 	"type": "minecraft:crafting_shaped",
+	"category": "misc",
 	"pattern": [
 		"www",
 		"gdg",
@@ -7,16 +8,17 @@
 	],
 	"key": {
 		"g": {
-			"tag": "forge:glass"
+			"tag": "c:glass_blocks/cheap"
 		},
 		"w": {
-			"tag": "minecraft:slabs"
+			"tag": "minecraft:wooden_slabs"
 		},
 		"d": {
-			"tag": "forge:gems"
+			"tag": "mobbottle:gems"
 		}
 	},
 	"result": {
-		"item": "mobbottle:mob_bottle"
+		"count": 1,
+		"id": "mobbottle:mob_bottle"
 	}
 }

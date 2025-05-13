@@ -1,0 +1,13 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"category": "misc",
+	"ingredients": [
+		{
+			"item": "mobbottle:mob_bottle"
+		}
+	],
+	"result": {
+		"count": 1,
+		"id": "mobbottle:mob_bottle_empty"
+	}
+}

@@ -15,7 +15,10 @@ public class FirisEntityHelper {
 	 * @return
 	 */
 	public static Entity createEntityFromTag(CompoundTag tag, Level level) {
-		
+
+		//nullチェック
+		if (tag == null) return null;
+
 		Entity entity = null;
 		try {
 			//Entity生成

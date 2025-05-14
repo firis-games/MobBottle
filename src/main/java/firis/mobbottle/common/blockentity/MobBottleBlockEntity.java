@@ -18,13 +18,11 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.fml.loading.FMLEnvironment;
-import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -186,7 +184,6 @@ public class MobBottleBlockEntity extends BlockEntity {
 		this.dataPositionY = tag.getFloat("positiony");
 	}
 	
-	@NonNull
 	protected Block getDataBlock() {
 		if (this.dataBlock == null) {
 			this.dataBlock = FirisBlocks.MOB_BOTTLE_EMPTY.get();
@@ -291,12 +288,14 @@ public class MobBottleBlockEntity extends BlockEntity {
 	 * アイテム描画に必要な情報を設定する
 	 * @param stack
 	 */
-	@SuppressWarnings("resource")
 	@OnlyIn(Dist.CLIENT)
 	public void setMobBottleDataFromBEWLR(ItemStack stack) {
+
+		this.setLevel(Minecraft.getInstance().level);
+
 		this.mobData = stack.get(MobBottle.FirisDataComponentType.MOBBOTTLE_TYPE);
 		this.dataDirection = Direction.EAST;
-		
+
 		//キャッシュに存在しない場合はgetRenderEntityでEntityを生成する
 		if (!this.renderEntityCacheMap.containsKey(this.mobData)) {
 			this.renderEntityCache = null;
@@ -307,9 +306,6 @@ public class MobBottleBlockEntity extends BlockEntity {
 		//キャッシュからEntityを反映
 		this.renderEntityCache = this.renderEntityCacheMap.get(this.mobData);
 		this.isRenderEntityCache = true;
-		this.setLevel(Minecraft.getInstance().level);
-	
-		
 	}
 	
 	/**
@@ -318,8 +314,4 @@ public class MobBottleBlockEntity extends BlockEntity {
 	protected String getDataBlockRegistryName() {
 		return FirisUtil.getIdFromBlock(this.getDataBlock(), null);
 	}
-	
-	   public RenderShape getRenderShape(BlockState p_49232_) {
-		      return RenderShape.INVISIBLE;
-		   }
 }

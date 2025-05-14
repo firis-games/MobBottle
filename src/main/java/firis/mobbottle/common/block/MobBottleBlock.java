@@ -8,12 +8,19 @@ import firis.mobbottle.common.blockentity.MobBottleBlockEntity;
 import firis.mobbottle.common.helper.FirisUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.server.network.Filterable;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.item.component.WrittenBookContent;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
@@ -29,6 +36,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.Optional;
 
 public class MobBottleBlock extends BaseEntityBlock {
@@ -173,34 +181,39 @@ public class MobBottleBlock extends BaseEntityBlock {
 				//下方向へ調整
 				mbBlockEntity.setMobBottlePositionMinus();
 			}
-			/* オミット
 			else if (itemId.endsWith("minecraft:writable_book")) {
-				
+
 				//モブボトルのコピー情報
 				CompoundTag mbTag = mbBlockEntity.getCopyMobBottleTag();
 				
 				//ペン付き本の初期設定
 				ItemStack bookStack = new ItemStack(Items.WRITTEN_BOOK);
-				bookStack.getOrCreateTag();
-				bookStack.addTagElement("author", StringTag.valueOf(player.getName().getString()));
-				bookStack.addTagElement("filtered_title", StringTag.valueOf("MobBottle"));
-				bookStack.addTagElement("title", StringTag.valueOf("MobBottle[" + pos.toShortString() + "]"));
-				ListTag listtag = new ListTag();
-				listtag.add(StringTag.valueOf(mbTag.toString()));
-				bookStack.addTagElement("pages", listtag);
-				
-				//モブボトル情報を設定
-				bookStack.addTagElement("mobbottle", mbTag);
-				
+
+				//書き込み済み本の情報を設定
+				WrittenBookContent bookCmp = new WrittenBookContent(
+						Filterable.passThrough("MobBottle[" + pos.toShortString() + "]"),
+						player.getName().getString(),
+						0,
+						List.of(),
+						true
+				);
+				bookStack.set(DataComponents.WRITTEN_BOOK_CONTENT, bookCmp);
+
+				//カスタムデータにモブボトル情報を設定
+				CompoundTag customTag = new CompoundTag();
+				customTag.put("mobbottle", mbTag);
+				bookStack.set(DataComponents.CUSTOM_DATA, CustomData.of(customTag));
+
 				player.setItemInHand(hand, bookStack);
 			}
 			else if (itemId.endsWith("minecraft:written_book")) {
-				CompoundTag mbTag = stack.getTagElement("mobbottle");
-				if (mbTag != null) {
-					mbBlockEntity.setCopyMobBottleTag(mbTag);
+				//カスタムデータ取得
+				CustomData cstmData = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY);
+				CompoundTag cstmTag = cstmData.copyTag();
+				if (cstmTag.contains("mobbottle")) {
+					mbBlockEntity.setCopyMobBottleTag(cstmTag.getCompound("mobbottle"));
 				}
 			}
-			*/
 			else if (itemId.endsWith("minecraft:stick")) {
 				//人形モードを設定
 				mbBlockEntity.setFigureMode();

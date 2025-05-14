@@ -120,7 +120,6 @@ public class MobBottleBlockEntity extends BlockEntity {
 	/**
 	 * モブボトルの情報を取得
 	 */
-	/* オミット
 	public CompoundTag getCopyMobBottleTag() {
 		CompoundTag tag = new CompoundTag();
 		tag.putString("block", this.getDataBlockRegistryName());
@@ -128,19 +127,16 @@ public class MobBottleBlockEntity extends BlockEntity {
 		tag.putFloat("positiony", this.dataPositionY);
 		return tag;
 	}
-	*/
 
 	/**
 	 * モブボトルの情報を設定
 	 */
-	/* オミット
 	public void setCopyMobBottleTag(CompoundTag tag) {
 		this.setDataBlockFromString(tag.getString("block"));
 		this.dataScale = tag.getFloat("scale");
 		this.dataPositionY = tag.getFloat("positiony");
 		this.setChanged();
 	}
-	*/
 
 	@Override
     public CompoundTag getUpdateTag(HolderLookup.Provider registries) {

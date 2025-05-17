@@ -199,7 +199,7 @@ public class MobBottleBlockEntity extends BlockEntity {
 	public void saveToItem(ItemStack stack, HolderLookup.Provider registries) {
 		super.saveToItem(stack, registries);
 		//ItemStackがMob情報を持っている場合はTagを設定する
-		if (this.mobData.isEmpty()) {
+		if (!this.mobData.isEmpty()) {
 			stack.set(MobBottle.FirisDataComponentType.MOBBOTTLE_TYPE, this.mobData);
 		}
 	}

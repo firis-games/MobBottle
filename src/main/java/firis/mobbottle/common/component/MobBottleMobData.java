@@ -15,9 +15,9 @@ import net.minecraft.network.codec.StreamCodec;
 public record MobBottleMobData(CompoundTag tag, String name) {
 
     /**
-     * 初期値
+     * 空のMobBottleMobDataを生成
      */
-    public static final MobBottleMobData EMPTY = new MobBottleMobData(new CompoundTag(), "");
+    public static final MobBottleMobData Empty() {return new MobBottleMobData(new CompoundTag(), "");}
 
     /**
      * CODEC
@@ -45,8 +45,19 @@ public record MobBottleMobData(CompoundTag tag, String name) {
      * @param name
      */
     public MobBottleMobData(CompoundTag tag, String name) {
-        this.tag = tag;
+        this.tag = tag.copy();
         this.name = name;
+    }
+
+    /**
+     * tagの取得Override
+     * 書き換えられても影響がないようにコピーを渡す
+     * @return
+     */
+    @Override
+    public CompoundTag tag()
+    {
+        return this.tag.copy();
     }
 
     /***
@@ -65,7 +76,7 @@ public record MobBottleMobData(CompoundTag tag, String name) {
     public CompoundTag getCompoundTag()
     {
         CompoundTag tag = new CompoundTag();
-        tag.put("tag", this.tag);
+        tag.put("tag", this.tag.copy());
         tag.putString("name", this.name);
         return tag;
     }
@@ -78,7 +89,7 @@ public record MobBottleMobData(CompoundTag tag, String name) {
     public static MobBottleMobData GetFromTag(CompoundTag tag)
     {
         if (!tag.contains("tag") || !tag.contains("name")) {
-            return MobBottleMobData.EMPTY;
+            return MobBottleMobData.Empty();
         }
         return new MobBottleMobData(tag.getCompound("tag"), tag.getString("name"));
     }

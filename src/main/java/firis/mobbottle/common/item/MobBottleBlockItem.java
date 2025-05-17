@@ -30,7 +30,7 @@ public class MobBottleBlockItem extends BlockItem {
 		super(block,
 				(new Item.Properties())
 				.stacksTo(1)
-				.component(MobBottle.FirisDataComponentType.MOBBOTTLE_TYPE.get(), MobBottleMobData.EMPTY)
+				.component(MobBottle.FirisDataComponentType.MOBBOTTLE_TYPE.get(), MobBottleMobData.Empty())
 		);
 	}
 	
@@ -53,7 +53,7 @@ public class MobBottleBlockItem extends BlockItem {
 						((ServerLevel)context.getLevel()).addFreshEntityWithPassengers(entity);
 					}
 					//Tag情報を初期化
-					stack.set(MobBottle.FirisDataComponentType.MOBBOTTLE_TYPE, MobBottleMobData.EMPTY);
+					stack.set(MobBottle.FirisDataComponentType.MOBBOTTLE_TYPE, MobBottleMobData.Empty());
 				}
 			}
 			return InteractionResult.SUCCESS;

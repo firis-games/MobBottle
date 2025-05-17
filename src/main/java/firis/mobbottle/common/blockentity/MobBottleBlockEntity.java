@@ -32,7 +32,7 @@ public class MobBottleBlockEntity extends BlockEntity {
 	/**
 	 * MobBottleMobData情報
 	 */
-	protected MobBottleMobData mobData = MobBottleMobData.EMPTY;
+	protected MobBottleMobData mobData = MobBottleMobData.Empty();
 	
 	/**
 	 * ブロックの向き
@@ -278,7 +278,7 @@ public class MobBottleBlockEntity extends BlockEntity {
 	// BlockEntityWithoutLevelRenderer対応
 	//**************************************************
 	@OnlyIn(Dist.CLIENT)
-	private Map<MobBottleMobData, Entity> renderEntityCacheMap;
+	private Map<CompoundTag, Entity> renderEntityCacheMap;
 	
 	/**
 	 * アイテム描画に必要な情報を設定する
@@ -293,14 +293,14 @@ public class MobBottleBlockEntity extends BlockEntity {
 		this.dataDirection = Direction.EAST;
 
 		//キャッシュに存在しない場合はgetRenderEntityでEntityを生成する
-		if (!this.renderEntityCacheMap.containsKey(this.mobData)) {
+		if (!this.renderEntityCacheMap.containsKey(this.mobData.tag())) {
 			this.renderEntityCache = null;
 			this.isRenderEntityCache = false;
-			this.renderEntityCacheMap.put(this.mobData, this.getRenderEntity());
+			this.renderEntityCacheMap.put(this.mobData.tag(), this.getRenderEntity());
 		}
 		
 		//キャッシュからEntityを反映
-		this.renderEntityCache = this.renderEntityCacheMap.get(this.mobData);
+		this.renderEntityCache = this.renderEntityCacheMap.get(this.mobData.tag());
 		this.isRenderEntityCache = true;
 	}
 	

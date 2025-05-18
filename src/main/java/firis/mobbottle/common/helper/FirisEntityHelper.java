@@ -2,6 +2,7 @@ package firis.mobbottle.common.helper;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 
@@ -23,7 +24,7 @@ public class FirisEntityHelper {
 		try {
 			//Entity生成
 			Optional<EntityType<?>> optEntityType = EntityType.by(tag);
-			entity = optEntityType.get().create(level);
+			entity = optEntityType.get().create(level, EntitySpawnReason.SPAWN_ITEM_USE);
 			
 			//情報の上書き
 			entity.load(tag);

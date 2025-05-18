@@ -8,10 +8,11 @@ import firis.mobbottle.common.block.MobBottleEmptyBlock;
 import firis.mobbottle.common.blockentity.MobBottleBlockEntity;
 import firis.mobbottle.common.component.MobBottleMobData;
 import firis.mobbottle.common.item.MobBottleBlockItem;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.level.block.Block;
@@ -26,11 +27,9 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
-import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
-import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
+import net.neoforged.neoforge.client.event.RegisterSpecialModelRendererEvent;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.registries.DeferredBlock;
-import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.slf4j.Logger;
@@ -53,8 +52,16 @@ public class MobBottle
 	public static class FirisBlocks {
 		public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(MODID);
 
-		public static final DeferredBlock<Block> MOB_BOTTLE = BLOCKS.register("mob_bottle", () -> new MobBottleBlock(MobBottleBlock.PROPERTIES));
-	    public static final DeferredBlock<Block> MOB_BOTTLE_EMPTY = BLOCKS.register("mob_bottle_empty", () -> new MobBottleEmptyBlock(MobBottleBlock.PROPERTIES));
+		public static final DeferredBlock<Block> MOB_BOTTLE = BLOCKS.register("mob_bottle", () ->
+				new MobBottleBlock(
+						MobBottleBlock.PROPERTIES.setId(
+								ResourceKey.create(Registries.BLOCK,
+										ResourceLocation.fromNamespaceAndPath(MODID, "mob_bottle")))));
+	    public static final DeferredBlock<Block> MOB_BOTTLE_EMPTY = BLOCKS.register("mob_bottle_empty", () ->
+				new MobBottleEmptyBlock(
+						MobBottleBlock.PROPERTIES.setId(
+								ResourceKey.create(Registries.BLOCK,
+										ResourceLocation.fromNamespaceAndPath(MODID, "mob_bottle_empty")))));
 	}
 	/**
      * アイテム参照用定義
@@ -71,7 +78,8 @@ public class MobBottle
 	public static class FirisBlockEntityType {
 		public static final DeferredRegister<BlockEntityType<?>> REGISTER = DeferredRegister.create(BuiltInRegistries.BLOCK_ENTITY_TYPE, MODID);
 
-	    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<MobBottleBlockEntity>> BLOCK_ENTITY_TYPE = REGISTER.register("mob_bottle_be", () -> BlockEntityType.Builder.of(MobBottleBlockEntity::new, FirisBlocks.MOB_BOTTLE.get()).build(null));
+	    public static final Supplier<BlockEntityType<MobBottleBlockEntity>> BLOCK_ENTITY_TYPE = REGISTER.register("mob_bottle_be",
+				() -> new BlockEntityType<>(MobBottleBlockEntity::new, FirisBlocks.MOB_BOTTLE.get()));
 	}
 
 	/**
@@ -83,9 +91,7 @@ public class MobBottle
 		public static final Supplier<DataComponentType<MobBottleMobData>> MOBBOTTLE_TYPE = REGISTRAR.registerComponentType(
 				"mob_data_type",
 				builder -> builder
-						// The codec to read/write the data to disk
 						.persistent(MobBottleMobData.CODEC)
-						// The codec to read/write the data across the network
 						.networkSynchronized(MobBottleMobData.STREAM_CODEC)
 		);
 	}
@@ -110,7 +116,7 @@ public class MobBottle
 		// Renderer登録
 		if (FMLEnvironment.dist == Dist.CLIENT) {
 			modEventBus.addListener(this::onRegisterRenderers);
-			modEventBus.addListener(this::onRegisterClientExtensionsEvent);
+			modEventBus.addListener(this::registerSpecialRenderers);
 		}
 	}
     
@@ -130,7 +136,6 @@ public class MobBottle
 
 	/**
 	 * ブロック描画系登録イベント
-	 * @param event
 	 */
 	@OnlyIn(Dist.CLIENT)
 	public void onRegisterRenderers(final EntityRenderersEvent.RegisterRenderers event) {
@@ -146,16 +151,11 @@ public class MobBottle
 	 * @param event
 	 */
 	@OnlyIn(Dist.CLIENT)
-	public void onRegisterClientExtensionsEvent(final RegisterClientExtensionsEvent event)
-	{
-		//ItemRenderer登録
-		event.registerItem(new IClientItemExtensions() {
-			private final MobBottleBlockEntityWithoutLevelRenderer renderer = new MobBottleBlockEntityWithoutLevelRenderer();
-			@Override
-			public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-				return renderer;
-			}
-		}, FirisItems.MOB_BOTTLE);
+	public void registerSpecialRenderers(RegisterSpecialModelRendererEvent event) {
+		event.register(
+				ResourceLocation.fromNamespaceAndPath(MobBottle.MODID, "mobbottle_special"),
+				MobBottleBlockEntityWithoutLevelRenderer.Unbaked.MAP_CODEC
+		);
 	}
 
     @EventBusSubscriber(modid = MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)

@@ -1,0 +1,9 @@
+{
+  "model": {
+    "type": "minecraft:special",
+    "base": "mobbottle:block/mob_bottle",
+    "model": {
+      "type": "mobbottle:mobbottle_special"
+    }
+  }
+}

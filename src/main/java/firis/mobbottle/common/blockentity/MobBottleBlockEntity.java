@@ -195,15 +195,13 @@ public class MobBottleBlockEntity extends BlockEntity {
 	/**
 	 * Drop用ItemStackTagを設定
 	 */
-	@Override
-	public void saveToItem(ItemStack stack, HolderLookup.Provider registries) {
-		super.saveToItem(stack, registries);
+	public void saveToItem(ItemStack stack) {
 		//ItemStackがMob情報を持っている場合はTagを設定する
 		if (!this.mobData.isEmpty()) {
 			stack.set(MobBottle.FirisDataComponentType.MOBBOTTLE_TYPE, this.mobData);
 		}
 	}
-	
+
 	/**
 	 * 描画用Entityキャッシュ
 	 */
@@ -302,6 +300,14 @@ public class MobBottleBlockEntity extends BlockEntity {
 		//キャッシュからEntityを反映
 		this.renderEntityCache = this.renderEntityCacheMap.get(this.mobData.tag());
 		this.isRenderEntityCache = true;
+	}
+
+	/**
+	 * アイテム描画に必要な方角を設定する
+	 */
+	@OnlyIn(Dist.CLIENT)
+	public void SetRendererDirection(Direction direction){
+		this.dataDirection = direction;
 	}
 	
 	/**

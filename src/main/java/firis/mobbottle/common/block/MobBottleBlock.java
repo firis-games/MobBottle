@@ -10,10 +10,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.server.network.Filterable;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -66,7 +65,7 @@ public class MobBottleBlock extends BaseEntityBlock {
 	 * ブロック当たり判定
 	 */
 	@Override
-	public VoxelShape getShape(BlockState p_48816_, BlockGetter p_48817_, BlockPos p_48818_, CollisionContext p_48819_) {
+	public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
 		return VS_MOB_BOTTLE_BLOCK;
 	}
 	
@@ -74,23 +73,15 @@ public class MobBottleBlock extends BaseEntityBlock {
 	 * FullBlockでない場合は1.0Fを返却する
 	 */
 	@Override
-	public float getShadeBrightness(BlockState p_48731_, BlockGetter p_48732_, BlockPos p_48733_) {
+	public float getShadeBrightness(BlockState state, BlockGetter level, BlockPos pos) {
 		return 1.0F;
 	}
 
 	/**
-	 * 空の光を透過する
-	 */
-	@Override
-	public boolean propagatesSkylightDown(BlockState p_48740_, BlockGetter p_48741_, BlockPos p_48742_) {
-		return true;
-	}
-	
-	/**
 	 * 描画用当たり判定
 	 */
 	@Override
-	public VoxelShape getVisualShape(BlockState p_48735_, BlockGetter p_48736_, BlockPos p_48737_, CollisionContext p_48738_) {
+	public VoxelShape getVisualShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
 		return Shapes.empty();
 	}
 	
@@ -121,7 +112,7 @@ public class MobBottleBlock extends BaseEntityBlock {
 			MobBottleBlockEntity mobBottleBlockEntity = (MobBottleBlockEntity)blockentity;
 			if (!level.isClientSide) {
 				ItemStack itemstack = new ItemStack(FirisItems.MOB_BOTTLE.get());
-				mobBottleBlockEntity.saveToItem(itemstack, level.registryAccess());
+				mobBottleBlockEntity.saveToItem(itemstack);
 
 				ItemEntity itementity = new ItemEntity(level, (double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D, itemstack);
 				itementity.setDefaultPickUpDelay();
@@ -142,11 +133,11 @@ public class MobBottleBlock extends BaseEntityBlock {
 	 * ブロックを右クリック
 	 */
 	@Override
-	protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+	protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
 		BlockEntity blockentity = level.getBlockEntity(pos);
 		if (blockentity instanceof MobBottleBlockEntity) {
 			MobBottleBlockEntity mbBlockEntity = (MobBottleBlockEntity) blockentity;
-			if (stack.isEmpty()) return ItemInteractionResult.SUCCESS;
+			if (stack.isEmpty()) return InteractionResult.SUCCESS;
 			Block block = Block.byItem(stack.getItem());
 			
 			String itemId = FirisUtil.getIdFromItem(stack.getItem(), "");
@@ -219,7 +210,7 @@ public class MobBottleBlock extends BaseEntityBlock {
 				mbBlockEntity.setFigureMode();
 			}			
 		}
-		return ItemInteractionResult.SUCCESS;
+		return InteractionResult.SUCCESS;
 	}
 
 	@Override
@@ -228,7 +219,7 @@ public class MobBottleBlock extends BaseEntityBlock {
 	}
 
 	@Override
-	public RenderShape getRenderShape(BlockState p_49232_) {
+	public RenderShape getRenderShape(BlockState state) {
 		return RenderShape.INVISIBLE;
 	}
 }

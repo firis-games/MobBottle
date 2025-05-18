@@ -26,7 +26,7 @@ public class MobBottleEmptyBlock extends Block {
 	 * ブロック当たり判定
 	 */
 	@Override
-	public VoxelShape getShape(BlockState p_48816_, BlockGetter p_48817_, BlockPos p_48818_, CollisionContext p_48819_) {
+	public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
 		return VS_MOB_BOTTLE_BLOCK;
 	}
 	
@@ -34,27 +34,19 @@ public class MobBottleEmptyBlock extends Block {
 	 * FullBlockでない場合は1.0Fを返却する
 	 */
 	@Override
-	public float getShadeBrightness(BlockState p_48731_, BlockGetter p_48732_, BlockPos p_48733_) {
+	public float getShadeBrightness(BlockState state, BlockGetter level, BlockPos pos) {
 		return 1.0F;
 	}
 
 	/**
-	 * 空の光を透過する
-	 */
-	@Override
-	public boolean propagatesSkylightDown(BlockState p_48740_, BlockGetter p_48741_, BlockPos p_48742_) {
-		return true;
-	}
-	
-	/**
 	 * 描画用当たり判定
 	 */
 	@Override
-	public VoxelShape getVisualShape(BlockState p_48735_, BlockGetter p_48736_, BlockPos p_48737_, CollisionContext p_48738_) {
+	public VoxelShape getVisualShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
 		return Shapes.empty();
 	}
 	
-	public RenderShape getRenderShape(BlockState p_49232_) {
+	public RenderShape getRenderShape(BlockState state) {
 		return RenderShape.MODEL;
 	}
 }

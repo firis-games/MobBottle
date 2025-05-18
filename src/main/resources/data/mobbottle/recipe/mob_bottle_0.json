@@ -7,15 +7,9 @@
 		"ggg"
 	],
 	"key": {
-		"g": {
-			"tag": "c:glass_blocks/cheap"
-		},
-		"w": {
-			"tag": "minecraft:wooden_slabs"
-		},
-		"d": {
-			"tag": "mobbottle:gems"
-		}
+		"g": "#c:glass_blocks/cheap",
+		"w": "#minecraft:wooden_slabs",
+		"d": "#mobbottle:gems"
 	},
 	"result": {
 		"count": 1,

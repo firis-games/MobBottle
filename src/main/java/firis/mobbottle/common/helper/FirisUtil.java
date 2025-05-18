@@ -1,10 +1,13 @@
 package firis.mobbottle.common.helper;
 
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+
+import java.util.Optional;
 
 public class FirisUtil {
 
@@ -16,7 +19,8 @@ public class FirisUtil {
 	 */
 	public static Block getBlockFromId(String blockId, Block defBlock) {
 		//IDからBlockを取得
-		Block block = BuiltInRegistries.BLOCK.get(ResourceLocation.parse(blockId));
+		Holder.Reference<Block> rblock = BuiltInRegistries.BLOCK.get(ResourceLocation.parse(blockId)).get();
+		Block block = rblock.value();
 		if (block == Blocks.AIR) {
 			//AIRは取得できないと判断
 			block = defBlock;

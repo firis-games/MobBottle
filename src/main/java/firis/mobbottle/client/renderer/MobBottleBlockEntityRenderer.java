@@ -11,6 +11,9 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.joml.Quaternionf;
 
+/***
+ * モブボトルブロック描画
+ */
 public class MobBottleBlockEntityRenderer implements BlockEntityRenderer<MobBottleBlockEntity> {
 
 	protected BlockEntityRendererProvider.Context context;
@@ -18,10 +21,12 @@ public class MobBottleBlockEntityRenderer implements BlockEntityRenderer<MobBott
 	public MobBottleBlockEntityRenderer(BlockEntityRendererProvider.Context context) {
 		this.context = context;
 	}
-	
+
+	/***
+	 * モブボトルブロック描画処理
+	 */
 	@Override
-	public void render(MobBottleBlockEntity blockEntity, float p_112308_, PoseStack poseStack,
-			MultiBufferSource p_112310_, int p_112311_, int p_112312_) {
+	public void render(MobBottleBlockEntity blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
 		
 		//Mobの描画
 		Entity entity = blockEntity.getRenderEntity();
@@ -29,21 +34,20 @@ public class MobBottleBlockEntityRenderer implements BlockEntityRenderer<MobBott
 		if (entity != null) {
 			poseStack.pushPose();
 			
-			float sclae = blockEntity.getRenderScale();
+			float scale = blockEntity.getRenderScale();
 			float positionY = blockEntity.getRenderPositionY();
 			
 			//位置とサイズと方角を設定
 			poseStack.translate(0.5D, positionY, 0.5D);
-	        poseStack.scale(sclae, sclae, sclae);
+	        poseStack.scale(scale, scale, scale);
 	        
 	        Quaternionf quaternion = direction.getRotation();	        
 	        quaternion.mul(new Quaternionf().fromAxisAngleDeg(1, 0, 0, -90f));
 	        quaternion.mul(new Quaternionf().fromAxisAngleDeg(0, 1, 0, 180f));
 	        poseStack.mulPose(quaternion);
-	        
+
 			Minecraft.getInstance().getEntityRenderDispatcher().render(
-					entity, 0.0D, 0.0D, 0.0D, 0.0F, 0.0F, 
-					poseStack, p_112310_, p_112311_);
+					entity, 0.0D, 0.0D, 0.0D, 0.0F, poseStack, bufferSource, packedLight);
 			
 			poseStack.popPose();
 		}
@@ -54,7 +58,7 @@ public class MobBottleBlockEntityRenderer implements BlockEntityRenderer<MobBott
 		
         Minecraft.getInstance().getBlockRenderer().renderSingleBlock(
         		state, 
-        		poseStack, p_112310_, p_112311_, p_112312_, 
+        		poseStack, bufferSource, packedLight, packedOverlay,
         		net.neoforged.neoforge.client.model.data.ModelData.EMPTY, 
         		null);
         

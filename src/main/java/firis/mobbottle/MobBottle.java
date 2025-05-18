@@ -2,7 +2,7 @@ package firis.mobbottle;
 
 import com.mojang.logging.LogUtils;
 import firis.mobbottle.client.renderer.MobBottleBlockEntityRenderer;
-import firis.mobbottle.client.renderer.MobBottleBlockEntityWithoutLevelRenderer;
+import firis.mobbottle.client.renderer.MobBottleBlockEntitySpecialModelRenderer;
 import firis.mobbottle.common.block.MobBottleBlock;
 import firis.mobbottle.common.block.MobBottleEmptyBlock;
 import firis.mobbottle.common.blockentity.MobBottleBlockEntity;
@@ -154,7 +154,7 @@ public class MobBottle
 	public void registerSpecialRenderers(RegisterSpecialModelRendererEvent event) {
 		event.register(
 				ResourceLocation.fromNamespaceAndPath(MobBottle.MODID, "mobbottle_special"),
-				MobBottleBlockEntityWithoutLevelRenderer.Unbaked.MAP_CODEC
+				MobBottleBlockEntitySpecialModelRenderer.Unbaked.MAP_CODEC
 		);
 	}
 

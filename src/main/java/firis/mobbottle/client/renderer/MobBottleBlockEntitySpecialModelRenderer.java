@@ -1,7 +1,6 @@
 package firis.mobbottle.client.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
 import com.mojang.serialization.MapCodec;
 import firis.mobbottle.MobBottle.FirisBlocks;
 import firis.mobbottle.common.blockentity.MobBottleBlockEntity;
@@ -22,7 +21,7 @@ import javax.annotation.Nullable;
  * モブボトルアイテム描画
  */
 @OnlyIn(Dist.CLIENT)
-public class MobBottleBlockEntityWithoutLevelRenderer implements SpecialModelRenderer<ItemStack> {
+public class MobBottleBlockEntitySpecialModelRenderer implements SpecialModelRenderer<ItemStack> {
 
 	//描画用のBlockEntity
 	public MobBottleBlockEntity blockEntity = null;
@@ -62,13 +61,14 @@ public class MobBottleBlockEntityWithoutLevelRenderer implements SpecialModelRen
 		} else if (displayContext == ItemDisplayContext.FIRST_PERSON_LEFT_HAND) {
 			blockEntity.SetRendererDirection(Direction.WEST);
 
+		//三人称右手
+		} else if (displayContext == ItemDisplayContext.THIRD_PERSON_RIGHT_HAND) {
+			blockEntity.SetRendererDirection(Direction.WEST);
+
 		//三人称左手
 		} else if (displayContext == ItemDisplayContext.THIRD_PERSON_LEFT_HAND) {
 			blockEntity.SetRendererDirection(Direction.EAST);
 
-		//三人称左手
-		} else if (displayContext == ItemDisplayContext.THIRD_PERSON_RIGHT_HAND) {
-			blockEntity.SetRendererDirection(Direction.WEST);
 		}
 
 		//モブボトルブロック描画
@@ -84,7 +84,7 @@ public class MobBottleBlockEntityWithoutLevelRenderer implements SpecialModelRen
 	 */
 	public record Unbaked() implements SpecialModelRenderer.Unbaked {
 
-		public static final MapCodec<MobBottleBlockEntityWithoutLevelRenderer.Unbaked> MAP_CODEC = MapCodec.unit(new MobBottleBlockEntityWithoutLevelRenderer.Unbaked());
+		public static final MapCodec<MobBottleBlockEntitySpecialModelRenderer.Unbaked> MAP_CODEC = MapCodec.unit(new MobBottleBlockEntitySpecialModelRenderer.Unbaked());
 
 		@Override
 		public MapCodec<Unbaked> type() {
@@ -93,7 +93,7 @@ public class MobBottleBlockEntityWithoutLevelRenderer implements SpecialModelRen
 
 		@Override
 		public SpecialModelRenderer<?> bake(EntityModelSet modelSet) {
-			return new MobBottleBlockEntityWithoutLevelRenderer();
+			return new MobBottleBlockEntitySpecialModelRenderer();
 		}
 	}
 

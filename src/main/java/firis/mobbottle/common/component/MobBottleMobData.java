@@ -7,6 +7,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
+import java.util.Optional;
+
 /***
  * モブボトルアイテムのデータ定義
  * @param tag
@@ -88,9 +90,12 @@ public record MobBottleMobData(CompoundTag tag, String name) {
      */
     public static MobBottleMobData GetFromTag(CompoundTag tag)
     {
-        if (!tag.contains("tag") || !tag.contains("name")) {
+        Optional<CompoundTag> optTag = tag.getCompound("tag");
+        Optional<String> optName = tag.getString("name");
+
+        if (optTag.isEmpty() || optName.isEmpty()) {
             return MobBottleMobData.Empty();
         }
-        return new MobBottleMobData(tag.getCompound("tag"), tag.getString("name"));
+        return new MobBottleMobData(optTag.get(), optName.get());
     }
 }

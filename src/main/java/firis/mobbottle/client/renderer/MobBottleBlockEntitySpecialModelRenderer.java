@@ -12,6 +12,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
@@ -71,10 +72,12 @@ public class MobBottleBlockEntitySpecialModelRenderer implements SpecialModelRen
 
 		}
 
+		//カメラ位置の取得
+		Vec3 cameraPos = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
+
 		//モブボトルブロック描画
 		Minecraft.getInstance().getBlockEntityRenderDispatcher().getRenderer(blockEntity)
-				.render(blockEntity, 0, pose, bufferSource, light, overlay);
-
+				.render(blockEntity, 0, pose, bufferSource, light, overlay, cameraPos);
 
 		pose.popPose();
 	}

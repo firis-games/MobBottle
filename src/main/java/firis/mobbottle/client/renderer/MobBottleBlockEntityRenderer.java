@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import org.joml.Quaternionf;
 
 /***
@@ -26,7 +27,7 @@ public class MobBottleBlockEntityRenderer implements BlockEntityRenderer<MobBott
 	 * モブボトルブロック描画処理
 	 */
 	@Override
-	public void render(MobBottleBlockEntity blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
+	public void render(MobBottleBlockEntity blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay, Vec3 vec3) {
 		
 		//Mobの描画
 		Entity entity = blockEntity.getRenderEntity();
@@ -59,7 +60,7 @@ public class MobBottleBlockEntityRenderer implements BlockEntityRenderer<MobBott
         Minecraft.getInstance().getBlockRenderer().renderSingleBlock(
         		state, 
         		poseStack, bufferSource, packedLight, packedOverlay,
-        		net.neoforged.neoforge.client.model.data.ModelData.EMPTY, 
+        		blockEntity.getLevel(),
         		null);
         
         poseStack.popPose();

@@ -201,9 +201,10 @@ public class MobBottleBlock extends BaseEntityBlock {
 				//カスタムデータ取得
 				CustomData cstmData = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY);
 				CompoundTag cstmTag = cstmData.copyTag();
-				if (cstmTag.contains("mobbottle")) {
-					mbBlockEntity.setCopyMobBottleTag(cstmTag.getCompound("mobbottle"));
-				}
+
+				cstmTag.getCompound("mobbottle").ifPresent(tag -> {
+					mbBlockEntity.setCopyMobBottleTag(tag);
+				});
 			}
 			else if (itemId.endsWith("minecraft:stick")) {
 				//人形モードを設定

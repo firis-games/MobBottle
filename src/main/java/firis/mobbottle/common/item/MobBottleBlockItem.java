@@ -19,10 +19,12 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.Block;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * モブボトルアイテム
@@ -54,7 +56,7 @@ public class MobBottleBlockItem extends BlockItem {
 				Entity entity = FirisEntityHelper.createEntityFromTag(mobTag, context.getLevel());
 				if (entity != null) {
 					//スポーン
-					entity.moveTo(context.getClickLocation());
+					entity.setPos(context.getClickLocation());
 					if (context.getLevel() instanceof ServerLevel) {
 						((ServerLevel)context.getLevel()).addFreshEntityWithPassengers(entity);
 					}
@@ -140,17 +142,17 @@ public class MobBottleBlockItem extends BlockItem {
 		}
 		return component;
 	}
-	
+
 	/**
 	 * info表示追加
 	 */
 	@Override
-	public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+	public void appendHoverText(ItemStack stack, Item.TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipAdder, TooltipFlag flag) {
 		String mobName = stack.get(MobBottle.FirisDataComponentType.MOBBOTTLE_TYPE).name();
 		if (!"".equals(mobName)) {
-			tooltipComponents.add(Component.translatable("info.mobbottle.mob_bottle_in", mobName).withStyle(ChatFormatting.DARK_AQUA));
+			tooltipAdder.accept(Component.translatable("info.mobbottle.mob_bottle_in", mobName).withStyle(ChatFormatting.DARK_AQUA));
 		} else {
-			tooltipComponents.add(Component.translatable("info.mobbottle.mob_bottle").withStyle(ChatFormatting.LIGHT_PURPLE));
+			tooltipAdder.accept(Component.translatable("info.mobbottle.mob_bottle").withStyle(ChatFormatting.LIGHT_PURPLE));
 		}
 	}
 }

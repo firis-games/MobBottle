@@ -132,9 +132,9 @@ public class MobBottleBlockEntity extends BlockEntity {
 	 * モブボトルの情報を設定
 	 */
 	public void setCopyMobBottleTag(CompoundTag tag) {
-		this.setDataBlockFromString(tag.getString("block"));
-		this.dataScale = tag.getFloat("scale");
-		this.dataPositionY = tag.getFloat("positiony");
+		this.setDataBlockFromString(tag.getStringOr("block", ""));
+		this.dataScale = tag.getFloatOr("scale", 0.0f);
+		this.dataPositionY = tag.getFloatOr("positiony", 0.0f);
 		this.setChanged();
 	}
 
@@ -173,11 +173,11 @@ public class MobBottleBlockEntity extends BlockEntity {
 	@Override
 	public void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
 		super.loadAdditional(tag, registries);
-		this.mobData = MobBottleMobData.GetFromTag(tag.getCompound("bottle"));
-		this.dataDirection = Direction.from3DDataValue(tag.getInt("dict"));
-		this.setDataBlockFromString(tag.getString("block"));
-		this.dataScale = tag.getFloat("scale");
-		this.dataPositionY = tag.getFloat("positiony");
+		this.mobData = MobBottleMobData.GetFromTag(tag.getCompoundOrEmpty("bottle"));
+		this.dataDirection = Direction.from3DDataValue(tag.getIntOr("dict", 0));
+		this.setDataBlockFromString(tag.getStringOr("block", ""));
+		this.dataScale = tag.getFloatOr("scale", 0.0f);
+		this.dataPositionY = tag.getFloatOr("positiony", 0.0f);
 	}
 	
 	protected Block getDataBlock() {

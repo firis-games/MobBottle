@@ -19,7 +19,7 @@ public class ModRecipeProvider extends RecipeProvider {
             Registries.ITEM, ResourceLocation.fromNamespaceAndPath("c", "glass_blocks/cheap"));
 
     private static final TagKey<Item> TAG_GEM = TagKey.create(
-            Registries.ITEM, ResourceLocation.fromNamespaceAndPath(MobBottle.MODID, "gems"));
+            Registries.ITEM, ResourceLocation.fromNamespaceAndPath("c", "gems"));
 
 
     public ModRecipeProvider(HolderLookup.Provider registries, RecipeOutput output) {

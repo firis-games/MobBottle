@@ -189,7 +189,7 @@ public class MobBottleBlockEntity extends BlockEntity {
 	
 	protected void setDataBlockFromString(String blockId) {
 		//BlockIdからBlockを取得
-		this.dataBlock = FirisUtil.getBlockFromId(blockId, null);
+		this.dataBlock = FirisUtil.getBlockFromId(blockId, Blocks.AIR);
 	}
 	
 	/**

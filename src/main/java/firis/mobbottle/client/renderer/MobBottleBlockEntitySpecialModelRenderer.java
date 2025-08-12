@@ -3,7 +3,7 @@ package firis.mobbottle.client.renderer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.serialization.MapCodec;
 import firis.mobbottle.MobBottle.FirisBlocks;
-import firis.mobbottle.common.blockentity.MobBottleBlockEntity;
+import firis.mobbottle.block.entity.MobBottleBlockEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.MultiBufferSource;

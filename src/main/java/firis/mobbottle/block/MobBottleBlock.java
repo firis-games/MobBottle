@@ -1,11 +1,11 @@
-package firis.mobbottle.common.block;
+package firis.mobbottle.block;
 
 import com.mojang.serialization.MapCodec;
 import firis.mobbottle.MobBottle.FirisBlockEntityType;
 import firis.mobbottle.MobBottle.FirisBlocks;
 import firis.mobbottle.MobBottle.FirisItems;
-import firis.mobbottle.common.blockentity.MobBottleBlockEntity;
-import firis.mobbottle.common.helper.FirisUtil;
+import firis.mobbottle.block.entity.MobBottleBlockEntity;
+import firis.mobbottle.helper.FirisUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;

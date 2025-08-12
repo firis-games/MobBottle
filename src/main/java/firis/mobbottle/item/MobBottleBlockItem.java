@@ -1,8 +1,8 @@
-package firis.mobbottle.common.item;
+package firis.mobbottle.item;
 
 import firis.mobbottle.MobBottle;
-import firis.mobbottle.common.component.MobBottleMobData;
-import firis.mobbottle.common.helper.FirisEntityHelper;
+import firis.mobbottle.component.MobBottleMobData;
+import firis.mobbottle.helper.FirisEntityHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
@@ -23,7 +23,6 @@ import net.minecraft.world.item.component.TooltipDisplay;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.Block;
 
-import java.util.List;
 import java.util.function.Consumer;
 
 /**

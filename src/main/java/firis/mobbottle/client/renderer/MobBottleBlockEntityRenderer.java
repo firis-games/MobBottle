@@ -1,7 +1,7 @@
 package firis.mobbottle.client.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import firis.mobbottle.common.blockentity.MobBottleBlockEntity;
+import firis.mobbottle.block.entity.MobBottleBlockEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;

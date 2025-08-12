@@ -1,10 +1,10 @@
-package firis.mobbottle.common.blockentity;
+package firis.mobbottle.block.entity;
 
 import firis.mobbottle.MobBottle;
 import firis.mobbottle.MobBottle.FirisBlocks;
-import firis.mobbottle.common.component.MobBottleMobData;
-import firis.mobbottle.common.helper.FirisEntityHelper;
-import firis.mobbottle.common.helper.FirisUtil;
+import firis.mobbottle.component.MobBottleMobData;
+import firis.mobbottle.helper.FirisEntityHelper;
+import firis.mobbottle.helper.FirisUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

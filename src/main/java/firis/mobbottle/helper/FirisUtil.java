@@ -1,4 +1,4 @@
-package firis.mobbottle.common.helper;
+package firis.mobbottle.helper;
 
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -6,8 +6,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-
-import java.util.Optional;
 
 public class FirisUtil {
 

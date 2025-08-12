@@ -1,4 +1,4 @@
-package firis.mobbottle.common.helper;
+package firis.mobbottle.helper;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;

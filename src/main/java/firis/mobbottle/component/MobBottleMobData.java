@@ -1,4 +1,4 @@
-package firis.mobbottle.common.component;
+package firis.mobbottle.component;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

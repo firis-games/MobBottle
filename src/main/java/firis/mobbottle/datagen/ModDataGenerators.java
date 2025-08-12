@@ -13,6 +13,7 @@ public class ModDataGenerators {
 
         //レシピの登録
         event.createProvider(ModRecipeProvider.Runner::new);
-
+        //LootTableの登録
+        event.createProvider(ModLootTableDataGenerators::new);
     }
 }

@@ -5,7 +5,7 @@ import firis.mobbottle.MobBottle.FirisBlockEntityType;
 import firis.mobbottle.MobBottle.FirisBlocks;
 import firis.mobbottle.MobBottle.FirisItems;
 import firis.mobbottle.block.entity.MobBottleBlockEntity;
-import firis.mobbottle.helper.FirisUtil;
+import firis.mobbottle.util.FirisUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;

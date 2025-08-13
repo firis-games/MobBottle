@@ -1,4 +1,4 @@
-package firis.mobbottle.helper;
+package firis.mobbottle.util;
 
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;

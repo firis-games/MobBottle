@@ -12,8 +12,6 @@ public class FirisEntityHelper {
 
 	/**
 	 * EntityのCompoundTagからEntityを生成する
-	 * @param tag
-	 * @return
 	 */
 	public static Entity createEntityFromTag(CompoundTag tag, Level level) {
 
@@ -22,12 +20,19 @@ public class FirisEntityHelper {
 
 		Entity entity = null;
 		try {
-			//Entity生成
+			//EntityType取得
 			Optional<EntityType<?>> optEntityType = EntityType.by(tag);
+			if (optEntityType.isEmpty()) {
+				return null;
+			}
+
+			//Entity生成
 			entity = optEntityType.get().create(level, EntitySpawnReason.SPAWN_ITEM_USE);
-			
-			//情報の上書き
-			entity.load(tag);
+			if (entity != null) {
+				//情報の上書き
+				entity.load(tag);
+			}
+
 		} catch (Exception e) {
 			entity = null;
 		}
@@ -36,14 +41,13 @@ public class FirisEntityHelper {
 	
 	/**
 	 * EntityからCompoundTagを生成する
-	 * @param entity
-	 * @return
 	 */
 	public static CompoundTag createTagFromEntity(Entity entity) {
 		
-		CompoundTag tag = new CompoundTag();		
-		entity.save(tag);
-		
+		CompoundTag tag = new CompoundTag();
+		if (entity != null) {
+			entity.save(tag);
+		}
 		return tag;
 	}
 	

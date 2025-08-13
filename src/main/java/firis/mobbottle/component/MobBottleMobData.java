@@ -19,7 +19,9 @@ public record MobBottleMobData(CompoundTag tag, String name) {
     /**
      * 空のMobBottleMobDataを生成
      */
-    public static final MobBottleMobData Empty() {return new MobBottleMobData(new CompoundTag(), "");}
+    public static MobBottleMobData Empty() {
+        return new MobBottleMobData(new CompoundTag(), "");
+    }
 
     /**
      * CODEC
@@ -54,11 +56,11 @@ public record MobBottleMobData(CompoundTag tag, String name) {
     /**
      * tagの取得Override
      * 書き換えられても影響がないようにコピーを渡す
+     *
      * @return
      */
     @Override
-    public CompoundTag tag()
-    {
+    public CompoundTag tag() {
         return this.tag.copy();
     }
 
@@ -66,8 +68,7 @@ public record MobBottleMobData(CompoundTag tag, String name) {
      * モブ情報
      * @return
      */
-    public boolean isEmpty()
-    {
+    public boolean isEmpty() {
         return this.tag.isEmpty();
     }
 
@@ -75,8 +76,7 @@ public record MobBottleMobData(CompoundTag tag, String name) {
      * CompoundTagへ変換
      * @return
      */
-    public CompoundTag getCompoundTag()
-    {
+    public CompoundTag getCompoundTag() {
         CompoundTag tag = new CompoundTag();
         tag.put("tag", this.tag.copy());
         tag.putString("name", this.name);
@@ -88,8 +88,7 @@ public record MobBottleMobData(CompoundTag tag, String name) {
      * @param tag
      * @return
      */
-    public static MobBottleMobData GetFromTag(CompoundTag tag)
-    {
+    public static MobBottleMobData GetFromTag(CompoundTag tag) {
         Optional<CompoundTag> optTag = tag.getCompound("tag");
         Optional<String> optName = tag.getString("name");
 

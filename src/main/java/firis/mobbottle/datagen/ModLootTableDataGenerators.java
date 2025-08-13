@@ -9,7 +9,6 @@ import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -36,7 +35,7 @@ public class ModLootTableDataGenerators extends LootTableProvider {
          */
         @Override
         protected Iterable<Block> getKnownBlocks() {
-            return Arrays.asList(MobBottle.FirisBlocks.MOB_BOTTLE_EMPTY.get());
+            return List.of(MobBottle.FirisBlocks.MOB_BOTTLE_EMPTY.get());
         }
 
         /***

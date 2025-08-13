@@ -1,11 +1,11 @@
 package firis.mobbottle;
 
 import com.mojang.logging.LogUtils;
-import firis.mobbottle.client.renderer.MobBottleBlockEntityRenderer;
-import firis.mobbottle.client.renderer.MobBottleBlockEntitySpecialModelRenderer;
 import firis.mobbottle.block.MobBottleBlock;
 import firis.mobbottle.block.MobBottleEmptyBlock;
 import firis.mobbottle.block.entity.MobBottleBlockEntity;
+import firis.mobbottle.client.renderer.MobBottleBlockEntityRenderer;
+import firis.mobbottle.client.renderer.MobBottleBlockEntitySpecialModelRenderer;
 import firis.mobbottle.component.MobBottleMobData;
 import firis.mobbottle.item.MobBottleBlockItem;
 import net.minecraft.core.component.DataComponentType;
@@ -18,14 +18,12 @@ import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterSpecialModelRendererEvent;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
@@ -39,10 +37,9 @@ import java.util.function.Supplier;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(MobBottle.MODID)
-public class MobBottle
-{
+public class MobBottle {
 	public static final String MODID = "mobbottle";
-	
+
     // Directly reference a slf4j logger
     public static final Logger LOGGER = LogUtils.getLogger();
 
@@ -95,35 +92,28 @@ public class MobBottle
 						.networkSynchronized(MobBottleMobData.STREAM_CODEC)
 		);
 	}
-	
+
 	/**
 	 * 各種イベント登録
 	 */
     public MobBottle(IEventBus modEventBus) {
 
-		// Register the commonSetup method for modloading
+		//共通処理
         modEventBus.addListener(this::commonSetup);
+		//クリエイティブタブ登録
+		modEventBus.addListener(this::CreativeModeTabEventBuildContents);
 
-        // 関連オブジェクト登録
+        //関連オブジェクト登録
         FirisBlocks.BLOCKS.register(modEventBus);
         FirisItems.ITEMS.register(modEventBus);
 		FirisBlockEntityType.REGISTER.register(modEventBus);
 		FirisDataComponentType.REGISTRAR.register(modEventBus);
 
-		// クリエイティブタブ
-		modEventBus.addListener(this::CreativeModeTabEventBuildContents);
-
-		// Renderer登録
-		if (FMLEnvironment.dist == Dist.CLIENT) {
-			modEventBus.addListener(this::onRegisterRenderers);
-			modEventBus.addListener(this::registerSpecialRenderers);
-		}
 	}
-    
-    private void commonSetup(final FMLCommonSetupEvent event)
-    {
+
+    private void commonSetup(final FMLCommonSetupEvent event) {
     }
-    
+
     /**
      * クリエイティブタブ登録イベント
      */
@@ -134,30 +124,6 @@ public class MobBottle
 		}
 	}
 
-	/**
-	 * ブロック描画系登録イベント
-	 */
-	@OnlyIn(Dist.CLIENT)
-	public void onRegisterRenderers(final EntityRenderersEvent.RegisterRenderers event) {
-		//BER登録
-		event.registerBlockEntityRenderer(
-				FirisBlockEntityType.BLOCK_ENTITY_TYPE.get(),
-				MobBottleBlockEntityRenderer::new
-		);
-	}
-
-	/**
-	 * アイテム描画イベント登録
-	 * @param event
-	 */
-	@OnlyIn(Dist.CLIENT)
-	public void registerSpecialRenderers(RegisterSpecialModelRendererEvent event) {
-		event.register(
-				ResourceLocation.fromNamespaceAndPath(MobBottle.MODID, "mobbottle_special"),
-				MobBottleBlockEntitySpecialModelRenderer.Unbaked.MAP_CODEC
-		);
-	}
-
     @EventBusSubscriber(modid = MODID, value = Dist.CLIENT)
     public static class ClientModEvents
     {
@@ -165,5 +131,29 @@ public class MobBottle
         public static void onClientSetup(FMLClientSetupEvent event)
         {
         }
+
+		/**
+		 * ブロック描画系登録イベント
+		 */
+		@SubscribeEvent
+		public static void onRegisterRenderers(final EntityRenderersEvent.RegisterRenderers event) {
+			//BER登録
+			event.registerBlockEntityRenderer(
+					FirisBlockEntityType.BLOCK_ENTITY_TYPE.get(),
+					MobBottleBlockEntityRenderer::new
+			);
+		}
+
+		/**
+		 * アイテム描画イベント登録
+		 * @param event
+		 */
+		@SubscribeEvent
+		public static void registerSpecialRenderers(RegisterSpecialModelRendererEvent event) {
+			event.register(
+					ResourceLocation.fromNamespaceAndPath(MobBottle.MODID, "mobbottle_special"),
+					MobBottleBlockEntitySpecialModelRenderer.Unbaked.MAP_CODEC
+			);
+		}
     }
 }

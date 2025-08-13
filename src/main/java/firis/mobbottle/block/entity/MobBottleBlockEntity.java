@@ -132,7 +132,7 @@ public class MobBottleBlockEntity extends BlockEntity {
         CompoundTag tag = new CompoundTag();
         tag.putString("block", this.getDataBlockRegistryName());
         tag.putFloat("scale", this.dataScale);
-        tag.putFloat("positiony", this.dataPositionY);
+        tag.putFloat("pos_y", this.dataPositionY);
         return tag;
     }
 
@@ -142,7 +142,7 @@ public class MobBottleBlockEntity extends BlockEntity {
     public void setCopyMobBottleTag(CompoundTag tag) {
         this.setDataBlockFromString(tag.getStringOr("block", ""));
         this.dataScale = tag.getFloatOr("scale", 0.0f);
-        this.dataPositionY = tag.getFloatOr("positiony", 0.0f);
+        this.dataPositionY = tag.getFloatOr("pos_y", 0.0f);
         this.setChanged();
     }
 

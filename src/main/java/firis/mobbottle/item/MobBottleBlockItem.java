@@ -147,6 +147,7 @@ public class MobBottleBlockItem extends BlockItem {
     /**
      * info表示追加
      */
+    @SuppressWarnings("deprecation")
     @Override
     public void appendHoverText(ItemStack stack, Item.TooltipContext context, TooltipDisplay tooltipDisplay, Consumer<Component> tooltipAdder, TooltipFlag flag) {
         String mobName = stack.get(MobBottle.FirisDataComponentType.MOBBOTTLE_TYPE).name();

@@ -14,12 +14,16 @@ import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.TagValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.fml.loading.FMLEnvironment;
@@ -146,46 +150,64 @@ public class MobBottleBlockEntity extends BlockEntity {
         this.setChanged();
     }
 
+    /***
+     * チャンクロード時のTag設定
+     */
     @Override
     public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
-        CompoundTag tag = new CompoundTag();
-        this.saveAdditional(tag, registries);
-        return tag;
+        TagValueOutput output = TagValueOutput.createWithoutContext(ProblemReporter.DISCARDING);
+        this.saveAdditional(output);
+        return output.buildResult();
     }
 
+    /***
+     * チャンクロード時のTagロード
+     * @return
+     */
     @Override
-    public void handleUpdateTag(CompoundTag tag, HolderLookup.Provider registries) {
-        super.handleUpdateTag(tag, registries);
+    public void handleUpdateTag(ValueInput input) {
+        super.handleUpdateTag(input);
     }
 
+    /***
+     * 手動同期時のTag設定
+     * @return
+     */
     @Override
     public Packet<ClientGamePacketListener> getUpdatePacket() {
         return ClientboundBlockEntityDataPacket.create(this);
     }
 
+    /***
+     * 手動同期時のTagロード
+     */
     @Override
-    public void onDataPacket(Connection connection, ClientboundBlockEntityDataPacket packet, HolderLookup.Provider registries) {
-        super.onDataPacket(connection, packet, registries);
+    public void onDataPacket(Connection net, ValueInput valueInput) {
+        super.onDataPacket(net, valueInput);
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.saveAdditional(tag, registries);
-        tag.put("bottle", this.mobData.getCompoundTag());
-        tag.putInt("dict", this.dataDirection.get3DDataValue());
-        tag.putString("block", this.getDataBlockRegistryName());
-        tag.putFloat("scale", this.dataScale);
-        tag.putFloat("positiony", this.dataPositionY);
+    protected void saveAdditional(ValueOutput output) {
+        super.saveAdditional(output);
+
+        output.store("bottle", CompoundTag.CODEC, this.mobData.getCompoundTag());
+        output.putInt("dict", this.dataDirection.get3DDataValue());
+        output.putString("block", this.getDataBlockRegistryName());
+        output.putFloat("scale", this.dataScale);
+        output.putFloat("pos_y", this.dataPositionY);
     }
 
     @Override
-    public void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
-        this.mobData = MobBottleMobData.GetFromTag(tag.getCompoundOrEmpty("bottle"));
-        this.dataDirection = Direction.from3DDataValue(tag.getIntOr("dict", 0));
-        this.setDataBlockFromString(tag.getStringOr("block", ""));
-        this.dataScale = tag.getFloatOr("scale", 0.0f);
-        this.dataPositionY = tag.getFloatOr("positiony", 0.0f);
+    protected void loadAdditional(ValueInput input) {
+        super.loadAdditional(input);
+
+        input.read("bottle", CompoundTag.CODEC).ifPresent((bottleData) -> {
+            this.mobData = MobBottleMobData.GetFromTag(bottleData);
+        });
+        this.dataDirection = Direction.from3DDataValue(input.getIntOr("dict", 0));
+        this.setDataBlockFromString(input.getStringOr("block", ""));
+        this.dataScale = input.getFloatOr("scale", 0.0f);
+        this.dataPositionY = input.getFloatOr("pos_y", 0.0f);
     }
 
     protected Block getDataBlock() {

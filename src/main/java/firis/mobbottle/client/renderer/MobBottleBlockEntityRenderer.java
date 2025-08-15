@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Quaternionf;
 
@@ -39,7 +40,7 @@ public class MobBottleBlockEntityRenderer implements BlockEntityRenderer<MobBott
             float positionY = blockEntity.getRenderPositionY();
 
             //位置とサイズと方角を設定
-            poseStack.translate(0.5D, positionY, 0.5D);
+            poseStack.translate(0.5d, positionY, 0.5d);
             poseStack.scale(scale, scale, scale);
 
             Quaternionf quaternion = direction.getRotation();
@@ -48,7 +49,7 @@ public class MobBottleBlockEntityRenderer implements BlockEntityRenderer<MobBott
             poseStack.mulPose(quaternion);
 
             Minecraft.getInstance().getEntityRenderDispatcher().render(
-                    entity, 0.0D, 0.0D, 0.0D, 0.0F, poseStack, bufferSource, packedLight);
+                    entity, 0.0d, 0.0d, 0.0d, 0.0f, poseStack, bufferSource, packedLight);
 
             poseStack.popPose();
         }
@@ -65,4 +66,14 @@ public class MobBottleBlockEntityRenderer implements BlockEntityRenderer<MobBott
 
         poseStack.popPose();
     }
+
+    /***
+     * 描画範囲の指定
+     * 1ブロックより0.5広げる
+     */
+    @Override
+    public AABB getRenderBoundingBox(MobBottleBlockEntity blockEntity) {
+        return new AABB(blockEntity.getBlockPos()).inflate(0.5d);
+    }
+
 }

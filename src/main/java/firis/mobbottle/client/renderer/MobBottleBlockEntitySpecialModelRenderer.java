@@ -15,8 +15,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import org.joml.Vector3f;
 
 import javax.annotation.Nullable;
+import java.util.Set;
 
 /***
  * モブボトルアイテム描画
@@ -80,6 +82,22 @@ public class MobBottleBlockEntitySpecialModelRenderer implements SpecialModelRen
                 .render(blockEntity, 0, pose, bufferSource, light, overlay, cameraPos);
 
         pose.popPose();
+    }
+
+    /***
+     * 描画範囲の指定
+     * 8頂点を指定する
+     */
+    @Override
+    public void getExtents(Set<Vector3f> set) {
+        set.add(new Vector3f(0, 0, 0));
+        set.add(new Vector3f(1, 0, 0));
+        set.add(new Vector3f(0, 1, 0));
+        set.add(new Vector3f(1, 1, 0));
+        set.add(new Vector3f(0, 0, 1));
+        set.add(new Vector3f(1, 0, 1));
+        set.add(new Vector3f(0, 1, 1));
+        set.add(new Vector3f(1, 1, 1));
     }
 
     /***

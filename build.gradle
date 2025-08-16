@@ -205,3 +205,8 @@ publishing {
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
 }
+
+// 警告のエラー表示を抑制
+tasks.withType(JavaCompile) {
+    options.compilerArgs += ["-Xlint:-removal"]
+}

@@ -3,9 +3,7 @@ package firis.mobbottle.block.entity;
 import firis.mobbottle.MobBottle;
 import firis.mobbottle.MobBottle.FirisBlocks;
 import firis.mobbottle.component.MobBottleMobData;
-import firis.mobbottle.util.FirisEntityHelper;
 import firis.mobbottle.util.FirisUtil;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -15,7 +13,6 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.util.ProblemReporter;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -25,11 +22,7 @@ import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.fml.loading.FMLEnvironment;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class MobBottleBlockEntity extends BlockEntity {
 
@@ -58,19 +51,24 @@ public class MobBottleBlockEntity extends BlockEntity {
      */
     protected float dataPositionY = 0.0F / 16.0F;
 
+    protected final MobBottleBlockEntityClient client;
+
     public MobBottleBlockEntity(BlockPos p_155229_, BlockState p_155230_) {
         super(MobBottle.FirisBlockEntityType.BLOCK_ENTITY_TYPE.get(), p_155229_, p_155230_);
-        //Client側初期化
+
+        //Client処理の初期化
         if (FMLEnvironment.dist == Dist.CLIENT) {
-            this.initClient();
+            this.client = new MobBottleBlockEntityClient(this);
+        } else {
+            this.client = null;
         }
     }
 
     /**
      * ブロック設置時に必要な情報を設定する
      *
-     * @param stack
-     * @param direction
+     * @param stack アイテム情報を保持
+     * @param direction 方角
      */
     public void setMobBottleData(ItemStack stack, Direction direction) {
         this.mobData = stack.get(MobBottle.FirisDataComponentType.MOBBOTTLE_TYPE);
@@ -162,7 +160,6 @@ public class MobBottleBlockEntity extends BlockEntity {
 
     /***
      * チャンクロード時のTagロード
-     * @return
      */
     @Override
     public void handleUpdateTag(ValueInput input) {
@@ -171,7 +168,6 @@ public class MobBottleBlockEntity extends BlockEntity {
 
     /***
      * 手動同期時のTag設定
-     * @return
      */
     @Override
     public Packet<ClientGamePacketListener> getUpdatePacket() {
@@ -233,122 +229,16 @@ public class MobBottleBlockEntity extends BlockEntity {
     }
 
     /**
-     * 描画用Entityキャッシュ
-     */
-    @OnlyIn(Dist.CLIENT)
-    protected Entity renderEntityCache;
-
-    @OnlyIn(Dist.CLIENT)
-    protected boolean isRenderEntityCache;
-
-    /**
-     * Clientサイドの初期化
-     */
-    @OnlyIn(Dist.CLIENT)
-    protected void initClient() {
-        this.renderEntityCache = null;
-        this.isRenderEntityCache = false;
-        this.renderEntityCacheMap = new HashMap<>();
-    }
-
-    /**
-     * 描画用Entity取得
-     *
-     * @return
-     */
-    @OnlyIn(Dist.CLIENT)
-    public Entity getRenderEntity() {
-        if (this.renderEntityCache == null && !this.isRenderEntityCache) {
-            CompoundTag tag = !this.mobData.isEmpty() ? this.mobData.tag() : null;
-            this.renderEntityCache = FirisEntityHelper.createEntityFromTag(tag, this.level);
-            this.isRenderEntityCache = true;
-        }
-        return this.renderEntityCache;
-    }
-
-    /**
-     * 描画用の方角を取得
-     *
-     * @return
-     */
-    @OnlyIn(Dist.CLIENT)
-    public Direction getRenderDirection() {
-        return this.dataDirection;
-    }
-
-    /**
-     * 描画用の外装ブロックを取得
-     *
-     * @return
-     */
-    @OnlyIn(Dist.CLIENT)
-    public BlockState getRenderBlockState() {
-        return this.getDataBlock().defaultBlockState();
-    }
-
-    /**
-     * 描画用のサイズ
-     *
-     * @return
-     */
-    @OnlyIn(Dist.CLIENT)
-    public float getRenderScale() {
-        return this.dataScale;
-    }
-
-    /**
-     * 描画用のY軸
-     *
-     * @return
-     */
-    @OnlyIn(Dist.CLIENT)
-    public float getRenderPositionY() {
-        return this.dataPositionY;
-    }
-
-
-    // BlockEntityWithoutLevelRenderer対応
-    //**************************************************
-    @OnlyIn(Dist.CLIENT)
-    private Map<CompoundTag, Entity> renderEntityCacheMap;
-
-    /**
-     * アイテム描画に必要な情報を設定する
-     *
-     * @param stack
-     */
-    @OnlyIn(Dist.CLIENT)
-    public void setMobBottleDataFromBEWLR(ItemStack stack) {
-
-        this.setLevel(Minecraft.getInstance().level);
-
-        this.mobData = stack.get(MobBottle.FirisDataComponentType.MOBBOTTLE_TYPE);
-        this.dataDirection = Direction.EAST;
-
-        //キャッシュに存在しない場合はgetRenderEntityでEntityを生成する
-        if (!this.renderEntityCacheMap.containsKey(this.mobData.tag())) {
-            this.renderEntityCache = null;
-            this.isRenderEntityCache = false;
-            this.renderEntityCacheMap.put(this.mobData.tag(), this.getRenderEntity());
-        }
-
-        //キャッシュからEntityを反映
-        this.renderEntityCache = this.renderEntityCacheMap.get(this.mobData.tag());
-        this.isRenderEntityCache = true;
-    }
-
-    /**
-     * アイテム描画に必要な方角を設定する
-     */
-    @OnlyIn(Dist.CLIENT)
-    public void SetRendererDirection(Direction direction) {
-        this.dataDirection = direction;
-    }
-
-    /**
      * Block.getRegistryNameの代替メソッド
      */
     protected String getDataBlockRegistryName() {
         return FirisUtil.getIdFromBlock(this.getDataBlock(), null);
+    }
+
+    /***
+     * クライアントから呼ばれる処理
+     */
+    public MobBottleBlockEntityClient getClient() {
+        return this.client;
     }
 }

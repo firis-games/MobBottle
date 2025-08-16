@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.serialization.MapCodec;
 import firis.mobbottle.MobBottle.FirisBlocks;
 import firis.mobbottle.block.entity.MobBottleBlockEntity;
+import firis.mobbottle.block.entity.MobBottleBlockEntityClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -13,8 +14,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.joml.Vector3f;
 
 import javax.annotation.Nullable;
@@ -22,8 +21,8 @@ import java.util.Set;
 
 /***
  * モブボトルアイテム描画
+ * @OnlyIn(Dist.CLIENT)
  */
-@OnlyIn(Dist.CLIENT)
 public class MobBottleBlockEntitySpecialModelRenderer implements SpecialModelRenderer<ItemStack> {
 
     //描画用のBlockEntity
@@ -47,30 +46,33 @@ public class MobBottleBlockEntitySpecialModelRenderer implements SpecialModelRen
         if (blockEntity == null) {
             blockEntity = new MobBottleBlockEntity(BlockPos.ZERO, FirisBlocks.MOB_BOTTLE.get().defaultBlockState());
         }
-        blockEntity.setMobBottleDataFromBEWLR(stack);
+
+        MobBottleBlockEntityClient blockEntityClient = this.blockEntity.getClient();
+
+        blockEntityClient.setMobBottleDataFromBEWLR(stack);
 
         pose.pushPose();
 
         //描画モードごとに調整
         //GUI
         if (displayContext == ItemDisplayContext.GUI) {
-            blockEntity.SetRendererDirection(Direction.WEST);
+            blockEntityClient.SetRendererDirection(Direction.WEST);
 
             //一人称右手
         } else if (displayContext == ItemDisplayContext.FIRST_PERSON_RIGHT_HAND) {
-            blockEntity.SetRendererDirection(Direction.WEST);
+            blockEntityClient.SetRendererDirection(Direction.WEST);
 
             //一人称左手
         } else if (displayContext == ItemDisplayContext.FIRST_PERSON_LEFT_HAND) {
-            blockEntity.SetRendererDirection(Direction.WEST);
+            blockEntityClient.SetRendererDirection(Direction.WEST);
 
             //三人称右手
         } else if (displayContext == ItemDisplayContext.THIRD_PERSON_RIGHT_HAND) {
-            blockEntity.SetRendererDirection(Direction.WEST);
+            blockEntityClient.SetRendererDirection(Direction.WEST);
 
             //三人称左手
         } else if (displayContext == ItemDisplayContext.THIRD_PERSON_LEFT_HAND) {
-            blockEntity.SetRendererDirection(Direction.EAST);
+            blockEntityClient.SetRendererDirection(Direction.EAST);
 
         }
 

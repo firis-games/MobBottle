@@ -2,6 +2,7 @@ package firis.mobbottle.client.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import firis.mobbottle.block.entity.MobBottleBlockEntity;
+import firis.mobbottle.block.entity.MobBottleBlockEntityClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -15,6 +16,7 @@ import org.joml.Quaternionf;
 
 /***
  * モブボトルブロック描画
+ * @OnlyIn(Dist.CLIENT)
  */
 public class MobBottleBlockEntityRenderer implements BlockEntityRenderer<MobBottleBlockEntity> {
 
@@ -30,14 +32,16 @@ public class MobBottleBlockEntityRenderer implements BlockEntityRenderer<MobBott
     @Override
     public void render(MobBottleBlockEntity blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay, Vec3 vec3) {
 
+        MobBottleBlockEntityClient blockEntityClient = blockEntity.getClient();
+
         //Mobの描画
-        Entity entity = blockEntity.getRenderEntity();
-        Direction direction = blockEntity.getRenderDirection();
+        Entity entity = blockEntityClient.getRenderEntity();
+        Direction direction = blockEntityClient.getRenderDirection();
         if (entity != null) {
             poseStack.pushPose();
 
-            float scale = blockEntity.getRenderScale();
-            float positionY = blockEntity.getRenderPositionY();
+            float scale = blockEntityClient.getRenderScale();
+            float positionY = blockEntityClient.getRenderPositionY();
 
             //位置とサイズと方角を設定
             poseStack.translate(0.5d, positionY, 0.5d);
@@ -56,7 +60,7 @@ public class MobBottleBlockEntityRenderer implements BlockEntityRenderer<MobBott
 
         //ブロックの描画
         poseStack.pushPose();
-        BlockState state = blockEntity.getRenderBlockState();
+        BlockState state = blockEntityClient.getRenderBlockState();
 
         Minecraft.getInstance().getBlockRenderer().renderSingleBlock(
                 state,
